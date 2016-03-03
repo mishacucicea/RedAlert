@@ -9,33 +9,26 @@ using System.Web;
 
 namespace RedAlert.API.BL
 {
-    public class DeviceIdentity
+     public static class DeviceIdentity
     {
-        RegistryManager registryManager;
-        string connectionString;
-        string _deviceId;
+        static string connectionString = ConfigurationManager.ConnectionStrings["IotHubConnectionString"].ConnectionString;
+        static RegistryManager registryManager =RegistryManager.CreateFromConnectionString(connectionString);
        
 
-        public DeviceIdentity(string deviceId)
+        public async static Task AddDeviceAsync(string id)
         {
-            _deviceId = deviceId;
-            AddDeviceAsync().Wait();
-        }
-        private async Task AddDeviceAsync()
-        {
-            connectionString = ConfigurationManager.ConnectionStrings["IotHubConnectionString"].ConnectionString;
-            registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+           
             Device device = null;
             try
             {
-                device = await registryManager.AddDeviceAsync(new Device(_deviceId));
+                device = await registryManager.AddDeviceAsync(new Device(id));
             }
             catch (DeviceAlreadyExistsException)
             {
                 throw new Exception("Device Alredy Exist");
             }   
         }
-        public async Task<string> GetDeviceAsync(string deviceId)
+        public async static Task<string> GetDeviceAsync(string deviceId)
         {
             var device = new Device();
             try

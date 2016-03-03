@@ -10,24 +10,42 @@ using System.Web.Http;
 
 namespace RedAlert.API.Controllers
 {
+    [RoutePrefix("api/device")]
     public class DeviceIdentityController : ApiController
     {
 
-        [HttpGet]
-        public async Task<HttpResponseMessage> Get(string deviceId)
+        [HttpPost]
+        public async Task<HttpResponseMessage> Post([FromBody]string id)
         {
            HttpResponseMessage response;
            
             try
             {
                 response = Request.CreateResponse(HttpStatusCode.Created);
-                DeviceIdentity device = new DeviceIdentity(deviceId);
-                var deviceKey = await device.GetDeviceAsync(deviceId);
-                response.Content = new StringContent(deviceKey);
+                await DeviceIdentity.AddDeviceAsync(id);
             }
             catch
             {
                 response= Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return response;
+        }
+
+        [HttpGet]
+        public async Task<HttpResponseMessage> Get(string id)
+        {
+            HttpResponseMessage response;
+
+            try
+            {
+                response = Request.CreateResponse(HttpStatusCode.OK);
+
+                var deviceKey = await DeviceIdentity.GetDeviceAsync(id);
+                response.Content = new StringContent(deviceKey);
+            }
+            catch
+            {
+                response = Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
             return response;
         }
