@@ -224,6 +224,7 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Device\Create.cshtml" />
     <Content Include="Views\Device\Get.cshtml" />
+    <Content Include="Views\Device\List.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
