@@ -9,15 +9,15 @@ using System.Web;
 
 namespace RedAlert.API.BL
 {
-     public static class DeviceIdentity
+    public static class DeviceIdentity
     {
         static string connectionString = ConfigurationManager.ConnectionStrings["IotHubConnectionString"].ConnectionString;
-        static RegistryManager registryManager =RegistryManager.CreateFromConnectionString(connectionString);
-       
+        static RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+
 
         public async static Task<string> AddDeviceAsync(string id)
         {
-           
+
             Device device = null;
             try
             {
@@ -30,12 +30,13 @@ namespace RedAlert.API.BL
 
             return device.Authentication.SymmetricKey.PrimaryKey;
         }
+
         public async static Task<string> GetDeviceAsync(string deviceId)
         {
             var device = new Device();
             try
             {
-                 device = await registryManager.GetDeviceAsync(deviceId);
+                device = await registryManager.GetDeviceAsync(deviceId);
             }
 
             catch (DeviceNotFoundException)
@@ -43,9 +44,24 @@ namespace RedAlert.API.BL
                 throw new Exception("Device Does not Exist");
             }
 
-           return device.Authentication.SymmetricKey.PrimaryKey;
+            return device.Authentication.SymmetricKey.PrimaryKey;
         }
 
+        public async static Task<IEnumerable<Device>> GetDevices()
+        {
+            IEnumerable<Device> devices;
 
+            try
+            {
+                devices = await registryManager.GetDevicesAsync(100);
+            }
+
+            catch (DeviceNotFoundException)
+            {
+                throw new Exception("Device Does not Exist");
+            }
+
+            return devices;
+        }
     }
 }
