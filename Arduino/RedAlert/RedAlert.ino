@@ -9,12 +9,16 @@
 //#include "Base64.h"
 #include "PubSubClient.h"
 
+
+
 #define Debug(x) Serial.print("DEBG: ");Serial.println(x)
 #define Debug2(x,y) Serial.print("DEBG: ");Serial.print(x);Serial.println(y)
 #define Debug3(x,y,z) Serial.print("DEBG: ");Serial.print(x);Serial.print(y);Serial.println(z)
 
-char* ssid = "WIFI_SID";
-char* pass = "WIFI_PASS";
+char* deviceSSID = "RedAlert-123";
+
+String ssid = "";
+String pass = "";
 
 unsigned long lastTimeCheck = 0;
 
@@ -219,7 +223,7 @@ void setupAP(void) {
   delay(100);
 
   Debug("Start the access point");
-  WiFi.softAP(ssid);
+  WiFi.softAP(deviceSSID);
 
   //launchWeb(1);
   Debug("over");
@@ -247,23 +251,23 @@ void setup() {
   delay(10);
 
   Debug("Reading EEPROM ssid");
-  String esid = "";
+  //String esid = "";
   for (int i = 0; i < 32; ++i) {
-      esid += char(EEPROM.read(i));
+      ssid += char(EEPROM.read(i));
   }
-  Debug2("SSID: ", esid);
+  Debug2("SSID: ", ssid);
   
   Debug("Reading EEPROM pass");
-  String epass = "";
+  //String epass = "";
   for (int i = 32; i < 96; ++i)
     {
-      epass += char(EEPROM.read(i));
+      pass += char(EEPROM.read(i));
     }
-  Debug2("PASS: ", epass);
+  Debug2("PASS: ", pass);
 
-  if ( esid.length() > 1 ) {
+  if ( ssid.length() > 1 ) {
       // test esid 
-      WiFi.begin(esid.c_str(), epass.c_str());
+      WiFi.begin(ssid.c_str(), pass.c_str());
       if ( testWifi() == 20 ) { 
           launchWeb(0);
           return;
@@ -287,7 +291,7 @@ void loop() {
 
   if (WiFi.status() != WL_CONNECTED) {
     //TODO: debug info
-    WiFi.begin(ssid, pass);
+    WiFi.begin(ssid.c_str(), pass.c_str());
 
     if (WiFi.waitForConnectResult() != WL_CONNECTED) {
       //TODO: log the fail reason?
