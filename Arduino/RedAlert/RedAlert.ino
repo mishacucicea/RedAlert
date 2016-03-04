@@ -15,6 +15,7 @@
 #define Debug2(x,y) Serial.print("DEBG: ");Serial.print(x);Serial.println(y)
 #define Debug3(x,y,z) Serial.print("DEBG: ");Serial.print(x);Serial.print(y);Serial.println(z)
 
+//TODO: randomize the device SSID
 char* deviceSSID = "RedAlert-123";
 
 String ssid = "";
@@ -22,10 +23,25 @@ String pass = "";
 
 unsigned long lastTimeCheck = 0;
 
+#define SSID_MAX 32
+#define PASS_MAX 64
+///TODO: ???
+#define HUB_MAX 32
+
+#define hubAddress "hub.azure.com"
 #define hubName "what name?"
 #define hubUser "hub user"
 #define hubPass "hub SAS token"
 #define hubTopic "some topic?"
+
+#define Red 1
+#define Green 2
+#define Yellow 3
+
+//define pins
+#define RED_PIN 14
+#define GREEN_PIN 12
+#define YELLOW_PIN 13
 
 //#define SOFTWARE_RX 4
 //#define SOFTWARE_TX 3
@@ -34,9 +50,9 @@ unsigned long lastTimeCheck = 0;
 
 //ref: https://github.com/chriscook8/esp-arduino-apboot/blob/master/ESP-wifiboot.ino
 
-IPAddress hubIP(172, 16, 0, 2); //TODO: set IoT Hub IP
+//IPAddress hubIP(172, 16, 0, 2); //TODO: set IoT Hub IP
 WiFiClient wclient;
-PubSubClient client(wclient, hubIP);
+PubSubClient client(wclient);//, hubIP);
 
 //Access Point mode
 MDNSResponder mdns;
@@ -45,8 +61,31 @@ WiFiServer server(80);
 //the html for the list of available stations
 String st;
 
-void callback(const MQTT::Publish& pub) {
+void setColor(int color) {
+  if (color == Yellow) analogWrite(YELLOW_PIN, 1024/2);
+  else analogWrite(YELLOW_PIN, 0);
+
+  if (color == Green) analogWrite(GREEN_PIN, 1024/2);
+  else analogWrite(GREEN_PIN, 0);
+
+  if (color == Red) analogWrite(RED_PIN, 1024/2);
+  else analogWrite(RED_PIN, 1024/2);
+}
+
+void callback(char* topic, byte* payload, unsigned int length) {
   // handle message arrived
+  String msg = "";
+  for (int i = 0; i < length; i++) {
+    msg += (char)payload[i];
+  }
+
+  if (msg.startsWith("RED")) {
+    setColor(Red);
+  } else if (msg.startsWith("GRN")) {
+    setColor(Green);
+  } else {
+    setColor(Yellow);
+  }
 }
 
 int mdns1(int webtype) {
@@ -246,6 +285,10 @@ void setup() {
   //need for debugging and communication with the slave module
   Serial.begin(115200);
 
+  pinMode(RED_PIN, OUTPUT);
+  pinMode(GREEN_PIN, OUTPUT);
+  pinMode(YELLOW_PIN, OUTPUT);
+
   //start the eeprom and wait 10 msecs for safety
   EEPROM.begin(512);
   delay(10);
@@ -276,6 +319,9 @@ void setup() {
   
   //TODO: setupAP needs to be done also in case the reset button is pressed
   setupAP(); 
+
+  //this will set the address of the hub and port on which it communicates
+  client.setServer(hubAddress, 8883);
 }
 
 void loop() {
@@ -303,17 +349,15 @@ void loop() {
 
   if (WiFi.status() == WL_CONNECTED) {
     if (!client.connected()) {
-      if (client.connect(MQTT::Connect(hubName).set_auth(hubUser, hubPass))) {
+      if (client.connect(hubName, hubUser, hubPass)) {
         //TODO: log connected status
       }
 
-      client.set_callback(callback);
+      client.setCallback(callback);
       //client.publish("outTopic", "test");
       client.subscribe(hubTopic);
     }
   }
-
-
 
   if (client.connected()) {
     
