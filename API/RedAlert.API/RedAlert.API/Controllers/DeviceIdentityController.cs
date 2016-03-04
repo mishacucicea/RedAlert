@@ -21,8 +21,10 @@ namespace RedAlert.API.Controllers
            
             try
             {
-                response = Request.CreateResponse(HttpStatusCode.Created);
-                await DeviceIdentity.AddDeviceAsync(id);
+               response = Request.CreateResponse(HttpStatusCode.Created);
+               var deviceKey= await DeviceIdentity.AddDeviceAsync(id);
+               response.Content = new StringContent(deviceKey);
+                
             }
             catch
             {
