@@ -15,7 +15,7 @@ namespace RedAlert.API.BL
         static RegistryManager registryManager =RegistryManager.CreateFromConnectionString(connectionString);
        
 
-        public async static Task AddDeviceAsync(string id)
+        public async static Task<string> AddDeviceAsync(string id)
         {
            
             Device device = null;
@@ -26,7 +26,9 @@ namespace RedAlert.API.BL
             catch (DeviceAlreadyExistsException)
             {
                 throw new Exception("Device Alredy Exist");
-            }   
+            }
+
+            return device.Authentication.SymmetricKey.PrimaryKey;
         }
         public async static Task<string> GetDeviceAsync(string deviceId)
         {
