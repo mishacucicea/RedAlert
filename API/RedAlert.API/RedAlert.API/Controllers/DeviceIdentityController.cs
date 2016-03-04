@@ -22,7 +22,7 @@ namespace RedAlert.API.Controllers
             try
             {
                response = Request.CreateResponse(HttpStatusCode.Created);
-               var deviceKey= await DeviceIdentity.AddDeviceAsync(id);
+               var deviceKey= await IotHubHelper.AddDeviceAsync(id);
                response.Content = new StringContent(deviceKey);
                 
             }
@@ -42,7 +42,7 @@ namespace RedAlert.API.Controllers
             {
                 response = Request.CreateResponse(HttpStatusCode.OK);
 
-                var deviceKey = await DeviceIdentity.GetDeviceAsync(id);
+                var deviceKey = await IotHubHelper.GetDeviceAsync(id);
                 response.Content = new StringContent(deviceKey);
             }
             catch
@@ -51,5 +51,6 @@ namespace RedAlert.API.Controllers
             }
             return response;
         }
+
     }
 }

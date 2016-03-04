@@ -1,18 +1,21 @@
 ﻿using Microsoft.Azure.Devices;
+using Microsoft.Azure.Devices.Client;
 using Microsoft.Azure.Devices.Common.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
 namespace RedAlert.API.BL
 {
-    public static class DeviceIdentity
+    public static class IotHubHelper
     {
         static string connectionString = ConfigurationManager.ConnectionStrings["IotHubConnectionString"].ConnectionString;
         static RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+        static string iotHubUri = ConfigurationManager.AppSettings["IotHubUri"];
 
 
         public async static Task<string> AddDeviceAsync(string id)
@@ -62,6 +65,16 @@ namespace RedAlert.API.BL
             }
 
             return devices;
+        }
+        public async static Task SendMessage(string serialNumber,string message)
+        {
+             DeviceClient deviceClient;
+             string deviceKey= await GetDeviceAsync(serialNumber);
+             deviceClient = DeviceClient.Create(iotHubUri, new DeviceAuthenticationWithRegistrySymmetricKey(serialNumber, deviceKey));
+
+             var messageToBytes = new Microsoft.Azure.Devices.Client.Message(Encoding.ASCII.GetBytes(message));
+
+             await deviceClient.SendEventAsync(messageToBytes);
         }
     }
 }
