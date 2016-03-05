@@ -63,5 +63,17 @@ namespace RedAlert.API.Controllers
 
             return View(devices);
         }
+
+        public ActionResult ViewSendMessage()
+        {
+            return View("SendMessage");
+        }
+
+        public async Task<ActionResult> SendMessage(string id, string color)
+        {
+            await IotHubHelper.SendMessage(id, color);
+
+            return View("SendMessage");
+        }
     }
 }

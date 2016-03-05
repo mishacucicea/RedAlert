@@ -231,6 +231,7 @@
     <Content Include="Views\Device\List.cshtml" />
     <Content Include="Views\Group\Create.cshtml" />
     <Content Include="Views\Group\Get.cshtml" />
+    <Content Include="Views\Device\SendMessage.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

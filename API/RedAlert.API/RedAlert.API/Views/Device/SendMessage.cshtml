@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "What's your mood";
+}
+
+<h2>What's your mood?</h2>
+
+<ul class="list-group">
+    <li class="list-group-item"> <input type="button" value="Excellent" class="btn-success" onclick="location.href='@Url.Action("SendMessage", "Device", new { id = "Hello", color = "g" }, null)'" /></li>
+    <li class="list-group-item"> <input type="button" value="So so" class="btn-warning" onclick="location.href='@Url.Action("SendMessage", "Device", new { id = "Hello", color = "y" }, null)'" /></li>
+    <li class="list-group-item"> <input type="button" value="No Way" class="btn-danger" onclick="location.href='@Url.Action("SendMessage", "Device", new { id = "Hello", color = "r" }, null)'" /></li>
+    <li class="list-group-item"> <input type="button" value="Meh..." class="btn-default" onclick="location.href='@Url.Action("SendMessage", "Device", new { id = "Hello", color = "x" }, null)'" /></li>
+</ul>
