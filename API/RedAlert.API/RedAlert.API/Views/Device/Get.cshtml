@@ -1,11 +1,11 @@
 ﻿@model RedAlert.API.Models.DeviceModel
 
 @{
-    ViewBag.Title = "Get";
+    ViewBag.Title = "Retrieve Device Key";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Get</h2>
+<h2>Retrieve Device Key</h2>
 
 @if (ViewData["deviceKey"] != null)
 {
@@ -18,11 +18,8 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>DeviceModel</h4>
         <hr />
         @Html.ValidationSummary(true)
-
-      
 
         <div class="form-group">
             @Html.LabelFor(model => model.SerialNumber, new { @class = "control-label col-md-2" })
@@ -34,15 +31,11 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Get Device Key" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

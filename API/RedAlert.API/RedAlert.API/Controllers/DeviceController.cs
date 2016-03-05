@@ -44,14 +44,14 @@ namespace RedAlert.API.Controllers
         }
 
         [HttpPost]
-        public ActionResult Get(DeviceModel model)
+        public async Task<ActionResult> Get(DeviceModel model)
         {
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ApiUrl);
-                var response = client.GetAsync("api/DeviceIdentity?=" + model.SerialNumber);
+                var response =  await client.GetAsync("api/DeviceIdentity/" + model.SerialNumber);
                 
-                ViewData["deviceKey"] = response.Result;
+                ViewData["deviceKey"] = response.Content.ReadAsStringAsync().Result;
             }
            
             return View();
