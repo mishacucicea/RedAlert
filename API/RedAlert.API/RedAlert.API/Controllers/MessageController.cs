@@ -28,5 +28,28 @@ namespace RedAlert.API.Controllers
             }
             return response;
         }
+        [HttpGet]
+        public async Task<HttpResponseMessage> SendToGroup(string groupName,string message)
+        {
+            HttpResponseMessage response;
+            var groupList = new List<string>();
+            groupList.Add("sl2yUZS+bC1fN/vU7/uxrkV3g9Z45oXvjPCpTY9kAws=");
+            groupList.Add("WZZqpXbpSAwuBBS9VoWam+eqc+2C59ENk/yjMv1OOzw=");
+            groupList.Add("5y/tgCuiCsriN8t71FCndQosAeBqf1DUmWx/ZbmUDkg=");
+
+            try
+            {
+                response = Request.CreateResponse(HttpStatusCode.OK);
+                foreach (var item in groupList)
+                {
+                    await IotHubHelper.SendMessage(item, message);
+                }
+            }
+            catch
+            {
+                response = Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return response;
+        }
     }
 }
