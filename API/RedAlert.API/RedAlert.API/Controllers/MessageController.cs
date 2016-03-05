@@ -52,5 +52,22 @@ namespace RedAlert.API.Controllers
             }
             return response;
         }
+
+        [HttpGet]
+        public async Task<HttpResponseMessage> Receive(string id)
+        {
+            HttpResponseMessage response;
+            try
+            {
+                var message = await IotHubHelper.ReceiveMessage(id);
+
+                response = Request.CreateResponse(HttpStatusCode.OK, message);
+            }
+            catch(Exception ex)
+            {
+                response = Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            return response;
+        }
     }
 }
