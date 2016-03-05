@@ -28,6 +28,7 @@ namespace RedAlert.API.Controllers
             }
             return response;
         }
+
         [HttpGet]
         public async Task<HttpResponseMessage> SendToGroup(string groupName,string message)
         {
