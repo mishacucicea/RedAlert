@@ -5,10 +5,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-<div class="jumbotron">
-
-
     <h4>Register your device</h4>
     
 
@@ -16,8 +12,6 @@
     {
        <h2>  Your device id is: @ViewData["deviceKey"]</h2>
     }
-
-   
 
     @using (Html.BeginForm())
     {
@@ -44,7 +38,6 @@
             </div>
         </div>
     }
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
