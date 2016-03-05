@@ -59,7 +59,7 @@ namespace RedAlert.API.Controllers
 
         public async Task<ActionResult> List()
         {
-            var devices = await DeviceIdentity.GetDevices();
+            var devices = await IotHubHelper.GetDevices();
 
             return View(devices);
         }
