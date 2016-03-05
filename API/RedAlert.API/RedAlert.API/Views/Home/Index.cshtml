@@ -5,6 +5,6 @@ Our extreme feedback device will be a mini lamp that can be put on the desk, sti
 It's scope is to provide a visual feedback of the status of a Build - green, your build is successfull, yellow - there are some issues, red - well, bad luck, your build is failing.
 The main innovation we want to introduce is the ability to control this device through the internet! Our device only needs to be connected to a power outlet, and have wifi available. You can then configure ANY build process to send a message through a very simple API, and change the color on the device, so your team has a real-time status of the build.
 But you don't have to limit at only using it for reporting build statuses. Want to use it for reporting on deploys? Sure. Want to use it as a semaphore? Sure. Just call the API to change the color..</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-large">Register your device</a></p>
+    <p>@Html.ActionLink("Register your device", "Create", "Device", null, new { @class = "btn btn-primary btn-large" })</p>
     
 </div>
