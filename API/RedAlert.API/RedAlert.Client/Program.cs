@@ -71,14 +71,13 @@ namespace RedAlert.Client
         /// <param name="message">The message.</param>
         static void WriteToSerial(string message)
         {
-            using (var mySerialPort = new SerialPort("COM6"))
+            using (var mySerialPort = new SerialPort("COM3"))
             {
                 mySerialPort.Open();
 
-                while (true)
-                {
+                
                     mySerialPort.Write(message);
-                }
+                
             }
         }
     }
