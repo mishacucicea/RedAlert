@@ -1,4 +1,4 @@
-void setup() {
+ void setup() {
   // put your setup code here, to run once:
   // initialize digital pin 9 as an output.
   pinMode(9, OUTPUT);
@@ -17,10 +17,10 @@ void loop() {
     case 'r':
       pin = 9;
       break;
-   case 'y':
+   case 'g':
       pin = 10;
       break;
-   case 'g':
+   case 'y':
      pin = 11;
      break;
     case 'x':
