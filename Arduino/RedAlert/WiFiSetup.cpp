@@ -137,6 +137,43 @@ bool WiFiSetup::anyConnections(void)  {
   else return false;
 }
 
+/*
+ * Loads the SSID, pass and serial number into wifi
+ */
+void WiFiSetup::loadStationSettings(void) {
+  ssid = "";
+  pass = "";
+  serial = "";
+  
+  Debug("Reading EEPROM ssid");
+  for (int i = 0; i < SSID_MAX; ++i) {
+      ssid += char(EEPROM.read(eepromOffset + i));
+  }
+  Debug2("SSID: ", ssid);
+  
+  Debug("Reading EEPROM pass");
+  for (int i = SSID_MAX; i < SSID_MAX + PASS_MAX; ++i) {
+      pass += char(EEPROM.read(eepromOffset + i));
+  }
+  Debug2("Password: ", pass);
+
+  Debug("Reading EEPROM Serial Number");
+  for (int i = SSID_MAX + PASS_MAX; i < SSID_MAX + PASS_MAX + SERIAL_MAX; ++i) {
+    serial += char(EEPROM.read(eepromOffset + i));
+  }
+  Debug2("Hub: ", serial);
+}
+
+String WiFiSetup::getSsid(void) {
+  return ssid;
+}
+String WiFiSetup::getPass(void) {
+  return pass;
+}
+String WiFiSetup::getSerial(void) {
+  return serial;
+}
+
 void WiFiSetup::setupMode(void) {
   Debug("Entered setupMode");
 
@@ -167,6 +204,12 @@ void WiFiSetup::setupMode(void) {
   while (!hasSetup) {
     server.handleClient();
   }
+}
+
+void WiFiSetup::stationMode(void) {
+  WiFi.disconnect();
+  WiFi.mode(WIFI_AP);
+  WiFi.begin(ssid.c_str(), pass.c_str());
 }
 
 WiFiSetup wifiSetup = WiFiSetup();

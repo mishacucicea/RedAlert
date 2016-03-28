@@ -16,16 +16,26 @@ class WiFiSetup {
     void scanNetworks(void);
     void setupAP(void);
     bool anyConnections(void);
-
+    /*
+     * Loads the SSID, pass and serial number into wifi
+     */
+    void loadStationSettings(void);
+    String getSsid(void);
+    String getPass(void);
+    String getSerial(void);
+    
     /*
      * Launches the web server with the setup page.
      */
     void setupMode(void);
+    void stationMode(void);
 
     int eepromOffset;
   private:
     //the html for the list of available stations
-
+    String ssid;
+    String pass;
+    String serial;
 };
 
 extern WiFiSetup wifiSetup;
