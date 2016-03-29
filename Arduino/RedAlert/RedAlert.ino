@@ -1,13 +1,7 @@
-//#include <SoftwareSerial.h>
-
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
 
 #include <WiFiClient.h>
-#include <EEPROM.h>
-//#include <WiFiUdp.h>
-//#include "sha256.h"
-//#include "Base64.h"
 #include "WiFiSetup.h"
 #include "PubSubClient.h"
 
@@ -38,9 +32,6 @@ unsigned long lastTimeCheck = 0;
 #define RED_PIN 14
 #define GREEN_PIN 12
 #define YELLOW_PIN 13
-
-//#define SOFTWARE_RX 4
-//#define SOFTWARE_TX 3
 
 //ref: https://github.com/oh1ko/ESP82666_OLED_clock/blob/master/ESP8266_OLED_clock.ino
 
@@ -87,14 +78,6 @@ int testWifi(void) {
   }
   Serial.println("Connect timed out, opening AP");
   return(10);
-} 
-
-void getDeviceId(void) {
-  
-}
-
-void getSAS(void) {
-  
 }
 
 void setup() {
@@ -109,27 +92,38 @@ void setup() {
   pinMode(GREEN_PIN, OUTPUT);
   pinMode(YELLOW_PIN, OUTPUT);
 
-  delay(5000);
+  //delay(5000);
 
   //initializing the wifi module
   wifiSetup.eepromOffset = 0;
   wifiSetup.loadStationSettings();
 
+  wifiSetup.scanNetworks();
+
   //enter in AP mode (name should auto setup)
   wifiSetup.setupAP();
+  delay(100);
 
   //wait ~20 sec for connections
   unsigned long now = millis();
 
+  Debug("Enter setup mode for at least 20 seconds");
+  wifiSetup.setupMode(20);
+  
+  /*
+  Debug("Waiting for stations to connect..");
   do {
     if (wifiSetup.anyConnections()) {
+      Debug("Got a station connected.");
+      
       //move into setup mode
-      wifiSetup.setupMode();
+      wifiSetup.setupMode(20);
       
       break;
     }
-  } while (millis() - now > 20000);
+  } while (millis() - now < 20000);*/
 
+  Debug("Moving to station mode.");
   //TODO: if could not enter station mode (no SSID, no network, errors connecting, etc,
   //then go back to setup mode
   //time to move to Station mode

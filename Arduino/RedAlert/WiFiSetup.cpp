@@ -84,8 +84,8 @@ void WiFiSetup::scanNetworks(void) {
   Debug("Switching STA mode (Station)");
   WiFi.mode(WIFI_STA);
   
-  Debug("Disconnecting");
-  WiFi.disconnect();
+  //Debug("Disconnecting");
+  //WiFi.disconnect();
   delay(100);
   
   Debug("Scanning networks");
@@ -174,10 +174,9 @@ String WiFiSetup::getSerial(void) {
   return serial;
 }
 
-void WiFiSetup::setupMode(void) {
+void WiFiSetup::setupMode(int seconds) {
   Debug("Entered setupMode");
 
-  
   Debug2("Assigned IP: ", WiFi.softAPIP());
   if (!MDNS.begin("redalert", WiFi.softAPIP())) {
     Debug("Error setting up MDNS responder!");
@@ -200,10 +199,18 @@ void WiFiSetup::setupMode(void) {
   // Start the server
   server.begin();
   Debug("Server started");   
+
+  unsigned long now = millis();
   
-  while (!hasSetup) {
+  while (!hasSetup && (seconds == 0 || (millis() - now < (seconds * 1000)) )) {
     server.handleClient();
+    if (server.client()) {
+      Debug("Client connected.");
+      seconds = 0;
+    }
   }
+
+  //TODO: stop the web server
 }
 
 void WiFiSetup::stationMode(void) {
