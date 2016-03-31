@@ -13,16 +13,11 @@
 
 unsigned long lastTimeCheck = 0;
 
-//maximum length of the specific EEPROM values
-#define SSID_MAX 32
-#define PASS_MAX 64
-#define SERIAL_MAX 36
-
-#define hubAddress "RedAlertHubArduino.azure-devices.net"
-#define hubName "what name?"
-#define hubUser "hub user"
-#define hubPass "hub SAS token"
-#define hubTopic "some topic?"
+#define hubAddress "arduhub.azure-devices.net"
+#define hubName "arduhub"
+#define hubUser "arduhub.azure-devices.net/pocDevice"
+#define hubPass "SharedAccessSignature sr=arduhub.azure-devices.net%2fdevices%2fpocDevice&sig=ksApO9qnlvs%2bERTKS3qqvO0T7cRG2D1xhI7PiE5C8uk%3d&se=1490896187"
+#define hubTopic "devices/pocDevice/messages/devicebound/#"
 
 #define Red 1
 #define Green 2
@@ -101,6 +96,7 @@ void setup() {
   wifiSetup.scanNetworks();
 
   //enter in AP mode (name should auto setup)
+  Debug("Entering AP mode");
   wifiSetup.setupAP();
   delay(100);
 
@@ -109,19 +105,6 @@ void setup() {
 
   Debug("Enter setup mode for at least 20 seconds");
   wifiSetup.setupMode(20);
-  
-  /*
-  Debug("Waiting for stations to connect..");
-  do {
-    if (wifiSetup.anyConnections()) {
-      Debug("Got a station connected.");
-      
-      //move into setup mode
-      wifiSetup.setupMode(20);
-      
-      break;
-    }
-  } while (millis() - now < 20000);*/
 
   Debug("Moving to station mode.");
   //TODO: if could not enter station mode (no SSID, no network, errors connecting, etc,
@@ -129,8 +112,16 @@ void setup() {
   //time to move to Station mode
   wifiSetup.stationMode();
 
+  Debug("Setting server for MQTT");
   //this will set the address of the hub and port on which it communicates
   client.setServer(hubAddress, 8883);
+
+  Debug("Setting callback for MQTT");
+  client.setCallback(callback);
+  
+  //client.publish("outTopic", "test");
+  Debug("Subscribing to the MQTT topic");
+  client.subscribe(hubTopic);
 }
 
 void loop() {
@@ -159,18 +150,21 @@ void loop() {
     //TOOD: log 
   }
 */
+  Debug("Checking for wifi connected");
   if (WiFi.status() == WL_CONNECTED) {
+    Debug("WiFi is connected");
     if (!client.connected()) {
+      Debug("MQTT connecting..");
       if (client.connect(hubName, hubUser, hubPass)) {
         //TODO: log connected status
+        Debug("MQTT connected.");
+      } else {
+        Debug("Could not connect :(");
       }
-
-      client.setCallback(callback);
-      //client.publish("outTopic", "test");
-      client.subscribe(hubTopic);
     }
   }
 
+  Debug("checking if MQTT is connected");
   if (client.connected()) {
     
     if (!client.loop()) Debug("MQTT failed to loop");

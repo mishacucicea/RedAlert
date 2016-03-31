@@ -210,13 +210,36 @@ void WiFiSetup::setupMode(int seconds) {
     }
   }
 
-  //TODO: stop the web server
+  Debug("Stopping and closing the server");
+  server.stop();
+  //server.close();
 }
 
-void WiFiSetup::stationMode(void) {
+bool WiFiSetup::stationMode(void) {
+  int retries = 0;
+  Debug("Connecting to the AP as Station");
+
+  Debug("setting mode to STA");
+  WiFi.mode(WIFI_STA);
+  Debug("Disconnecting from previous wifi");
   WiFi.disconnect();
-  WiFi.mode(WIFI_AP);
+  Debug("Trying to connect..");
   WiFi.begin(ssid.c_str(), pass.c_str());
+  Debug("Checking for connected status..");
+  while ( retries < 20 ) {
+    if (WiFi.status() == WL_CONNECTED) { 
+      
+      Debug("Connected to wifi! Local IP:");
+      Debug(WiFi.localIP());
+      return(true); 
+    } 
+    delay(500);
+    Debug2("Wifi Status: " ,WiFi.status());    
+    retries++;
+  }
+
+  Serial.println("Connect timed out");
+  return(false);
 }
 
 WiFiSetup wifiSetup = WiFiSetup();
