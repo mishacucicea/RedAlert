@@ -28,7 +28,7 @@ class WiFiSetup {
      * Launches the web server with the setup page.
      */
     void setupMode(int seconds);
-    void stationMode(void);
+    bool stationMode(void);
 
     int eepromOffset;
   private:
