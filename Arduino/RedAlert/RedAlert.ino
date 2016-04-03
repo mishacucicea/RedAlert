@@ -1,20 +1,15 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
 
-#include <WiFiClient.h>
+#include <WiFiClientSecure.h>
 #include "WiFiSetup.h"
 #include "PubSubClient.h"
-
-#define debug
-
-#define Debug(x) Serial.print("DEBG: ");Serial.println(x)
-#define Debug2(x,y) Serial.print("DEBG: ");Serial.print(x);Serial.println(y)
-#define Debug3(x,y,z) Serial.print("DEBG: ");Serial.print(x);Serial.print(y);Serial.println(z)
+#include "Logging.h"
 
 unsigned long lastTimeCheck = 0;
 
 #define hubAddress "arduhub.azure-devices.net"
-#define hubName "arduhub"
+#define hubName "pocDevice"
 #define hubUser "arduhub.azure-devices.net/pocDevice"
 #define hubPass "SharedAccessSignature sr=arduhub.azure-devices.net%2fdevices%2fpocDevice&sig=ksApO9qnlvs%2bERTKS3qqvO0T7cRG2D1xhI7PiE5C8uk%3d&se=1490896187"
 #define hubTopic "devices/pocDevice/messages/devicebound/#"
@@ -32,7 +27,7 @@ unsigned long lastTimeCheck = 0;
 
 //ref: https://github.com/chriscook8/esp-arduino-apboot/blob/master/ESP-wifiboot.ino
 
-WiFiClient wclient;
+WiFiClientSecure wclient;
 PubSubClient client(wclient);
 
 void setColor(int color) {
@@ -47,11 +42,14 @@ void setColor(int color) {
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
+  Debug("Entered callback");
   // handle message arrived
   String msg = "";
   for (int i = 0; i < length; i++) {
     msg += (char)payload[i];
   }
+
+  Info2("Message received: ", msg);
 
   if (msg.startsWith("RED")) {
     setColor(Red);
@@ -62,6 +60,8 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
 }
 
+//TODO: do we need this method?
+/*
 int testWifi(void) {
   int retries = 0;
   Debug("Waiting for Wifi to connect");  
@@ -71,9 +71,10 @@ int testWifi(void) {
     Debug2("Wifi Status: " ,WiFi.status());    
     retries++;
   }
-  Serial.println("Connect timed out, opening AP");
+  Debug("Connect timed out, opening AP");
   return(10);
 }
+*/
 
 void setup() {
   //need for debugging and communication with the slave module
@@ -86,8 +87,6 @@ void setup() {
   pinMode(RED_PIN, OUTPUT);
   pinMode(GREEN_PIN, OUTPUT);
   pinMode(YELLOW_PIN, OUTPUT);
-
-  //delay(5000);
 
   //initializing the wifi module
   wifiSetup.eepromOffset = 0;
@@ -119,9 +118,8 @@ void setup() {
   Debug("Setting callback for MQTT");
   client.setCallback(callback);
   
-  //client.publish("outTopic", "test");
-  Debug("Subscribing to the MQTT topic");
-  client.subscribe(hubTopic);
+  //TODO: do we need this line?
+  configTime(3 * 3600, 0, "pool.ntp.org", "time.nist.gov");
 }
 
 void loop() {
@@ -137,6 +135,7 @@ void loop() {
     //TODO: check for time agains google
     //do the wifi client and shit
   }
+
 /*
   if (WiFi.status() != WL_CONNECTED) {
     //TODO: debug info
@@ -150,6 +149,7 @@ void loop() {
     //TOOD: log 
   }
 */
+
   Debug("Checking for wifi connected");
   if (WiFi.status() == WL_CONNECTED) {
     Debug("WiFi is connected");
@@ -158,6 +158,11 @@ void loop() {
       if (client.connect(hubName, hubUser, hubPass)) {
         //TODO: log connected status
         Debug("MQTT connected.");
+
+        //client.publish("outTopic", "test");
+        Debug("Subscribing to the MQTT topic");
+        client.subscribe(hubTopic);
+        Info("Ready to receive messages.");
       } else {
         Debug("Could not connect :(");
       }
@@ -166,8 +171,12 @@ void loop() {
 
   Debug("checking if MQTT is connected");
   if (client.connected()) {
-    
-    if (!client.loop()) Debug("MQTT failed to loop");
+    Debug("MQTT is connected!");
+    if (!client.loop()) {
+      Debug("MQTT failed to loop");
+    }
   }
+
+  delay(1000);
 }
 
