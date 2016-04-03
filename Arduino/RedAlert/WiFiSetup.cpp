@@ -5,10 +5,6 @@
 #define PASS_MAX 64
 #define SERIAL_MAX 36
 
-#define Debug(x) Serial.print("DEBG: ");Serial.println(x)
-#define Debug2(x,y) Serial.print("DEBG: ");Serial.print(x);Serial.println(y)
-#define Debug3(x,y,z) Serial.print("DEBG: ");Serial.print(x);Serial.print(y);Serial.println(z)
-
 char* deviceSSID = "RedAlert-123";
 String st;
 bool hasSetup = false; 

@@ -9,6 +9,7 @@
 #include <EEPROM.h>
 #include "PubSubClient.h"
 #include "Arduino.h"
+#include "Logging.h"
 
 class WiFiSetup {
   public:
