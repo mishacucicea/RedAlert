@@ -7,6 +7,7 @@
             .wrapper {background:#ffffff; max-width: 900px; padding:20px; display: inline-block;border-radius: 14px;}
             input{border:1px solid #d2d2d2; padding:10px;}
             input[type="submit"]{background:#9fd330; color:#333333; min-width: 200px; font-size: 16px; padding:10px; cursor: pointer;}
+            #backButton{background:#f7f9f6; color:#333333; min-width: 200px; font-size: 16px; padding:10px; cursor: pointer;}
             ol { display:inline-block; text-align: left;}
             ol li{padding:10px;}
             ol>li:nth-child(2n){background:#f7f9f6;}
@@ -23,9 +24,9 @@
               document.getElementById("PASSWORD").focus();
               hideList();
               showButton();
-              show();
+              showCredential();
             }
-            function show(){
+            function showCredential(){
               var contentId = document.getElementById("credentials");
               contentId.style.display = "block";
             }
@@ -79,7 +80,7 @@
                 </br>
                   <input type="submit" value="Submit" />
                     <p style="display:none;" id="buttonBackID">
-                  <input type="button" value="Back" onclick="showList()"/>
+                  <input type="button" id="backButton" value="Back" onclick="showList()"/>
                   </p>
             </form>
         </div>
