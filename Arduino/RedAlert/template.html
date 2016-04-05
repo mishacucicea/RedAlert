@@ -4,7 +4,7 @@
         <title>Configure the LIGHT BOX</title>
         <style>
             body{text-align: center;font-family: Arial; color:#333333; font-size: 16px;background:#f7f9f6}
-            .wrapper {background:#ffffff; max-width: 900px; padding:20px; display: inline-block;}
+            .wrapper {background:#ffffff; max-width: 900px; padding:20px; display: inline-block;border-radius: 14px;}
             input{border:1px solid #d2d2d2; padding:10px;}
             input[type="submit"]{background:#9fd330; color:#333333; min-width: 200px; font-size: 16px; padding:10px; cursor: pointer;}
             ol { display:inline-block; text-align: left;}
@@ -13,39 +13,67 @@
             a{text-decoration: none; color:#333333}
             .row {margin-bottom:10px;}
         </style>
-        
+
         <script>
             function populate(elem){
+
+                var contentId = document.getElementById("credentials");
+                contentId.style.display == "none" ? contentId.style.display = "block" :
+                contentId.style.display = "none";
                 document.getElementById("SSID").value=elem.textContent;
-                 document.getElementById("PASSWORD").focus();
-                
-                
+                document.getElementById("PASSWORD").focus();
+                hideList();
+                showButton();
+                show();
+            }
+            function show(){
+              var contentId = document.getElementById("credentials");
+              contentId.style.display = "block";
+            }
+            function showList(){
+              hideButton();
+              var contentId = document.getElementById("content");
+              contentId.style.display = "block";
+            }
+            function hideList(){
+              var contentId = document.getElementById("content");
+              contentId.style.display = "none";
+            }
+            function hideButton() {
+              var contentId = document.getElementById("buttonID");
+              contentId.style.display = "none";
+            }
+            function showButton() {
+              var contentId = document.getElementById("buttonID");
+              contentId.style.display = "block";
             }
         </script>
     </head>
     <body>
-        
+
         <div class="wrapper">
             <h2>Hi awesome</h2>
             <p>Please select your wireless network:</p>
-           <ol>
+            <p style="display:none;" id="buttonID">  <input type="button" value="Select network" onclick="showList()"/></p>
+           <ol ID="content" style="display:block;">
                <li><a href="#" onclick="populate(this)">Dinamitescu </a> <i> (strong)</i> </li>
                <li><a href="#" onclick="populate(this)">dlink-2A06 </a>  <i>(medium)</i> </li>
                <li><a href="#" onclick="populate(this)">Attila  </a> <i>(strong)</i> </li>
                <li><a href="#" onclick="populate(this)">FBI Surveillance</a>  (low)</i> </li>
             </ol>
-            <form>
-                <div class="row">
-                    <input id="SSID" type="text" placeholder="name of your wireless" name="SSID"/>
-                    <input id="PASSWORD" type="password" placeholder="wireless password" name="password"/>
-                    <input type="text" placeholder="device ID" name="deviceID"/>
-                </div>
+            <form id="credentials"  style="display:none;">
+                <div >
 
+                  <div > <input id="SSID" type="text" placeholder="name of your wireless" name="SSID"/></div></br>
+                  <div >  <input id="PASSWORD" type="password" placeholder="wireless password" name="password"/></div></br>
+                <div >   <input type="text" placeholder="device ID" name="deviceID"/></div>
+
+</br>
                 <div class="row">
                   <input type="submit" value="Submit" />
                 </div>
             </form>
         </div>
-        
+
     </body>
 </html>
