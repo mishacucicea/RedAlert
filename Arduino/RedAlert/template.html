@@ -16,15 +16,14 @@
 
         <script>
             function populate(elem){
-
-                var contentId = document.getElementById("credentials");
-                contentId.style.display == "none" ? contentId.style.display = "block" :
-                contentId.style.display = "none";
-                document.getElementById("SSID").value=elem.textContent;
-                document.getElementById("PASSWORD").focus();
-                hideList();
-                showButton();
-                show();
+              var contentId = document.getElementById("credentials");
+              contentId.style.display == "none" ? contentId.style.display = "block" :
+              contentId.style.display = "none";
+              document.getElementById("SSID").innerHTML =elem.textContent+ " network:";
+              document.getElementById("PASSWORD").focus();
+              hideList();
+              showButton();
+              show();
             }
             function show(){
               var contentId = document.getElementById("credentials");
@@ -34,6 +33,7 @@
               hideButton();
               var contentId = document.getElementById("content");
               contentId.style.display = "block";
+              hideCredential();
             }
             function hideList(){
               var contentId = document.getElementById("content");
@@ -44,8 +44,12 @@
               contentId.style.display = "none";
             }
             function showButton() {
-              var contentId = document.getElementById("buttonID");
+              var contentId = document.getElementById("buttonBackID");
               contentId.style.display = "block";
+            }
+            function hideCredential() {
+              var contentId = document.getElementById("credentials");
+              contentId.style.display = "none";
             }
         </script>
     </head>
@@ -53,27 +57,31 @@
 
         <div class="wrapper">
             <h2>Hi awesome</h2>
-            <p>Please select your wireless network:</p>
             <p style="display:none;" id="buttonID">  <input type="button" value="Select network" onclick="showList()"/></p>
            <ol ID="content" style="display:block;">
+             <p>Please select your wireless network:</p>
                <li><a href="#" onclick="populate(this)">Dinamitescu </a> <i> (strong)</i> </li>
                <li><a href="#" onclick="populate(this)">dlink-2A06 </a>  <i>(medium)</i> </li>
                <li><a href="#" onclick="populate(this)">Attila  </a> <i>(strong)</i> </li>
                <li><a href="#" onclick="populate(this)">FBI Surveillance</a>  (low)</i> </li>
             </ol>
+
             <form id="credentials"  style="display:none;">
+                <div id="SSID"></div>
+                  </br>
                 <div >
-
-                  <div > <input id="SSID" type="text" placeholder="name of your wireless" name="SSID"/></div></br>
-                  <div >  <input id="PASSWORD" type="password" placeholder="wireless password" name="password"/></div></br>
-                <div >   <input type="text" placeholder="device ID" name="deviceID"/></div>
-
-</br>
-                <div class="row">
-                  <input type="submit" value="Submit" />
+                  <input id="PASSWORD" type="password" placeholder="wireless password" name="password"/>
                 </div>
+              </br>
+                <div >
+                  <input type="text" placeholder="device ID" name="deviceID"/>
+                </div>
+                </br>
+                  <input type="submit" value="Submit" />
+                    <p style="display:none;" id="buttonBackID">
+                  <input type="button" value="Back" onclick="showList()"/>
+                  </p>
             </form>
         </div>
-
     </body>
 </html>
