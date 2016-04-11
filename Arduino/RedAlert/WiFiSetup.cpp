@@ -53,7 +53,7 @@ void handleRoot(void) {
   String s;
 
         s = "<!DOCTYPE HTML>\r\n\
-<html>Hello from RedAlert";
+<html>Hello from RedAlert!";
         s += "<p>";
         s += st;
         s += "\
