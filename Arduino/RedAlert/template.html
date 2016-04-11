@@ -4,14 +4,15 @@
         <title>Configure the LIGHT BOX</title>
         <style>
             body{text-align: center;font-family: Arial; color:#333333; font-size: 16px;background:#f7f9f6}
-            .wrapper {background:#ffffff; max-width: 900px; padding:20px; display: inline-block;border-radius: 14px;}
-            input{border:1px solid #d2d2d2; padding:10px;}
+            .wrapper {background:#ffffff; padding:20px; display: inline-block;border-radius: 14px;    width: 290px;}
+            input{border:1px solid #d2d2d2; padding:10px;     }
             input[type="submit"]{background:#9fd330; color:#333333; min-width: 200px; font-size: 16px; padding:10px; cursor: pointer;}
             #backButton{background:#f7f9f6; color:#333333; min-width: 200px; font-size: 16px; padding:10px; cursor: pointer;}
             ol { display:inline-block; text-align: left;}
             ol li{padding:10px;}
             ol>li:nth-child(2n){background:#f7f9f6;}
-            a{text-decoration: none; color:#333333}
+            a{text-decoration: none; color:#333333 ;    width: 100%;
+    display: block; }
             .row {margin-bottom:10px;}
         </style>
 
@@ -57,14 +58,14 @@
     <body>
 
         <div class="wrapper">
-            <h2>Hi awesome</h2>
+
             <p style="display:none;" id="buttonID">  <input type="button" value="Select network" onclick="showList()"/></p>
            <ol ID="content" style="display:block;">
              <p>Please select your wireless network:</p>
-               <li><a href="#" onclick="populate(this)">Dinamitescu </a> <i> (strong)</i> </li>
-               <li><a href="#" onclick="populate(this)">dlink-2A06 </a>  <i>(medium)</i> </li>
-               <li><a href="#" onclick="populate(this)">Attila  </a> <i>(strong)</i> </li>
-               <li><a href="#" onclick="populate(this)">FBI Surveillance</a>  (low)</i> </li>
+               <li><a href="#" onclick="populate(this)">Dinamitescu <i> (strong)</i> </a>  </li>
+               <li><a href="#" onclick="populate(this)">dlink-2A06 <i>(medium)</i></a>   </li>
+               <li><a href="#" onclick="populate(this)">Attila  <i>(strong)</i> </a> </li>
+               <li><a href="#" onclick="populate(this)">FBI Surveillance <i>  (low)</i> </a> </li>
             </ol>
 
             <form id="credentials"  style="display:none;">
