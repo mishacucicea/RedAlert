@@ -9,11 +9,12 @@
             input[type="submit"]{background:#9fd330; color:#333333; min-width: 200px; font-size: 16px; padding:10px; cursor: pointer;}
             #backButton{background:#f7f9f6; color:#333333; min-width: 200px; font-size: 16px; padding:10px; cursor: pointer;}
             ol { display:inline-block; text-align: left;}
-            ol li{padding:10px;}
+
             ol>li:nth-child(2n){background:#f7f9f6;}
-            a{text-decoration: none; color:#333333 ;    width: 100%;
+            a{text-decoration: none; color:#333333 ; padding: 10px;
     display: block; }
-            .row {margin-bottom:10px;}
+            a:hover{background:#9fd330;     border-radius: 8px; }
+
         </style>
 
         <script>
@@ -21,7 +22,7 @@
               var contentId = document.getElementById("credentials");
               contentId.style.display == "none" ? contentId.style.display = "block" :
               contentId.style.display = "none";
-              document.getElementById("SSID").innerHTML =elem.textContent+ " network:";
+              document.getElementById("SSID").innerHTML = elem.textContent+ " network:";
               document.getElementById("PASSWORD").focus();
               hideList();
               showButton();
@@ -60,13 +61,13 @@
         <div class="wrapper">
 
             <p style="display:none;" id="buttonID">  <input type="button" value="Select network" onclick="showList()"/></p>
-           <ol ID="content" style="display:block;">
-             <p>Please select your wireless network:</p>
-               <li><a href="#" onclick="populate(this)">Dinamitescu <i> (strong)</i> </a>  </li>
-               <li><a href="#" onclick="populate(this)">dlink-2A06 <i>(medium)</i></a>   </li>
-               <li><a href="#" onclick="populate(this)">Attila  <i>(strong)</i> </a> </li>
-               <li><a href="#" onclick="populate(this)">FBI Surveillance <i>  (low)</i> </a> </li>
-            </ol>
+           <div ID="content" style="display:block;">
+             <p><b>Please select your wireless network:</b></p>
+              <a href="#" onclick="populate(this)">Dinamitescu <i> (strong)</i> </a>
+              <a href="#" onclick="populate(this)">dlink-2A06 <i>(medium)</i></a>
+              <a href="#" onclick="populate(this)">Attila  <i>(strong)</i> </a>
+              <a href="#" onclick="populate(this)">FBI Surveillance <i>  (low)</i> </a>
+            </div>
 
             <form id="credentials"  style="display:none;">
                 <div id="SSID"></div>
