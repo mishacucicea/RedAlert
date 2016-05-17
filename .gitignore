@@ -198,3 +198,5 @@ eagle.epf
 
 # file locks introduced since 7.x
 *.lck
+/API/RedAlert.API/packages
+/API/RedAlert.API/RedAlert.API/Web.config
