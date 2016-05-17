@@ -1,14 +1,10 @@
 ﻿using Microsoft.Azure.Devices;
-using Microsoft.Azure.Devices.Client;
 using Microsoft.Azure.Devices.Common.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace RedAlert.API.BL
 {
@@ -17,37 +13,39 @@ namespace RedAlert.API.BL
         /// <summary>
         /// The connection string
         /// </summary>
-        static string connectionString = ConfigurationManager.ConnectionStrings["IotHubConnectionString"].ConnectionString;
+        static internal string connectionString = ConfigurationManager.ConnectionStrings["IotHubConnectionString"].ConnectionString;
         /// <summary>
         /// The registry manager
         /// </summary>
-        static RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+        static internal RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
         /// <summary>
         /// The iot hub URI
         /// </summary>
-        static string iotHubUri = ConfigurationManager.AppSettings["IotHubUri"];
+        static internal string iotHubUri = ConfigurationManager.AppSettings["IotHubUri"];
+
+        static internal ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
 
 
         /// <summary>
         /// Adds the device asynchronous.
         /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
+        /// <param name="deviceId">The identifier.</param>
+        /// <returns>Device Key</returns>
         /// <exception cref="System.Exception">Device Alredy Exist</exception>
-        public async static Task<string> AddDeviceAsync(string id)
+        public async static Task<string> AddDeviceAsync(string deviceId)
         {
 
             Device device = null;
             try
             {
-                device = await registryManager.AddDeviceAsync(new Device(id));
+                device = await registryManager.AddDeviceAsync(new Device(deviceId));
+                return device.Authentication.SymmetricKey.PrimaryKey;
             }
             catch (DeviceAlreadyExistsException)
             {
-                throw new Exception("Device Alredy Exist");
-            }
-
-            return device.Authentication.SymmetricKey.PrimaryKey;
+                var result = await GetDeviceAsync(deviceId);
+                return result;
+            }        
         }
 
         /// <summary>
@@ -97,44 +95,14 @@ namespace RedAlert.API.BL
         /// <summary>
         /// Sends the message.
         /// </summary>
-        /// <param name="serialNumber">The serial number.</param>
+        /// <param name="deviceId">The serial number.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public async static Task SendMessage(string serialNumber,string message)
-        {
-             DeviceClient deviceClient;
-             string deviceKey= await GetDeviceAsync(serialNumber);
-             deviceClient = DeviceClient.Create(iotHubUri, new DeviceAuthenticationWithRegistrySymmetricKey(serialNumber, deviceKey));
+        public async static Task SendCloudToDeviceMessageAsync(string deviceId, string message)
+            { 
+                var messageToBytes = new Microsoft.Azure.Devices.Message(Encoding.ASCII.GetBytes(message));
+                await serviceClient.SendAsync(deviceId, messageToBytes);
+            }
 
-             var messageToBytes = new Microsoft.Azure.Devices.Client.Message(Encoding.ASCII.GetBytes(message));
-
-             await deviceClient.SendEventAsync(messageToBytes);
-        }
-
-        /// <summary>
-        /// Receives the message.
-        /// </summary>
-        /// <param name="serialNumber">The serial number.</param>
-        /// <returns></returns>
-        public async static Task<string> ReceiveMessage(string serialNumber)
-        {
-            DeviceClient deviceClient;
-            string deviceKey = await GetDeviceAsync(serialNumber);
-            deviceClient = DeviceClient.Create(iotHubUri, new DeviceAuthenticationWithRegistrySymmetricKey(serialNumber, deviceKey));
-
-            //var messageObj = await deviceClient.ReceiveAsync(new TimeSpan(0,0,1));
-
-            string message = "";
-
-            //if (messageObj != null)
-            //{
-            //    using (var sr = new StreamReader(messageObj.BodyStream))
-            //    {
-            //        message = sr.ReadToEnd();
-            //    }
-            //}
-
-            return message;
         }
     }
-}

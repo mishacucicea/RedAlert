@@ -1,0 +1,58 @@
+Xtreme feedback device.
+
+1. Title
+Team name, members
+
+Red Alert is an extreme feedback device that is controlled through the internet. Our extreme feedback device will be a mini lamp that can be put on the desk, stick on a wall or carried between between spaces.
+
+2. problem/need that is addressed
+Often we'd like to feel a better pulse of reality, and our proposal is a device that shows realtime feedback using the power of lights and colors.
+
+3. Value proposition
+The devices is meant to greatly reduce feedback time and show a current trend in mood, team morale, build failure/success. etc
+It is very easy to use, needed only an initial setup and a power plug. 
+
+ - build feedback
+ - mood indicator
+ - busy indicator
+ - Team morale in a sprint
+
+
+4. Underlying magic
+describe the solution and technologies (Diagram + description)
+The full system consists from 
+ - programmed Arduino board, bound with LEDs and wrapped up as a single individual  device
+ - API that communicates with the IoT Hub
+ - Web site for device setup and inputting feedback
+ - Mobile application for inputting feedback
+
+5. Business model (how do we monetize)
+The device can be introduced to development teams that use Continuous Integration and want to get a build feedback.
+Another target can be companies that appreciate feedback from their people and want to make it transparent. 
+New use cases can be discovered together with the clients based on the device and application capabilities.
+
+ 6. Go to market plan
+ Potential customers will be approached, explaining them how the added value of having a realtime feedback device.
+ The production of the device itself is not that expensive, and 
+ 
+ 7. Competitive analysis
+ There are other similar devices on the market, e.g. http://gitgear.com/xfd/ which looks good, but has a catalog cost of 279 EUR.
+ According to our calculation our device would be only 35 EUR and we'd also attempt for a monthly subscription of 3 EUR. 
+ 
+ 
+ 8. Management team
+ We're a group of technology enthusiasts that are promoted by our mother company, having access to sales and marketing experts, as well as senior managers to provide guidance. 
+ 
+ 9. Financial projection
+ In the bellow predictions we should expect 5-10 devices sold per client.
+ 1st year: 20-40 clients -> 
+ 2nd year: up to 100 clients
+ 3rd year: 200-300 clients
+ 
+ 10. Current Status, accomplishments and timeline
+ The current achievement is a functional prototype (device + web application).
+ In the next month we should have a final prototype and in 3 to 6 months we should be in a position to begin volume production.
+ The budget will be focused on getting a matrix for the device and prepare a lot of prerequisite items, like PCBs, LEDs, etc.
+ 
+ Demo
+ show web app link and encourage people to access the app

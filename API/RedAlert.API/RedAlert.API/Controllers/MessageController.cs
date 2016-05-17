@@ -13,14 +13,14 @@ namespace RedAlert.API.Controllers
     {
         
         [HttpGet]
-        public async Task<HttpResponseMessage> Send(string id, string message)
+        public async Task<HttpResponseMessage> Send(string deviceId, string message)
         {
             HttpResponseMessage response;
             try
             {
                 response = Request.CreateResponse(HttpStatusCode.OK);
 
-               await IotHubHelper.SendMessage(id, message);
+               await IotHubHelper.SendCloudToDeviceMessageAsync(deviceId, message);
             }
             catch
             {
@@ -43,7 +43,7 @@ namespace RedAlert.API.Controllers
                 response = Request.CreateResponse(HttpStatusCode.OK);
                 foreach (var item in groupList)
                 {
-                    await IotHubHelper.SendMessage(item, message);
+                    await IotHubHelper.SendCloudToDeviceMessageAsync(item, message);
                 }
             }
             catch
@@ -53,21 +53,21 @@ namespace RedAlert.API.Controllers
             return response;
         }
 
-        [HttpGet]
-        public async Task<HttpResponseMessage> Receive(string id)
-        {
-            HttpResponseMessage response;
-            try
-            {
-                var message = await IotHubHelper.ReceiveMessage(id);
+        //[HttpGet]
+        //public async Task<HttpResponseMessage> Receive(string id)
+        //{
+        //    HttpResponseMessage response;
+        //    try
+        //    {
+        //        var message = await IotHubHelper.ReceiveMessage(id);
 
-                response = Request.CreateResponse(HttpStatusCode.OK, message);
-            }
-            catch(Exception ex)
-            {
-                response = Request.CreateResponse(HttpStatusCode.InternalServerError);
-            }
-            return response;
-        }
+        //        response = Request.CreateResponse(HttpStatusCode.OK, message);
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        response = Request.CreateResponse(HttpStatusCode.InternalServerError);
+        //    }
+        //    return response;
+        //}
     }
 }
