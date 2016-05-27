@@ -12,12 +12,56 @@ namespace RedAlert.API.Controllers
     public class MessageController : ApiController
     {
         
+        [Route("api/message/send")]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deviceId"></param>
+        /// <param name="color">RGB (six character) or named color. Case insensitive.</param>
+        /// <param name="pattern">Specify the kind of pattern to use. Default is continunous.</param>
+        /// <param name="timeout">How much time to keep the given color on (in seconds).</param>
         [HttpGet]
-        public async Task<IHttpActionResult> Send(string deviceId, string message)
+        public async Task<IHttpActionResult> Send(string deviceId, string color, string pattern, uint? timeout)
         {
             try
             {
+                //we'll be building the message to be sent to the IoT Hub
+
+                byte[] message = new byte[9];
+                //1 byte is the type of the message
+                //3 bytes is the RGB value
+                //1 bytes is the pattern number
+                //4 bytes is the timeout
+                message[0] = 1;
+
+                try
+                {
+                    System.Drawing.Color col = System.Drawing.ColorTranslator.FromHtml("#"+color);
+                }
+                catch
+                {
+                    System.Drawing.Color colorRGB = System.Drawing.Color.FromName(color);
+
+                    if (colorRGB.ToArgb() == 0)
+                    {
+                        return BadRequest("Unknown color.");
+                    }
+
+                    message[1] = colorRGB.R;
+                    message[2] = colorRGB.G;
+                    message[3] = colorRGB.B;
+                }
+                
                 await IotHubHelper.SendCloudToDeviceMessageAsync(deviceId, message);
+
+                if (timeout.HasValue)
+                {
+                    byte[] timeoutBytes = BitConverter.GetBytes(timeout.Value);
+
+                    //because we're running on a little indian machine
+                    Array.Reverse(timeoutBytes);
+                    Array.Copy(timeoutBytes, 0, message, 4, 3);
+                }
 
                 return Ok();
             }
@@ -66,5 +110,15 @@ namespace RedAlert.API.Controllers
         //    }
         //    return response;
         //}
+
+        public static byte[] StringToByteArray(string hex)
+        {
+            if (hex.Length % 2 != 0) throw new FormatException("Not a hex string.");
+
+            return Enumerable.Range(0, hex.Length)
+                             .Where(x => x % 2 == 0)
+                             .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
+                             .ToArray();
+        }
     }
 }

@@ -99,10 +99,15 @@ namespace RedAlert.API.BL
         /// <param name="message">The message.</param>
         /// <returns></returns>
         public async static Task SendCloudToDeviceMessageAsync(string deviceId, string message)
-            { 
-                var messageToBytes = new Microsoft.Azure.Devices.Message(Encoding.ASCII.GetBytes(message));
-                await serviceClient.SendAsync(deviceId, messageToBytes);
-            }
-
+        { 
+            var messageToBytes = new Microsoft.Azure.Devices.Message(Encoding.ASCII.GetBytes(message));
+            await serviceClient.SendAsync(deviceId, messageToBytes);
         }
+
+        public async static Task SendCloudToDeviceMessageAsync(string deviceId, byte[] message)
+        {
+            await serviceClient.SendAsync(deviceId, new Microsoft.Azure.Devices.Message(message));
+        }
+
     }
+}
