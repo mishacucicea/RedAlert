@@ -11,8 +11,6 @@ namespace RedAlert.API.Controllers
 {
     public class MessageController : ApiController
     {
-        
-        [Route("api/message/send")]
         /// <summary>
         /// 
         /// </summary>
@@ -21,7 +19,7 @@ namespace RedAlert.API.Controllers
         /// <param name="pattern">Specify the kind of pattern to use. Default is continunous.</param>
         /// <param name="timeout">How much time to keep the given color on (in seconds).</param>
         [HttpGet]
-        public async Task<IHttpActionResult> Send(string deviceId, string color, string pattern, uint? timeout)
+        public async Task<IHttpActionResult> Send(string deviceId, string color, string pattern = null, uint? timeout = null)
         {
             try
             {
@@ -52,8 +50,6 @@ namespace RedAlert.API.Controllers
                     message[3] = colorRGB.B;
                 }
                 
-                await IotHubHelper.SendCloudToDeviceMessageAsync(deviceId, message);
-
                 if (timeout.HasValue)
                 {
                     byte[] timeoutBytes = BitConverter.GetBytes(timeout.Value);
@@ -62,6 +58,8 @@ namespace RedAlert.API.Controllers
                     Array.Reverse(timeoutBytes);
                     Array.Copy(timeoutBytes, 0, message, 4, 3);
                 }
+
+                await IotHubHelper.SendCloudToDeviceMessageAsync(deviceId, message);
 
                 return Ok();
             }
