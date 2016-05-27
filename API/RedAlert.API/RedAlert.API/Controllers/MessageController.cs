@@ -13,26 +13,23 @@ namespace RedAlert.API.Controllers
     {
         
         [HttpGet]
-        public async Task<HttpResponseMessage> Send(string deviceId, string message)
+        public async Task<IHttpActionResult> Send(string deviceId, string message)
         {
-            HttpResponseMessage response;
             try
             {
-                response = Request.CreateResponse(HttpStatusCode.OK);
+                await IotHubHelper.SendCloudToDeviceMessageAsync(deviceId, message);
 
-               await IotHubHelper.SendCloudToDeviceMessageAsync(deviceId, message);
+                return Ok();
             }
             catch
             {
-                response = Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return InternalServerError();
             }
-            return response;
         }
 
         [HttpGet]
-        public async Task<HttpResponseMessage> SendToGroup(string groupName,string message)
+        public async Task<IHttpActionResult> SendToGroup(string groupName,string message)
         {
-            HttpResponseMessage response;
             var groupList = new List<string>();
             groupList.Add("sl2yUZS+bC1fN/vU7/uxrkV3g9Z45oXvjPCpTY9kAws=");
             groupList.Add("WZZqpXbpSAwuBBS9VoWam+eqc+2C59ENk/yjMv1OOzw=");
@@ -40,17 +37,17 @@ namespace RedAlert.API.Controllers
 
             try
             {
-                response = Request.CreateResponse(HttpStatusCode.OK);
                 foreach (var item in groupList)
                 {
                     await IotHubHelper.SendCloudToDeviceMessageAsync(item, message);
                 }
+
+                return Ok();
             }
             catch
             {
-                response = Request.CreateResponse(HttpStatusCode.InternalServerError);
+                return InternalServerError();
             }
-            return response;
         }
 
         //[HttpGet]
