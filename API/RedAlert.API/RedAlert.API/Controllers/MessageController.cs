@@ -32,24 +32,25 @@ namespace RedAlert.API.Controllers
                 //4 bytes is the timeout
                 message[0] = 1;
 
+                System.Drawing.Color colorRGB;
                 try
                 {
-                    System.Drawing.Color col = System.Drawing.ColorTranslator.FromHtml("#"+color);
+                    colorRGB = System.Drawing.ColorTranslator.FromHtml("#"+color);
                 }
                 catch
                 {
-                    System.Drawing.Color colorRGB = System.Drawing.Color.FromName(color);
+                    colorRGB = System.Drawing.Color.FromName(color);
 
                     if (colorRGB.ToArgb() == 0)
                     {
                         return BadRequest("Unknown color.");
                     }
-
-                    message[1] = colorRGB.R;
-                    message[2] = colorRGB.G;
-                    message[3] = colorRGB.B;
                 }
-                
+
+                message[1] = colorRGB.R;
+                message[2] = colorRGB.G;
+                message[3] = colorRGB.B;
+
                 if (timeout.HasValue)
                 {
                     byte[] timeoutBytes = BitConverter.GetBytes(timeout.Value);
