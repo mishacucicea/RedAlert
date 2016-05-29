@@ -20,8 +20,8 @@ unsigned long lastTimeCheck = 0;
 
 //define pins
 #define RED_PIN 14
+#define BLUE_PIN 13
 #define GREEN_PIN 12
-#define YELLOW_PIN 13
 
 //ref: https://github.com/oh1ko/ESP82666_OLED_clock/blob/master/ESP8266_OLED_clock.ino
 
@@ -30,33 +30,52 @@ unsigned long lastTimeCheck = 0;
 WiFiClientSecure wclient;
 PubSubClient client(wclient);
 
-void setColor(int color) {
-  if (color == Yellow) analogWrite(YELLOW_PIN, 1024/2);
-  else analogWrite(YELLOW_PIN, 0);
-
-  if (color == Green) analogWrite(GREEN_PIN, 1024/2);
-  else analogWrite(GREEN_PIN, 0);
-
-  if (color == Red) analogWrite(RED_PIN, 1024/2);
-  else analogWrite(RED_PIN, 1024/2);
+void setColor(int r, int g, int b)
+{
+  //not exact, there is some loss in values.
+  analogWrite(RED_PIN, r);
+  analogWrite(GREEN_PIN, g);
+  analogWrite(BLUE_PIN, b);
 }
+
+void setColor(int color) {
+  if (color == Yellow) setColor(255, 255, 0);
+
+  if (color == Green) setColor(0, 255, 0);
+
+  if (color == Red) setColor(255, 0, 0);
+}
+
+
 
 void callback(char* topic, byte* payload, unsigned int length) {
   Debug("Entered callback");
-  // handle message arrived
-  String msg = "";
-  for (int i = 0; i < length; i++) {
-    msg += (char)payload[i];
+  //this is the new format:
+  //check that the length is 9 and message code is 1
+  if (length == 9 && payload[0] == 1) {
+    //1 byte is the type of the message
+    //3 bytes is the RGB value
+    //1 bytes is the pattern number - not supported yet
+    //4 bytes is the timeout - not supported yet
+    setColor(payload[1], payload[2], payload[3]);
   }
+  else {
 
-  Info2("Message received: ", msg);
-
-  if (msg.startsWith("RED")) {
-    setColor(Red);
-  } else if (msg.startsWith("GRN")) {
-    setColor(Green);
-  } else {
-    setColor(Yellow);
+    // handle message arrived
+    String msg = "";
+    for (int i = 0; i < length; i++) {
+      msg += (char)payload[i];
+    }
+  
+    Info2("Message received: ", msg);
+  
+    if (msg.startsWith("RED")) {
+      setColor(Red);
+    } else if (msg.startsWith("GRN")) {
+      setColor(Green);
+    } else {
+      setColor(Yellow);
+    }
   }
 }
 
@@ -86,30 +105,57 @@ void setup() {
 
   pinMode(RED_PIN, OUTPUT);
   pinMode(GREEN_PIN, OUTPUT);
-  pinMode(YELLOW_PIN, OUTPUT);
+  pinMode(BLUE_PIN, OUTPUT);
 
+  //for pin testing
+  //while(true)
+  {
+    setColor(255, 0, 0);
+    delay(1000);
+    setColor(0, 255, 0);
+    delay(1000);
+    setColor(0, 0, 255);
+    delay(1000);
+    setColor(0, 0, 0);
+  }
+  
   //initializing the wifi module
   wifiSetup.eepromOffset = 0;
   wifiSetup.loadStationSettings();
 
-  wifiSetup.scanNetworks();
+  int setupModeTimeout = 20;
 
-  //enter in AP mode (name should auto setup)
-  Debug("Entering AP mode");
-  wifiSetup.setupAP();
-  delay(100);
-
-  //wait ~20 sec for connections
-  unsigned long now = millis();
-
-  Debug("Enter setup mode for at least 20 seconds");
-  wifiSetup.setupMode(20);
-
-  Debug("Moving to station mode.");
-  //TODO: if could not enter station mode (no SSID, no network, errors connecting, etc,
-  //then go back to setup mode
-  //time to move to Station mode
-  wifiSetup.stationMode();
+  while (true) {
+    wifiSetup.scanNetworks();
+  
+    //enter in AP mode (name should auto setup)
+    Debug("Entering AP mode");
+    wifiSetup.setupAP();
+    delay(100);
+  
+    //wait ~20 sec for connections
+    unsigned long now = millis();
+  
+    Debug("Enter setup mode for at least 20 seconds");
+    do  {
+      wifiSetup.beginSetupMode(setupModeTimeout);
+    } while (!wifiSetup.getHasSettings());
+  
+    wifiSetup.endSetupMode();
+    
+    Debug("Moving to station mode.");
+    //TODO: if could not enter station mode (no SSID, no network, errors connecting, etc,
+    //then go back to setup mode
+    //time to move to Station mode
+    if (wifiSetup.stationMode()) {
+      break;
+    }
+    else {
+      //if wifi connection failed, go back to setup mode
+      setupModeTimeout = 60;
+      continue;
+    }
+  }
 
   Debug("Setting server for MQTT");
   //this will set the address of the hub and port on which it communicates
@@ -167,13 +213,13 @@ void loop() {
         Debug("Could not connect :(");
       }
     }
-  }
-
-  Debug("checking if MQTT is connected");
-  if (client.connected()) {
-    Debug("MQTT is connected!");
-    if (!client.loop()) {
-      Debug("MQTT failed to loop");
+    
+    Debug("checking if MQTT is connected");
+    if (client.connected()) {
+      Debug("MQTT is connected!");
+      if (!client.loop()) {
+        Debug("MQTT failed to loop");
+      }
     }
   }
 

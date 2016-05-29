@@ -4,6 +4,8 @@
 #define SSID_MAX 32
 #define PASS_MAX 64
 #define SERIAL_MAX 36
+//this is a magic number used to for a TRUE value for EEPROM, as EEPROM after reset can have any random value.
+#define MAGIC_NUMBER B10101010
 
 char* deviceSSID = "RedAlert-123";
 String st;
@@ -38,8 +40,12 @@ void handleSetup(void) {
   for (int i = 0; i < qsn.length(); ++i) {
     EEPROM.write(wifiSetup.eepromOffset + SSID_MAX + PASS_MAX + i, qsn[i]);
   }
+
+  //write the magic number so we know that the EEPROM values are valid
+  EEPROM.write(wifiSetup.eepromOffset + SSID_MAX + PASS_MAX + SERIAL_MAX, MAGIC_NUMBER);
   
   EEPROM.commit();
+  wifiSetup.loadStationSettings();
   
   String s = "<!DOCTYPE HTML>\r\n<html>Hello from ESP8266 \
   New settings saved to eeprom... reset to boot into new wifi</html>";
@@ -74,6 +80,7 @@ void handleNotFound(void) {
 
 WiFiSetup::WiFiSetup(void) {
   eepromOffset = 0;
+  hasSettings = false;
 }
 
 void WiFiSetup::scanNetworks(void) {
@@ -140,24 +147,33 @@ void WiFiSetup::loadStationSettings(void) {
   ssid = "";
   pass = "";
   serial = "";
-  
-  Debug("Reading EEPROM ssid");
-  for (int i = 0; i < SSID_MAX; ++i) {
-      ssid += char(EEPROM.read(eepromOffset + i));
-  }
-  Debug2("SSID: ", ssid);
-  
-  Debug("Reading EEPROM pass");
-  for (int i = SSID_MAX; i < SSID_MAX + PASS_MAX; ++i) {
-      pass += char(EEPROM.read(eepromOffset + i));
-  }
-  Debug2("Password: ", pass);
 
-  Debug("Reading EEPROM Serial Number");
-  for (int i = SSID_MAX + PASS_MAX; i < SSID_MAX + PASS_MAX + SERIAL_MAX; ++i) {
-    serial += char(EEPROM.read(eepromOffset + i));
+  hasSettings = false;
+
+  Debug("Checking if settings are stored in EEPROM");
+  hasSettings = MAGIC_NUMBER == EEPROM.read(eepromOffset + SSID_MAX + PASS_MAX + SERIAL_MAX);
+
+  if (hasSettings) {
+    Debug("Reading EEPROM ssid");
+    for (int i = 0; i < SSID_MAX; ++i) {
+        ssid += char(EEPROM.read(eepromOffset + i));
+    }
+    Debug2("SSID: ", ssid);
+    
+    Debug("Reading EEPROM pass");
+    for (int i = SSID_MAX; i < SSID_MAX + PASS_MAX; ++i) {
+        pass += char(EEPROM.read(eepromOffset + i));
+    }
+    Debug2("Password: ", pass);
+  
+    Debug("Reading EEPROM Serial Number");
+    for (int i = SSID_MAX + PASS_MAX; i < SSID_MAX + PASS_MAX + SERIAL_MAX; ++i) {
+      serial += char(EEPROM.read(eepromOffset + i));
+    }
+    Debug2("Hub: ", serial);
+  } else {
+    Debug("No settings stored in EEPROM");
   }
-  Debug2("Hub: ", serial);
 }
 
 String WiFiSetup::getSsid(void) {
@@ -170,7 +186,12 @@ String WiFiSetup::getSerial(void) {
   return serial;
 }
 
-void WiFiSetup::setupMode(int seconds) {
+boolean WiFiSetup::getHasSettings(void) {
+  return hasSettings;
+}
+
+void WiFiSetup::beginSetupMode(int seconds) {
+  hasSetup = false;
   Debug("Entered setupMode");
 
   Debug2("Assigned IP: ", WiFi.softAPIP());
@@ -205,9 +226,12 @@ void WiFiSetup::setupMode(int seconds) {
       seconds = 0;
     }
   }
+}
 
+void WiFiSetup::endSetupMode(void) {
   Debug("Stopping and closing the server");
   server.stop();
+  //panic mode if close()..
   //server.close();
 }
 
