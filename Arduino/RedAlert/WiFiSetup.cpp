@@ -58,18 +58,85 @@ void handleSetup(void) {
 void handleRoot(void) {
   String s;
 
-        s = "<!DOCTYPE HTML>\r\n\
-<html>Hello from RedAlert!";
-        s += "<p>";
+        s = "\
+<!doctype html>\
+<html xml:lang=\"en\">\
+    <head>\
+        <title>Configure the LIGHT BOX</title>\
+        <style>\
+            body{text-align:center;font-family:Arial;color:#333333;font-size:16px;background:#f7f9f6}\
+            .wrapper {background:#ffffff;padding:20px;display:inline-block;border-radius:14px;width:290px;}\
+            input{border:1px solid #d2d2d2;padding:10px;}\
+            input[type=\"submit\"]{background:#9fd330;color:#333333;min-width:200px;font-size:16px;padding:10px;cursor:pointer;}\
+            #backButton{background:#f7f9f6;color:#333333;min-width:200px;font-size:16px;padding:10px;cursor:pointer;}\
+            ol {display:inline-block;text-align:left;}\
+            ol>li:nth-child(2n){background:#f7f9f6;}\
+            a{text-decoration:none;color:#333333;padding:10px;display: block;}\
+            a:hover{background:#9fd330;border-radius:8px;}\
+        </style>\
+        <script>\
+            function populate(elem){\
+              var contentId = document.getElementById(\"credentials\");\
+              contentId.style.display == \"none\" ? contentId.style.display = \"block\" :\
+              contentId.style.display = \"none\";\
+              document.getElementById(\"SSID\").value = elem.getAttribute(\"ssid\");\
+              document.getElementById(\"SSIDText\").innerHTML = elem.textContent + \" network:\";\
+              document.getElementById(\"PASSWORD\").focus();\
+              hideList();\
+              showButton();\
+              showCredential();\
+            }\
+            function showCredential(){\
+              var contentId = document.getElementById(\"credentials\");\
+              contentId.style.display = \"block\";\
+            }\
+            function showList(){\
+              hideButton();\
+              var contentId = document.getElementById(\"content\");\
+              contentId.style.display = \"block\";\
+              hideCredential();\
+            }\
+            function hideList(){\
+              var contentId = document.getElementById(\"content\");\
+              contentId.style.display = \"none\";\
+            }\
+            function hideButton() {\
+              var contentId = document.getElementById(\"buttonID\");\
+              contentId.style.display = \"none\";\
+            }\
+            function showButton() {\
+              var contentId = document.getElementById(\"buttonBackID\");\
+              contentId.style.display = \"block\";\
+            }\
+            function hideCredential() {\
+              var contentId = document.getElementById(\"credentials\");\
+              contentId.style.display = \"none\";\
+            }\
+        </script>\
+    </head>\
+    <body>\
+        <div class=\"wrapper\">\
+            <p style=\"display:none;\" id=\"buttonID\">  <input type=\"button\" value=\"Select network\" onclick=\"showList()\"/></p>\
+           <div ID=\"content\" style=\"display:block;\">\
+             <p><b>Please select your wireless network:</b></p>";
         s += st;
         s += "\
-  <form method='get' action='setup'>\
-    <label>SSID: </label>\
-    <input name='ssid' length=32>\
-    <input name='pass' length=64>\
-    <input name='serial' length=36>\
-    <input type='submit'>\
-  </form>\
+            </div>\
+            <form id=\"credentials\"  style=\"display:none;\">\
+              <input id=\"SSID\" type=\"hidden\" name=\"ssid\" />\
+                <div id=\"SSIDText\"></div></br>\
+                <div >\
+                  <input id=\"PASSWORD\" type=\"password\" placeholder=\"wireless password\" name=\"pass\"/>\
+                </div></br>\
+                <div>\
+                  <input type=\"text\" placeholder=\"device ID\" name=\"serial\"/>\
+                </div></br>\
+                  <input type=\"submit\" value=\"Submit\" />\
+                    <p style=\"display:none;\" id=\"buttonBackID\">\
+                  <input type=\"button\" id=\"backButton\" value=\"Back\" onclick=\"showList()\"/></p>\
+            </form>\
+        </div>\
+    </body>\
 </html>";
   server.send(200, "text/html", s);
 }
@@ -108,21 +175,14 @@ void WiFiSetup::scanNetworks(void) {
      }
   }
 
-  st = "<ul>";
+  st = "";
   for (int i = 0; i < n; ++i)
     {
-      // Print SSID and RSSI for each network found
-      st += "<li>";
-      st +=i + 1;
-      st += ": ";
-      st += WiFi.SSID(i);
-      st += " (";
-      st += WiFi.RSSI(i);
-      st += ")";  
-      st += (WiFi.encryptionType(i) == ENC_TYPE_NONE)?" ":"*";
-      st += "</li>";
+      //new template:
+      //<a href="#" onclick="populate(this)">Dinamitescu <i> (strong)</i> </a>
+      //TODO: add signal strength
+      st += "<a href=\"#\" onclick=\"populate(this)\" ssid=\"" + WiFi.SSID(i) + "\">" + WiFi.SSID(i) + "</a>";
     }
-  st += "</ul>";
 }
 
 void WiFiSetup::setupAP(void) {
