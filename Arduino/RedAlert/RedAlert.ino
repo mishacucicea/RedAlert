@@ -14,10 +14,6 @@ unsigned long lastTimeCheck = 0;
 #define hubPass "SharedAccessSignature sr=arduhub.azure-devices.net%2fdevices%2fpocDevice&sig=ksApO9qnlvs%2bERTKS3qqvO0T7cRG2D1xhI7PiE5C8uk%3d&se=1490896187"
 #define hubTopic "devices/pocDevice/messages/devicebound/#"
 
-#define Red 1
-#define Green 2
-#define Yellow 3
-
 //define pins
 #define RED_PIN 14
 #define BLUE_PIN 13
@@ -37,16 +33,6 @@ void setColor(int r, int g, int b)
   analogWrite(GREEN_PIN, g);
   analogWrite(BLUE_PIN, b);
 }
-
-void setColor(int color) {
-  if (color == Yellow) setColor(255, 255, 0);
-
-  if (color == Green) setColor(0, 255, 0);
-
-  if (color == Red) setColor(255, 0, 0);
-}
-
-
 
 void callback(char* topic, byte* payload, unsigned int length) {
   Debug("Entered callback");
@@ -68,14 +54,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
     }
   
     Info2("Message received: ", msg);
-  
-    if (msg.startsWith("RED")) {
-      setColor(Red);
-    } else if (msg.startsWith("GRN")) {
-      setColor(Green);
-    } else {
-      setColor(Yellow);
-    }
   }
 }
 
@@ -123,7 +101,7 @@ void setup() {
   wifiSetup.eepromOffset = 0;
   wifiSetup.loadStationSettings();
 
-  int setupModeTimeout = 20;
+  int setupModeTimeout = 40;
 
   while (true) {
     wifiSetup.scanNetworks();
@@ -133,10 +111,10 @@ void setup() {
     wifiSetup.setupAP();
     delay(100);
   
-    //wait ~20 sec for connections
+    //wait ~40 sec for connections
     unsigned long now = millis();
   
-    Debug("Enter setup mode for at least 20 seconds");
+    Debug("Enter setup mode for at least 40 seconds");
     do  {
       wifiSetup.beginSetupMode(setupModeTimeout);
     } while (!wifiSetup.getHasSettings());
@@ -175,7 +153,7 @@ void loop() {
   //TODO: fix bug: after 47 days the now will reset to 0
   
   //at start, or once each day
-  if (lastTimeCheck == 0 || now - lastTimeCheck > 24*3600*1000) {
+  if (lastTimeCheck == 0 || now - lastTimeCheck > 24*3600*1000 || now < lastTimeCheck) {
     lastTimeCheck = now;
     
     //TODO: check for time agains google

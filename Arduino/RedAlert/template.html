@@ -1,7 +1,7 @@
 <!doctype html>
 <html xml:lang="en">
     <head>
-        <title>Configure the LIGHT BOX</title>
+        <title>Red Alert</title>
         <style>
             body{text-align:center;font-family:Arial;color:#333333;font-size:16px;background:#f7f9f6}
             .wrapper {background:#ffffff;padding:20px;display:inline-block;border-radius:14px;width:290px;}
@@ -17,9 +17,9 @@
         <script>
             function populate(elem){
               var contentId = document.getElementById("credentials");
-              contentId.style.display == "none" ? contentId.style.display = "block" :
-              contentId.style.display = "none";
-              document.getElementById("SSID").innerHTML = elem.textContent+ " network:";
+              contentId.style.display = contentId.style.display=="none"?"block":"none";
+              document.getElementById("SSID").value = elem.getAttribute("ssid");
+              document.getElementById("SSIDText").innerHTML = elem.textContent + " network:";
               document.getElementById("PASSWORD").focus();
               hideList();
               showButton();
@@ -54,33 +54,24 @@
         </script>
     </head>
     <body>
-
         <div class="wrapper">
-
             <p style="display:none;" id="buttonID">  <input type="button" value="Select network" onclick="showList()"/></p>
            <div ID="content" style="display:block;">
              <p><b>Please select your wireless network:</b></p>
-              <a href="#" onclick="populate(this)">Dinamitescu <i> (strong)</i> </a>
-              <a href="#" onclick="populate(this)">dlink-2A06 <i>(medium)</i></a>
-              <a href="#" onclick="populate(this)">Attila  <i>(strong)</i> </a>
-              <a href="#" onclick="populate(this)">FBI Surveillance <i>  (low)</i> </a>
+              <!--<a href="#" onclick="populate(this)" ssid="Dinamitescu">Dinamitescu <i> (strong)</i> </a>-->
             </div>
-
             <form id="credentials"  style="display:none;">
-                <div id="SSID"></div>
-                  </br>
+              <input id="SSID" type="hidden" name="ssid" />
+                <div id="SSIDText"></div></br>
                 <div >
-                  <input id="PASSWORD" type="password" placeholder="wireless password" name="password"/>
-                </div>
-              </br>
+                  <input id="PASSWORD" type="password" placeholder="wireless password" name="pass"/>
+                </div></br>
                 <div >
-                  <input type="text" placeholder="device ID" name="deviceID"/>
-                </div>
-                </br>
+                  <input type="text" placeholder="device ID" name="serial"/>
+                </div></br>
                   <input type="submit" value="Submit" />
                     <p style="display:none;" id="buttonBackID">
-                  <input type="button" id="backButton" value="Back" onclick="showList()"/>
-                  </p>
+                  <input type="button" id="backButton" value="Back" onclick="showList()"/></p>
             </form>
         </div>
     </body>
