@@ -27,11 +27,11 @@ namespace RedAlert.API.Controllers
         [HttpPost]
         public  ActionResult Create(DeviceModel model)
         {
-            HttpResponseMessage response;
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ApiUrl);
-                response = client.PostAsJsonAsync("api/DeviceIdentity", model.SerialNumber).Result;
+                var response = client.PostAsJsonAsync("api/DeviceIdentity", model.SerialNumber).Result;
+                if (response == null) throw new ArgumentNullException(nameof(response));
                 ViewData["deviceKey"] =  response.Content.ReadAsStringAsync().Result;
             }
             return View();
