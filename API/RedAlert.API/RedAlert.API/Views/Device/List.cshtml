@@ -4,27 +4,32 @@
     ViewBag.Title = "Device List";
 }
 
-<h2>List</h2>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Serial Number
-            </th>
-            <th>
-                Hub Key
-            </th>
-        </tr>
-    </thead>
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @item.Id
-            </td>
-            <td>
-               @item.Authentication.SymmetricKey.PrimaryKey
-            </td>
-        </tr>
-    }
-</table>
+<div class="jumbotron">
+    <div class="container">
+        <h2>List</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Serial Number
+                    </th>
+                    <th>
+                        Hub Key
+                    </th>
+                </tr>
+            </thead>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.Id
+                    </td>
+                    <td>
+                        @item.Authentication.SymmetricKey.PrimaryKey
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
