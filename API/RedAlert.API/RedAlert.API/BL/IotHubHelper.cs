@@ -97,5 +97,6 @@ namespace RedAlert.API.BL
                 var messageToBytes = new Message(message);
                 await serviceClient.SendAsync(deviceId, messageToBytes);
             }
+
         }
     }
