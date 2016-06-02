@@ -71,26 +71,28 @@ namespace RedAlert.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IHttpActionResult> SendToGroup(string groupName,string message)
+        public async Task<IHttpActionResult> SendToGroup(string groupName, string message)
         {
-            var groupList = new List<string>();
-            groupList.Add("sl2yUZS+bC1fN/vU7/uxrkV3g9Z45oXvjPCpTY9kAws=");
-            groupList.Add("WZZqpXbpSAwuBBS9VoWam+eqc+2C59ENk/yjMv1OOzw=");
-            groupList.Add("5y/tgCuiCsriN8t71FCndQosAeBqf1DUmWx/ZbmUDkg=");
+            throw new NotImplementedException();
 
-            try
-            {
-                foreach (var item in groupList)
-                {
-                    await IotHubHelper.SendCloudToDeviceMessageAsync(item, message);
-                }
+            //var groupList = new List<string>();
+            //groupList.Add("sl2yUZS+bC1fN/vU7/uxrkV3g9Z45oXvjPCpTY9kAws=");
+            //groupList.Add("WZZqpXbpSAwuBBS9VoWam+eqc+2C59ENk/yjMv1OOzw=");
+            //groupList.Add("5y/tgCuiCsriN8t71FCndQosAeBqf1DUmWx/ZbmUDkg=");
 
-                return Ok();
-            }
-            catch
-            {
-                return InternalServerError();
-            }
+            //try
+            //{
+            //    foreach (var item in groupList)
+            //    {
+            //        await IotHubHelper.SendCloudToDeviceMessageAsync(item, message);
+            //    }
+
+            //    return Ok();
+            //}
+            //catch
+            //{
+            //    return InternalServerError();
+            //}
         }
 
         //[HttpGet]
