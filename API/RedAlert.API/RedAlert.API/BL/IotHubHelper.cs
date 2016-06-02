@@ -92,9 +92,9 @@ namespace RedAlert.API.BL
         /// <param name="deviceId">The serial number.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public static async Task SendCloudToDeviceMessageAsync(string deviceId, string message)
+        public static async Task SendCloudToDeviceMessageAsync(string deviceId, byte[] message)
             { 
-                var messageToBytes = new Message(Encoding.ASCII.GetBytes(message));
+                var messageToBytes = new Message(message);
                 await serviceClient.SendAsync(deviceId, messageToBytes);
             }
         }
