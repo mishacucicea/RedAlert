@@ -5,38 +5,44 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Retrieve Device Key</h2>
+<div class="jumbotron">
+    <div class="container">
+        <h2>Retrieve Device Key</h2>
 
-@if (ViewData["deviceKey"] != null)
-{
-    <h2>  Your device id is: @ViewData["deviceKey"]</h2>
-}
+        @if (ViewData["deviceKey"] != null)
+        {
+            <h2>  Your device id is: @ViewData["deviceKey"]</h2>
+        }
 
 
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true)
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.SerialNumber, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.SerialNumber)
-                @Html.ValidationMessageFor(model => model.SerialNumber)
+            <div class="form-horizontal">
+                <hr />
+                @Html.ValidationSummary(true)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SerialNumber, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.SerialNumber)
+                        @Html.ValidationMessageFor(model => model.SerialNumber)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Get Device Key" class="btn btn-default" />
+                    </div>
+                </div>
             </div>
-        </div>
+        }
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Get Device Key" class="btn btn-default" />
-            </div>
-        </div>
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+        }
+
+
     </div>
-}
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+</div>

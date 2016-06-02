@@ -5,40 +5,48 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <h4>Register your device</h4>
-    
 
-    @if (ViewData["deviceKey"] != null)
-    {
-       <h2>  Your device id is: @ViewData["deviceKey"]</h2>
-    }
+<div class="jumbotron">
+    <div class="container">
+        <h4>Register your device</h4>
 
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
 
-        <div class="form-horizontal">
+        @if (ViewData["deviceKey"] != null)
+        {
+            <h2>  Your device id is: @ViewData["deviceKey"]</h2>
+        }
 
-            <hr />
-            @Html.ValidationSummary(true)
-            <div class="form-group">
-                @Html.LabelFor(model => model.SerialNumber, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.SerialNumber)
-                    @Html.ValidationMessageFor(model => model.SerialNumber)
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+
+                <hr />
+                @Html.ValidationSummary(true)
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SerialNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.SerialNumber)
+                        @Html.ValidationMessageFor(model => model.SerialNumber)
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create" class="btn btn-default" />
+                    </div>
                 </div>
             </div>
+        }
+
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+        }
 
 
+    </div>
+</div>
 
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Create" class="btn btn-default" />
-                </div>
-            </div>
-        </div>
-    }
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
