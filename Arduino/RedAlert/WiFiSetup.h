@@ -24,11 +24,13 @@ class WiFiSetup {
     String getSsid(void);
     String getPass(void);
     String getSerial(void);
+    boolean getHasSettings(void);
     
     /*
      * Launches the web server with the setup page.
      */
-    void setupMode(int seconds);
+    void beginSetupMode(int seconds);
+    void endSetupMode(void);
     bool stationMode(void);
 
     int eepromOffset;
@@ -37,6 +39,7 @@ class WiFiSetup {
     String ssid;
     String pass;
     String serial;
+    bool hasSettings;
 };
 
 extern WiFiSetup wifiSetup;
