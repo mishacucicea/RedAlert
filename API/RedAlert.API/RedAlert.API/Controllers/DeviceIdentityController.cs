@@ -13,24 +13,6 @@ namespace RedAlert.API.Controllers
     public class DeviceIdentityController : ApiController
     {
 
-
-
-        
-        //[HttpGet]
-        //public async Task<IHttpActionResult> Get(string id)
-        //{
-        //    //the expected ID is the id generated on the portal
-
-        //    //check that the key exists in the database
-        //    //generate a connection string and return it
-        //    //push a C2D message with the latest status (if any) - will be delivered when connection is established (hopefully)
-
-        //    string deviceId = "pocDevice";
-        //    string connectionString = GenerateDeviceConnectionString(deviceId);
-
-        //    return Ok(connectionString);
-        //}
-
         [HttpPost]
         public async Task<HttpResponseMessage> Post([FromBody]string id)
         {
@@ -53,15 +35,35 @@ namespace RedAlert.API.Controllers
         [HttpGet]
         public async Task<HttpResponseMessage> Get(string id)
         {
+            //the expected ID is the id generated on the portal (consider as an API key)
+
+            //check that the key exists in the database
+            //generate a connection string and return it
+            //push a C2D message with the latest status (if any) - will be delivered when connection is established (hopefully)
+            
+            //1. hubAddress "arduhub.azure-devices.net"
+            //2. hubName "pocDevice"
+            //3. hubUser "arduhub.azure-devices.net/pocDevice"
+            //4. hubConn "SharedAccessSignature sr=arduhub.azure-devices.net%2fdevices%2fpocDevice&sig=ksApO9qnlvs%2bERTKS3qqvO0T7cRG2D1xhI7PiE5C8uk%3d&se=1490896187"
+            //5. hubTopic "devices/pocDevice/messages/devicebound/#"
+
+            
             string deviceId = "pocDevice";
-            string connectionString = GenerateDeviceConnectionString(deviceId);
+            
+            string hubAddress = "arduhub.azure-devices.net";
+            string hubName = deviceId;
+            string hubUser = $"arduhub.azure-devices.net/{deviceId}";
+            string hubConn = GenerateDeviceConnectionString(deviceId);
+            string hubTopic = $"devices/{deviceId}/messages/devicebound/#";
+            
+            string responseMessage = $"{hubAddress}\n{hubName}\n{hubUser}\n{hubConn}\n{hubTopic}";
 
             HttpResponseMessage response;
 
             try
             {
                 response = Request.CreateResponse(HttpStatusCode.OK);
-                response.Content = new StringContent(connectionString);
+                response.Content = new StringContent(responseMessage);
             }
             catch
             {
@@ -69,31 +71,9 @@ namespace RedAlert.API.Controllers
             }
             return response;
         }
-
-        /*
- * var generateSasToken = function(resourceUri, signingKey, policyName, expiresInMins) {
-resourceUri = encodeURIComponent(resourceUri.toLowerCase()).toLowerCase();
-
-// Set expiration in seconds
-var expires = (Date.now() / 1000) + expiresInMins * 60;
-expires = Math.ceil(expires);
-var toSign = resourceUri + '\n' + expires;
-
-// using crypto
-var decodedPassword = new Buffer(signingKey, 'base64').toString('binary');
-const hmac = crypto.createHmac('sha256', decodedPassword);
-hmac.update(toSign);
-var base64signature = hmac.digest('base64');
-var base64UriEncoded = encodeURIComponent(base64signature);
-
-// construct autorization string
-var token = "SharedAccessSignature sr=" + resourceUri + "&sig="
-+ base64UriEncoded + "&se=" + expires;
-if (policyName) token += "&skn="+policyName;
-// console.log("signature:" + token);
-return token;
-};
- */
+        
+        #region private methods
+        
         /// <summary>
         /// 
         /// </summary>
@@ -130,5 +110,6 @@ return token;
                    new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc)).TotalSeconds;
         }
 
+        #endregion private methods
     }
 }
