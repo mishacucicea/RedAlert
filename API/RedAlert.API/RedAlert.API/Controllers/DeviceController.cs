@@ -27,11 +27,11 @@ namespace RedAlert.API.Controllers
         [HttpPost]
         public  ActionResult Create(DeviceModel model)
         {
-            HttpResponseMessage response;
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ApiUrl);
-                response = client.PostAsJsonAsync("api/DeviceIdentity", model.SerialNumber).Result;
+                var response = client.PostAsJsonAsync("api/DeviceIdentity", model.SerialNumber).Result;
+                if (response == null) throw new ArgumentNullException(nameof(response));
                 ViewData["deviceKey"] =  response.Content.ReadAsStringAsync().Result;
             }
             return View();
@@ -69,11 +69,12 @@ namespace RedAlert.API.Controllers
             return View("SendMessage");
         }
 
-        public async Task<ActionResult> SendMessage(string id, string color)
-        {
-            await IotHubHelper.SendMessage(id, color);
+        //why do we need it??
+        //public async Task<ActionResult> SendMessage(string id, string message)
+        //{
+        //    await IotHubHelper.SendCloudToDeviceMessageAsync(id, message);
 
-            return View("SendMessage");
-        }
+        //    return View("SendMessage");
+        //}
     }
 }

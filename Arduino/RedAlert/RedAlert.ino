@@ -1,273 +1,64 @@
-//#include <SoftwareSerial.h>
-
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
-#include <WiFiClient.h>
-#include <EEPROM.h>
-//#include <WiFiUdp.h>
-//#include "sha256.h"
-//#include "Base64.h"
+
+#include <WiFiClientSecure.h>
+#include "WiFiSetup.h"
 #include "PubSubClient.h"
-
-
-
-#define Debug(x) Serial.print("DEBG: ");Serial.println(x)
-#define Debug2(x,y) Serial.print("DEBG: ");Serial.print(x);Serial.println(y)
-#define Debug3(x,y,z) Serial.print("DEBG: ");Serial.print(x);Serial.print(y);Serial.println(z)
-
-//TODO: randomize the device SSID
-char* deviceSSID = "RedAlert-123";
-
-String ssid = "";
-String pass = "";
+#include "Logging.h"
 
 unsigned long lastTimeCheck = 0;
 
-#define SSID_MAX 32
-#define PASS_MAX 64
-///TODO: ???
-#define HUB_MAX 32
-
-#define hubAddress "hub.azure.com"
-#define hubName "what name?"
-#define hubUser "hub user"
-#define hubPass "hub SAS token"
-#define hubTopic "some topic?"
-
-#define Red 1
-#define Green 2
-#define Yellow 3
+#define hubAddress "arduhub.azure-devices.net"
+#define hubName "pocDevice"
+#define hubUser "arduhub.azure-devices.net/pocDevice"
+#define hubPass "SharedAccessSignature sr=arduhub.azure-devices.net%2fdevices%2fpocDevice&sig=ksApO9qnlvs%2bERTKS3qqvO0T7cRG2D1xhI7PiE5C8uk%3d&se=1490896187"
+#define hubTopic "devices/pocDevice/messages/devicebound/#"
 
 //define pins
 #define RED_PIN 14
+#define BLUE_PIN 13
 #define GREEN_PIN 12
-#define YELLOW_PIN 13
-
-//#define SOFTWARE_RX 4
-//#define SOFTWARE_TX 3
 
 //ref: https://github.com/oh1ko/ESP82666_OLED_clock/blob/master/ESP8266_OLED_clock.ino
 
 //ref: https://github.com/chriscook8/esp-arduino-apboot/blob/master/ESP-wifiboot.ino
 
-//IPAddress hubIP(172, 16, 0, 2); //TODO: set IoT Hub IP
-WiFiClient wclient;
-PubSubClient client(wclient);//, hubIP);
+WiFiClientSecure wclient;
+PubSubClient client(wclient);
 
-//Access Point mode
-MDNSResponder mdns;
-WiFiServer server(80);
-
-//the html for the list of available stations
-String st;
-
-void setColor(int color) {
-  if (color == Yellow) analogWrite(YELLOW_PIN, 1024/2);
-  else analogWrite(YELLOW_PIN, 0);
-
-  if (color == Green) analogWrite(GREEN_PIN, 1024/2);
-  else analogWrite(GREEN_PIN, 0);
-
-  if (color == Red) analogWrite(RED_PIN, 1024/2);
-  else analogWrite(RED_PIN, 1024/2);
+void setColor(int r, int g, int b)
+{
+  //not exact, there is some loss in values.
+  analogWrite(RED_PIN, r);
+  analogWrite(GREEN_PIN, g);
+  analogWrite(BLUE_PIN, b);
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  // handle message arrived
-  String msg = "";
-  for (int i = 0; i < length; i++) {
-    msg += (char)payload[i];
-  }
-
-  if (msg.startsWith("RED")) {
-    setColor(Red);
-  } else if (msg.startsWith("GRN")) {
-    setColor(Green);
-  } else {
-    setColor(Yellow);
-  }
-}
-
-int mdns1(int webtype) {
-  // Check for any mDNS queries and send responses
-  mdns.update();
-  
-  // Check if a client has connected
-  WiFiClient client = server.available();
-  if (!client) {
-    return(20);
-  }
-
-  Debug("New client");
-
-  // Wait for data from client to become available
-  while(client.connected() && !client.available()){
-    delay(1);
-   }
-  
-  // Read the first line of HTTP request
-  String req = client.readStringUntil('\r');
-  
-  // First line of HTTP request looks like "GET /path HTTP/1.1"
-  // Retrieve the "/path" part by finding the spaces
-  int addr_start = req.indexOf(' ');
-  int addr_end = req.indexOf(' ', addr_start + 1);
-  if (addr_start == -1 || addr_end == -1) {
-    Debug("Invalid request: ");
-    Debug(req);
-    return(20);
-  }
-  
-  req = req.substring(addr_start + 1, addr_end);
-  Debug("Request: ");
-  Debug(req);
-  client.flush(); 
-  
-  String s;
-  if ( webtype == 1 ) {
-      if (req == "/") {
-        IPAddress ip = WiFi.softAPIP();
-        String ipStr = String(ip[0]) + '.' + String(ip[1]) + '.' + String(ip[2]) + '.' + String(ip[3]);
-        s = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>Hello from ESP8266 at ";
-        s += ipStr;
-        s += "<p>";
-        s += st;
-        s += "<form method='get' action='a'><label>SSID: </label><input name='ssid' length=32><input name='pass' length=64><input type='submit'></form>";
-        s += "</html>\r\n\r\n";
-        Debug("Sending 200");
-      }
-      else if ( req.startsWith("/a?ssid=") ) {
-        // /a?ssid=blahhhh&pass=poooo
-        Debug("clearing eeprom");
-        for (int i = 0; i < 96; ++i) { EEPROM.write(i, 0); }
-        
-        String qsid; 
-        qsid = req.substring(8,req.indexOf('&'));
-        Debug(qsid);
-        
-        String qpass;
-        qpass = req.substring(req.lastIndexOf('=')+1);
-        Debug(qpass);
-        
-        Debug("writing eeprom ssid:");
-        for (int i = 0; i < qsid.length(); ++i) {
-            EEPROM.write(i, qsid[i]);
-        }
-       
-        Debug("writing eeprom pass:"); 
-        for (int i = 0; i < qpass.length(); ++i) {
-            EEPROM.write(32+i, qpass[i]);; 
-        }    
-        EEPROM.commit();
-        
-        s = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>Hello from ESP8266 ";
-        s += "Found ";
-        s += req;
-        s += "<p> saved to eeprom... reset to boot into new wifi</html>\r\n\r\n";
-      }
-      else {
-        s = "HTTP/1.1 404 Not Found\r\n\r\n";
-        Debug("Sending 404");
-      }
-  } 
-  else {
-      if (req == "/")
-      {
-        s = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>Hello from ESP8266";
-        s += "</html>\r\n\r\n";
-        Debug("Sending 200");
-      }
-      else if ( req.startsWith("/cleareeprom") ) {
-        s = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<!DOCTYPE HTML>\r\n<html>Hello from ESP8266";
-        s += "<p>Clearing the EEPROM<p>";
-        s += "</html>\r\n\r\n";
-        Debug("Sending 200");  
-        Debug("clearing eeprom");
-        for (int i = 0; i < 96; ++i) { EEPROM.write(i, 0); }
-        EEPROM.commit();
-      }
-      else
-      {
-        s = "HTTP/1.1 404 Not Found\r\n\r\n";
-        Debug("Sending 404");
-      }       
-  }
-  client.print(s);
-  Debug("Done with client");
-  
-  return(20);
-}
-
-void launchWeb(int webtype) {
-
-  if (!mdns.begin("esp8266", WiFi.localIP())) {
-    Debug("Error setting up MDNS responder!");
-
-    //TODO: figure out what to do, otherwise it will just hang..
-    while(1) { 
-      delay(1000);
-    }
-  }
-  
-  Debug("mDNS responder started");
-  // Start the server
-  server.begin();
-  Debug("Server started");   
-  
-  int b = 20;
-  while(b == 20) { 
-     b = mdns1(webtype);
-   }
-}
-
-void setupAP(void) {
-  Debug("Switching STA mode (Station)");
-  WiFi.mode(WIFI_STA);
-  
-  Debug("Disconnecting");
-  WiFi.disconnect();
-  delay(100);
-  
-  Debug("Scanning networks");
-  int n = WiFi.scanNetworks();
-  Debug("scan done");
-  
-  if (n == 0) {
-    Debug("no networks found");
+  Debug("Entered callback");
+  //this is the new format:
+  //check that the length is 9 and message code is 1
+  if (length == 9 && payload[0] == 1) {
+    //1 byte is the type of the message
+    //3 bytes is the RGB value
+    //1 bytes is the pattern number - not supported yet
+    //4 bytes is the timeout - not supported yet
+    setColor(payload[1], payload[2], payload[3]);
   }
   else {
-    Debug("Networks found:");
-    for (int i = 0; i < n; ++i)
-     {
-      Debug(String(WiFi.SSID(i)) + " (" + WiFi.RSSI(i) + ")" + (WiFi.encryptionType(i) == ENC_TYPE_NONE)?" ":"*");
-      delay(10);
-     }
-  }
 
-  st = "<ul>";
-  for (int i = 0; i < n; ++i)
-    {
-      // Print SSID and RSSI for each network found
-      st += "<li>";
-      st +=i + 1;
-      st += ": ";
-      st += WiFi.SSID(i);
-      st += " (";
-      st += WiFi.RSSI(i);
-      st += ")";  
-      st += (WiFi.encryptionType(i) == ENC_TYPE_NONE)?" ":"*";
-      st += "</li>";
+    // handle message arrived
+    String msg = "";
+    for (int i = 0; i < length; i++) {
+      msg += (char)payload[i];
     }
-  st += "</ul>";
-  delay(100);
-
-  Debug("Start the access point");
-  WiFi.softAP(deviceSSID);
-
-  //launchWeb(1);
-  Debug("over");
+  
+    Info2("Message received: ", msg);
+  }
 }
 
+//TODO: do we need this method?
+/*
 int testWifi(void) {
   int retries = 0;
   Debug("Waiting for Wifi to connect");  
@@ -277,64 +68,99 @@ int testWifi(void) {
     Debug2("Wifi Status: " ,WiFi.status());    
     retries++;
   }
-  Serial.println("Connect timed out, opening AP");
+  Debug("Connect timed out, opening AP");
   return(10);
-} 
+}
+*/
 
 void setup() {
   //need for debugging and communication with the slave module
-  Serial.begin(115200);
-
-  pinMode(RED_PIN, OUTPUT);
-  pinMode(GREEN_PIN, OUTPUT);
-  pinMode(YELLOW_PIN, OUTPUT);
+  Serial.begin(74880);
 
   //start the eeprom and wait 10 msecs for safety
   EEPROM.begin(512);
   delay(10);
 
-  Debug("Reading EEPROM ssid");
-  //String esid = "";
-  for (int i = 0; i < 32; ++i) {
-      ssid += char(EEPROM.read(i));
+  pinMode(RED_PIN, OUTPUT);
+  pinMode(GREEN_PIN, OUTPUT);
+  pinMode(BLUE_PIN, OUTPUT);
+
+  //for pin testing
+  //while(true)
+  {
+    setColor(255, 0, 0);
+    delay(1000);
+    setColor(0, 255, 0);
+    delay(1000);
+    setColor(0, 0, 255);
+    delay(1000);
+    setColor(0, 0, 0);
   }
-  Debug2("SSID: ", ssid);
   
-  Debug("Reading EEPROM pass");
-  //String epass = "";
-  for (int i = 32; i < 96; ++i)
-    {
-      pass += char(EEPROM.read(i));
+  //initializing the wifi module
+  wifiSetup.eepromOffset = 0;
+  wifiSetup.loadStationSettings();
+
+  int setupModeTimeout = 40;
+
+  while (true) {
+    wifiSetup.scanNetworks();
+  
+    //enter in AP mode (name should auto setup)
+    Debug("Entering AP mode");
+    wifiSetup.setupAP();
+    delay(100);
+  
+    //wait ~40 sec for connections
+    unsigned long now = millis();
+  
+    Debug("Enter setup mode for at least 40 seconds");
+    do  {
+      wifiSetup.beginSetupMode(setupModeTimeout);
+    } while (!wifiSetup.getHasSettings());
+  
+    wifiSetup.endSetupMode();
+    
+    Debug("Moving to station mode.");
+    //TODO: if could not enter station mode (no SSID, no network, errors connecting, etc,
+    //then go back to setup mode
+    //time to move to Station mode
+    if (wifiSetup.stationMode()) {
+      break;
     }
-  Debug2("PASS: ", pass);
-
-  if ( ssid.length() > 1 ) {
-      // test esid 
-      WiFi.begin(ssid.c_str(), pass.c_str());
-      if ( testWifi() == 20 ) { 
-          launchWeb(0);
-          return;
-      }
+    else {
+      //if wifi connection failed, go back to setup mode
+      setupModeTimeout = 60;
+      continue;
+    }
   }
-  
-  //TODO: setupAP needs to be done also in case the reset button is pressed
-  setupAP(); 
 
+  Debug("Setting server for MQTT");
   //this will set the address of the hub and port on which it communicates
   client.setServer(hubAddress, 8883);
+
+  Debug("Setting callback for MQTT");
+  client.setCallback(callback);
+  
+  //TODO: do we need this line?
+  configTime(3 * 3600, 0, "pool.ntp.org", "time.nist.gov");
 }
 
 void loop() {
 
   unsigned long now = millis();
+
+  //TODO: fix bug: after 47 days the now will reset to 0
+  
   //at start, or once each day
-  if (lastTimeCheck == 0 || now - lastTimeCheck > 24*3600*1000) {
+  if (lastTimeCheck == 0 || now - lastTimeCheck > 24*3600*1000 || now < lastTimeCheck) {
     lastTimeCheck = now;
     
     //TODO: check for time agains google
     //do the wifi client and shit
   }
 
+/*
   if (WiFi.status() != WL_CONNECTED) {
     //TODO: debug info
     WiFi.begin(ssid.c_str(), pass.c_str());
@@ -346,22 +172,35 @@ void loop() {
 
     //TOOD: log 
   }
+*/
 
+  Debug("Checking for wifi connected");
   if (WiFi.status() == WL_CONNECTED) {
+    Debug("WiFi is connected");
     if (!client.connected()) {
+      Debug("MQTT connecting..");
       if (client.connect(hubName, hubUser, hubPass)) {
         //TODO: log connected status
-      }
+        Debug("MQTT connected.");
 
-      client.setCallback(callback);
-      //client.publish("outTopic", "test");
-      client.subscribe(hubTopic);
+        //client.publish("outTopic", "test");
+        Debug("Subscribing to the MQTT topic");
+        client.subscribe(hubTopic);
+        Info("Ready to receive messages.");
+      } else {
+        Debug("Could not connect :(");
+      }
+    }
+    
+    Debug("checking if MQTT is connected");
+    if (client.connected()) {
+      Debug("MQTT is connected!");
+      if (!client.loop()) {
+        Debug("MQTT failed to loop");
+      }
     }
   }
 
-  if (client.connected()) {
-    
-    if (!client.loop()) Debug("MQTT failed to loop");
-  }
+  delay(1000);
 }
 
