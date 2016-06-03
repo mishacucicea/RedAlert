@@ -58,9 +58,10 @@
             <p style="display:none;" id="buttonID">  <input type="button" value="Select network" onclick="showList()"/></p>
            <div ID="content" style="display:block;">
              <p><b>Please select your wireless network:</b></p>
-              <!--<a href="#" onclick="populate(this)" ssid="Dinamitescu">Dinamitescu <i> (strong)</i> </a>-->
+             <!-- Item template: -->
+             <!--<a href="#" onclick="populate(this)" ssid="Dinamitescu">Dinamitescu <i> (strong)</i> </a>-->
             </div>
-            <form id="credentials"  style="display:none;">
+            <form method='get' action='setup' id="credentials"  style="display:none;">
               <input id="SSID" type="hidden" name="ssid" />
                 <div id="SSIDText"></div></br>
                 <div >

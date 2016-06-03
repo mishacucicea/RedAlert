@@ -122,7 +122,7 @@ void handleRoot(void) {
         s += st;
         s += "\
             </div>\
-            <form id=\"credentials\"  style=\"display:none;\">\
+            <form method='get' action='setup' id=\"credentials\"  style=\"display:none;\">\
               <input id=\"SSID\" type=\"hidden\" name=\"ssid\" />\
                 <div id=\"SSIDText\"></div></br>\
                 <div >\

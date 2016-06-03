@@ -200,3 +200,4 @@ eagle.epf
 *.lck
 /API/RedAlert.API/packages
 /API/RedAlert.API/RedAlert.API/Web.config
+/API/RedAlert.API/.vs/config

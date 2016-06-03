@@ -69,11 +69,12 @@ namespace RedAlert.API.Controllers
             return View("SendMessage");
         }
 
-        public async Task<ActionResult> SendMessage(string id, string message)
-        {
-            await IotHubHelper.SendCloudToDeviceMessageAsync(id, message);
+        //why do we need it??
+        //public async Task<ActionResult> SendMessage(string id, string message)
+        //{
+        //    await IotHubHelper.SendCloudToDeviceMessageAsync(id, message);
 
-            return View("SendMessage");
-        }
+        //    return View("SendMessage");
+        //}
     }
 }
