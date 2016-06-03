@@ -40,6 +40,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CacheManager.Core, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.Core.0.8.0\lib\net45\CacheManager.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CacheManager.SystemRuntimeCaching, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheManager.SystemRuntimeCaching.0.8.0\lib\net45\CacheManager.SystemRuntimeCaching.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="DotNetty.Buffers">
       <HintPath>..\packages\DotNetty.Buffers-signed.0.2.3\lib\net45\DotNetty.Buffers.dll</HintPath>
     </Reference>
@@ -89,6 +97,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization">
       <Private>True</Private>
     </Reference>
@@ -230,7 +239,17 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\custom.css" />
+    <Content Include="Content\img\banner-bg.jpg" />
+    <Content Include="Content\img\dog.png" />
+    <Content Include="Content\img\intro-bg.jpg" />
+    <Content Include="Content\img\ipad.png" />
+    <Content Include="Content\img\jenkins.jpg" />
+    <Content Include="Content\img\jenkins.png" />
     <Content Include="Content\img\logo.png" />
+    <Content Include="Content\img\phones.png" />
+    <Content Include="Content\img\team\1.jpg" />
+    <Content Include="Content\img\team\2.jpg" />
+    <Content Include="Content\img\team\3.jpg" />
     <Content Include="Content\landing-page.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -270,7 +289,9 @@
     <Content Include="Views\Group\Create.cshtml" />
     <Content Include="Views\Group\Get.cshtml" />
     <Content Include="Views\Device\SendMessage.cshtml" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -291,7 +312,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''"  />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
