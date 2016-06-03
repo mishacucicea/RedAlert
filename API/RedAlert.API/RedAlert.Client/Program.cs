@@ -43,7 +43,7 @@ namespace RedAlert.Client
         /// <param name="client">The client.</param>
         /// <param name="partition">The partition.</param>
         /// <returns></returns>
-        private async static Task ReceiveMessagesFromDeviceAsync(EventHubClient client, string partition)
+        private static async Task ReceiveMessagesFromDeviceAsync(EventHubClient client, string partition)
         {
             try
             {
