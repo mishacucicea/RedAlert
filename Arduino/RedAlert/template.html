@@ -1,10 +1,11 @@
 <!doctype html>
 <html xml:lang="en">
     <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Red Alert</title>
         <style>
             body{text-align:center;font-family:Arial;color:#333333;font-size:16px;background:#f7f9f6}
-            .wrapper {background:#ffffff;padding:20px;display:inline-block;border-radius:14px;width:290px;}
+            .wrapper {background:#ffffff;padding:20px;display:inline-block;border-radius:14px;}
             input{border:1px solid #d2d2d2;padding:10px;}
             input[type="submit"]{background:#9fd330;color:#333333;min-width:200px;font-size:16px;padding:10px;cursor:pointer;}
             #backButton{background:#f7f9f6;color:#333333;min-width:200px;font-size:16px;padding:10px;cursor:pointer;}
@@ -59,7 +60,10 @@
            <div ID="content" style="display:block;">
              <p><b>Please select your wireless network:</b></p>
              <!-- Item template: -->
-             <!--<a href="#" onclick="populate(this)" ssid="Dinamitescu">Dinamitescu <i> (strong)</i> </a>-->
+             <a href="#" onclick="populate(this)" ssid="dinamitescu">dinamitescu <i> (strong)</i> </a>
+             <a href="#" onclick="populate(this)" ssid="dinamitescu">dinamitescu <i> (strong)</i> </a>
+             <a href="#" onclick="populate(this)" ssid="dinamitescu">dinamitescu <i> (strong)</i> </a>
+             <a href="#" onclick="populate(this)" ssid="dinamitescu">dinamitescu <i> (strong)</i> </a>
             </div>
             <form method='get' action='setup' id="credentials"  style="display:none;">
               <input id="SSID" type="hidden" name="ssid" />
