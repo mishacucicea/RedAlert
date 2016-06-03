@@ -12,7 +12,7 @@ namespace RedAlert.API
             // Web API configuration and services
 
             // Web API routes
-            config.MapHttpAttributeRoutes();
+            
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
@@ -25,6 +25,8 @@ namespace RedAlert.API
                 routeTemplate: "api/{controller}/{action}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            config.MapHttpAttributeRoutes();
         }
     }
 }
