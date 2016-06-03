@@ -32,7 +32,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-           
+
             <img src="~/Content/img/logo.png"/>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -42,7 +42,7 @@
                 <li>@Html.ActionLink("Mood", "ViewSendMessage", "Device")</li>
                 <li>@Html.ActionLink("Create Device Key", "Create", "Device", new {area = ""}, null)</li>
                 <li>@Html.ActionLink("Get Device Key", "Get", "Device", new {area = ""}, null)</li>
-                <li>@Html.ActionLink("List Devices", "List", "Device", new {area = ""}, null)</li>
+                <li>@Html.ActionLink("Create QR Code", "Index", "QrCode", new {area = ""}, null)</li>
                 <li>@Html.ActionLink("Create Group", "Create", "Group", new {area = ""}, null)</li>
             </ul>
         </div>
@@ -50,11 +50,11 @@
     </div>
     <!-- /.container -->
 </nav>
-    
-       
+
+
     @RenderBody()
-  
-    
+
+
     <!-- /.banner -->
     <!-- Footer -->
     <footer>
