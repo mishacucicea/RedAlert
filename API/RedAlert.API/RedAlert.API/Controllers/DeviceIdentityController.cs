@@ -47,12 +47,14 @@ namespace RedAlert.API.Controllers
             //4. hubConn "SharedAccessSignature sr=arduhub.azure-devices.net%2fdevices%2fpocDevice&sig=ksApO9qnlvs%2bERTKS3qqvO0T7cRG2D1xhI7PiE5C8uk%3d&se=1490896187"
             //5. hubTopic "devices/pocDevice/messages/devicebound/#"
 
-            
+            //device id should be looked up in the db based on the api key
             string deviceId = "pocDevice";
             
+            //should get from the config
             string hubAddress = "arduhub.azure-devices.net";
+
             string hubName = deviceId;
-            string hubUser = $"arduhub.azure-devices.net/{deviceId}";
+            string hubUser = $"{hubAddress}/{deviceId}";
             string hubConn = GenerateDeviceConnectionString(deviceId);
             string hubTopic = $"devices/{deviceId}/messages/devicebound/#";
             
