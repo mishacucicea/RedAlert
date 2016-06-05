@@ -9,7 +9,7 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
     <!-- Bootstrap Core CSS -->
     <link href="~/Content/agency.css" rel="stylesheet">
     <link href="~/Content/bootstrap.min.css" rel="stylesheet">
@@ -32,7 +32,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-           
+
             <img src="~/Content/img/logo.png"/>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -42,19 +42,20 @@
                 <li>@Html.ActionLink("Mood", "ViewSendMessage", "Device")</li>
                 <li>@Html.ActionLink("Create Device Key", "Create", "Device", new {area = ""}, null)</li>
                 <li>@Html.ActionLink("Get Device Key", "Get", "Device", new {area = ""}, null)</li>
-                <li>@Html.ActionLink("List Devices", "List", "Device", new {area = ""}, null)</li>
+                <li>@Html.ActionLink("Create QR Code", "Index", "QrCode", new {area = ""}, null)</li>
                 <li>@Html.ActionLink("Create Group", "Create", "Group", new {area = ""}, null)</li>
+                <li>@Html.ActionLink("Create Receipes", "Index", "Receipe", new { area = "" }, null)</li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
     </div>
     <!-- /.container -->
 </nav>
-    
-       
+
+
     @RenderBody()
-  
-    
+
+
     <!-- /.banner -->
     <!-- Footer -->
     <footer>
