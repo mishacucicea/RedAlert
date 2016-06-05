@@ -15,7 +15,7 @@ namespace RedAlert.API.Controllers
         {
             var name = "test";
             var password = "pass";
-            var list = new List<DeviceModel>();
+            var list = new List<Device>();
             if (name == model.Name && password == model.Password)
             {
                 ViewData["result"] = "success";
