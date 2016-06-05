@@ -60,7 +60,7 @@ namespace RedAlert.API.Controllers
                     Array.Copy(timeoutBytes, 0, message, 4, 3);
                 }
 
-                await IotHubHelper.SendCloudToDeviceMessageAsync(deviceId, message);
+             //   await IotHubHelper.SendCloudToDeviceMessageAsync(deviceId, message);
 
                 return Ok();
             }
