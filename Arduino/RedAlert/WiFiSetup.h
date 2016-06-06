@@ -18,12 +18,12 @@ class WiFiSetup {
     void setupAP(void);
     bool anyConnections(void);
     /*
-     * Loads the SSID, pass and serial number into wifi
+     * Loads the SSID, pass and API Key into wifi
      */
     void loadStationSettings(void);
     String getSsid(void);
     String getPass(void);
-    String getSerial(void);
+    String getApiKey(void);
     boolean getHasSettings(void);
     
     /*
@@ -38,7 +38,7 @@ class WiFiSetup {
     //the html for the list of available stations
     String ssid;
     String pass;
-    String serial;
+    String apiKey;
     bool hasSettings;
 };
 
