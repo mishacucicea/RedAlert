@@ -25,7 +25,7 @@ namespace RedAlert.API.Controllers
         }
 
         [HttpPost]
-        public  ActionResult Create(DeviceModel model)
+        public  ActionResult Create(Device model)
         {
             using (var client = new HttpClient())
             {
@@ -44,7 +44,7 @@ namespace RedAlert.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Get(DeviceModel model)
+        public async Task<ActionResult> Get(Device model)
         {
             using (var client = new HttpClient())
             {
