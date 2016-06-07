@@ -18,31 +18,31 @@ namespace RedAlert.API.Controllers
         private string ApiUrl = ConfigurationManager.AppSettings["ApiUrl"];
 
         // GET: Device
-        public ActionResult Create()
+        public ActionResult Register()
         {
 
             return View();
         }
 
         [HttpPost]
-        public  ActionResult Create(Device model)
+        public async Task<ActionResult> Register(DeviceModel model)
         {
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ApiUrl);
-                var response = client.PostAsJsonAsync("api/DeviceIdentity", model.SerialNumber).Result;
+                var response = await client.PostAsJsonAsync("api/DeviceIdentity", model.SerialNumber);
                 if (response == null) throw new ArgumentNullException(nameof(response));
                 ViewData["deviceKey"] =  response.Content.ReadAsStringAsync().Result;
             }
             return View();
         }
-
+        
         public ActionResult Get()
         {
 
             return View();
         }
-
+        
         [HttpPost]
         public async Task<ActionResult> Get(Device model)
         {
@@ -59,7 +59,8 @@ namespace RedAlert.API.Controllers
 
         public async Task<ActionResult> List()
         {
-            var devices = await IotHubHelper.GetDevices();
+            DeviceManagement dm = new DeviceManagement();
+            var devices = await dm.GetDevices();
 
             return View(devices);
         }

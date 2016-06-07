@@ -9,6 +9,8 @@ namespace RedAlert.API.DAL
     /// <seealso cref="System.Data.Entity.DbContext" />
     public class RedAlertContext : DbContext
     {
+        
+
         /// <summary>
         /// Gets or sets the devices.
         /// </summary>
@@ -24,5 +26,7 @@ namespace RedAlert.API.DAL
         /// The device groups.
         /// </value>
         public DbSet<DeviceGroup> DeviceGroups { get; set; }
+
+        public DbSet<SerialNumber> SerialNumbers { get; set; }
     }
 }

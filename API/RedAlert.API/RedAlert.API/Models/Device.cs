@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RedAlert.API.Models
 {
@@ -19,6 +20,7 @@ namespace RedAlert.API.Models
         /// The serial number.
         /// </value>
         [Index(IsUnique = true)]
+        [MaxLength(40)]
         public string SerialNumber { get; set; }
 
         /// <summary>
@@ -33,12 +35,14 @@ namespace RedAlert.API.Models
         /// Gets or sets the DeviceKey used by the device to get Azure IoT Hub authentication data.
         /// </summary>
         [Index(IsUnique = true)]
+        [MaxLength(20)]
         public string DeviceKey { get; set; }
 
         /// <summary>
         /// Gets or sets the SenderKey used by the sender to send messages to this device.
         /// </summary>
         [Index(IsUnique = true)]
+        [MaxLength(20)]
         public string SenderKey { get; set; }
     }
 }

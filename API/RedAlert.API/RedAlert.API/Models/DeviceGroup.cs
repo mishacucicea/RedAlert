@@ -7,6 +7,8 @@ namespace RedAlert.API.Models
     /// </summary>
     public class DeviceGroup
     {
+        public int DeviceGroupId { get; set; }
+
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
