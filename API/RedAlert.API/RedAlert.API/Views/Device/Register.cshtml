@@ -8,12 +8,13 @@
 
 <div class="jumbotron">
     <div class="container">
-        <h4>Register your device</h4>
+        <h2>Register your device</h2>
 
 
-        @if (ViewData["deviceKey"] != null)
+        @if (Model.DeviceKey != null)
         {
-            <h2>  Your device id is: @ViewData["deviceKey"]</h2>
+            <h2> Your Device key is: @Model.DeviceKey</h2>
+            <h2> Your Sender Key is: @Model.SenderKey</h2>
         }
 
         @using (Html.BeginForm())
@@ -36,7 +37,7 @@
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Create" class="btn btn-default" />
+                        <input type="submit" value="Register" class="btn btn-default" />
                     </div>
                 </div>
             </div>

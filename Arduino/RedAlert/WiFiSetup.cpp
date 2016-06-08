@@ -3,7 +3,7 @@
 //maximum length of the specific EEPROM values
 #define SSID_MAX 32
 #define PASS_MAX 64
-#define SERIAL_MAX 36
+#define APIKEY_MAX 36
 //this is a magic number used to for a TRUE value for EEPROM, as EEPROM after reset can have any random value.
 #define MAGIC_NUMBER B10101010
 
@@ -15,7 +15,7 @@ ESP8266WebServer server(80);
 
 void handleSetup(void) {
   Debug("clearing eeprom");
-  for (int i = 0; i < SSID_MAX + PASS_MAX + SERIAL_MAX; ++i) { EEPROM.write(i, 0); }
+  for (int i = 0; i < SSID_MAX + PASS_MAX + APIKEY_MAX; ++i) { EEPROM.write(i, 0); }
   
   String qsid = server.arg("ssid");
   Debug2("New SSID: ", qsid);
@@ -23,8 +23,8 @@ void handleSetup(void) {
   String qpass = server.arg("pass");
   Debug2("New Password: ", qpass);
   
-  String qsn = server.arg("serial");
-  Debug2("New Serial Number: ", qsn);
+  String qsn = server.arg("apikey");
+  Debug2("New API Key: ", qsn);
   
   Debug("writing eeprom ssid");
   for (int i = 0; i < qsid.length(); ++i) {
@@ -36,13 +36,13 @@ void handleSetup(void) {
     EEPROM.write(wifiSetup.eepromOffset + SSID_MAX + i, qpass[i]);
   }    
   
-  Debug("wrigin eeprom serial number");
+  Debug("wrigin eeprom API Key");
   for (int i = 0; i < qsn.length(); ++i) {
     EEPROM.write(wifiSetup.eepromOffset + SSID_MAX + PASS_MAX + i, qsn[i]);
   }
 
   //write the magic number so we know that the EEPROM values are valid
-  EEPROM.write(wifiSetup.eepromOffset + SSID_MAX + PASS_MAX + SERIAL_MAX, MAGIC_NUMBER);
+  EEPROM.write(wifiSetup.eepromOffset + SSID_MAX + PASS_MAX + APIKEY_MAX, MAGIC_NUMBER);
   
   EEPROM.commit();
   wifiSetup.loadStationSettings();
@@ -62,6 +62,7 @@ void handleRoot(void) {
 <!doctype html>\
 <html xml:lang=\"en\">\
     <head>\
+      <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\
         <title>Configure the LIGHT BOX</title>\
         <style>\
             body{text-align:center;font-family:Arial;color:#333333;font-size:16px;background:#f7f9f6}\
@@ -129,7 +130,7 @@ void handleRoot(void) {
                   <input id=\"PASSWORD\" type=\"password\" placeholder=\"wireless password\" name=\"pass\"/>\
                 </div></br>\
                 <div>\
-                  <input type=\"text\" placeholder=\"device ID\" name=\"serial\"/>\
+                  <input type=\"text\" placeholder=\"API Key\" name=\"apikey\"/>\
                 </div></br>\
                   <input type=\"submit\" value=\"Submit\" />\
                     <p style=\"display:none;\" id=\"buttonBackID\">\
@@ -201,17 +202,17 @@ bool WiFiSetup::anyConnections(void)  {
 }
 
 /*
- * Loads the SSID, pass and serial number into wifi
+ * Loads the SSID, pass and API Key number into wifi
  */
 void WiFiSetup::loadStationSettings(void) {
   ssid = "";
   pass = "";
-  serial = "";
+  apiKey = "";
 
   hasSettings = false;
 
   Debug("Checking if settings are stored in EEPROM");
-  hasSettings = MAGIC_NUMBER == EEPROM.read(eepromOffset + SSID_MAX + PASS_MAX + SERIAL_MAX);
+  hasSettings = MAGIC_NUMBER == EEPROM.read(eepromOffset + SSID_MAX + PASS_MAX + APIKEY_MAX);
 
   if (hasSettings) {
     Debug("Reading EEPROM ssid");
@@ -226,11 +227,11 @@ void WiFiSetup::loadStationSettings(void) {
     }
     Debug2("Password: ", pass);
   
-    Debug("Reading EEPROM Serial Number");
-    for (int i = SSID_MAX + PASS_MAX; i < SSID_MAX + PASS_MAX + SERIAL_MAX; ++i) {
-      serial += char(EEPROM.read(eepromOffset + i));
+    Debug("Reading EEPROM API Key");
+    for (int i = SSID_MAX + PASS_MAX; i < SSID_MAX + PASS_MAX + APIKEY_MAX; ++i) {
+      apiKey += char(EEPROM.read(eepromOffset + i));
     }
-    Debug2("Hub: ", serial);
+    Debug2("Hub: ", apiKey);
   } else {
     Debug("No settings stored in EEPROM");
   }
@@ -242,8 +243,8 @@ String WiFiSetup::getSsid(void) {
 String WiFiSetup::getPass(void) {
   return pass;
 }
-String WiFiSetup::getSerial(void) {
-  return serial;
+String WiFiSetup::getApiKey(void) {
+  return apiKey;
 }
 
 boolean WiFiSetup::getHasSettings(void) {
