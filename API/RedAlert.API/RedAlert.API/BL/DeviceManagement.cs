@@ -23,7 +23,7 @@ namespace RedAlert.API.BL
 
         private string iotHubUri = ConfigurationManager.AppSettings["IotHubUri"];
 
-        
+
 
 
         /// <summary>
@@ -47,10 +47,17 @@ namespace RedAlert.API.BL
 
                 //create keys - will be used to updated if already registered.
                 Models.Device device = context.Devices.SingleOrDefault(x => x.SerialNumber == serialNumber) ?? context.Devices.Create();
-                device.DeviceKey = rand.GetAlphaNumeric(8);
-                device.SenderKey = rand.GetAlphaNumeric(8);
+                
+                do
+                {
+                    device.DeviceKey = rand.GetAlphaNumeric(8);
+                    device.SenderKey = rand.GetAlphaNumeric(8);
+                    
+                    //check for collisions!
+                }
+                while (context.Devices.Any(x => x.DeviceKey == device.DeviceKey || x.SenderKey == device.SenderKey));
 
-                //TODO: check for collisions!
+                //if it's the first registration
                 if (device.SerialNumber == null)
                 {
                     //copy the serial number from the database!
@@ -72,6 +79,9 @@ namespace RedAlert.API.BL
                     {
                         IoTdevice = await registryManager.GetDeviceAsync(device.HubDeviceId);
                     }
+
+                    //and don't forget to update the SerialNumber as used
+                    sn.Activated = true;
                 }
 
                 await context.SaveChangesAsync();
