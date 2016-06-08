@@ -20,8 +20,8 @@ namespace RedAlert.API.Controllers
         // GET: Device
         public ActionResult Register()
         {
-
-            return View();
+            DeviceModel model = new DeviceModel();
+            return View(model);
         }
 
         [HttpPost]
