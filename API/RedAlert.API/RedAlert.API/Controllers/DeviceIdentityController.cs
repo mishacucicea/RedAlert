@@ -15,7 +15,7 @@ namespace RedAlert.API.Controllers
     //[RoutePrefix("api/device")]
     public class DeviceIdentityController : ApiController
     {
-
+        [Obsolete("Just delete it..")]
         [HttpPost]
         public async Task<IHttpActionResult> Post([FromBody]DeviceModel device)
         {
@@ -34,6 +34,7 @@ namespace RedAlert.API.Controllers
             }
         }
 
+        [Obsolete("Just delete it...")]
         [HttpGet]
         public async Task<HttpResponseMessage> Get(string id)
         {

@@ -29,12 +29,17 @@ namespace RedAlert.API.Controllers
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(ApiUrl);
-                var response = await client.PostAsJsonAsync("api/DeviceIdentity", model.SerialNumber);
-                if (response == null) throw new ArgumentNullException(nameof(response));
-                ViewData["deviceKey"] =  response.Content.ReadAsStringAsync().Result;
+                DeviceManagement dm = new DeviceManagement();
+
+                model = await dm.AddDeviceAsync(model.SerialNumber);
+
+                //client.BaseAddress = new Uri(ApiUrl);
+                //var response = await client.PostAsJsonAsync("http://localhost:63913/api/DeviceIdentity", model);
+                //if (!response.IsSuccessStatusCode) //throw BUBU?
+                //if (response == null) throw new ArgumentNullException(nameof(response));
+                //model =  await response.Content.ReadAsAsync<DeviceModel>();
             }
-            return View();
+            return View(model);
         }
         
         public ActionResult Get()

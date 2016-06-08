@@ -11,6 +11,7 @@ namespace RedAlert.API.Models
         /// <summary>
         /// Primary key.
         /// </summary>
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int DeviceId { get; set; }
 
         /// <summary>
