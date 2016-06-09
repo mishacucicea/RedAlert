@@ -236,12 +236,14 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-    <Compile Include="BL\IotHubHelper.cs" />
+    <Compile Include="BL\DeviceManagement.cs" />
     <Compile Include="BL\QrCoderGenerator.cs" />
+    <Compile Include="BL\RandomProvider.cs" />
     <Compile Include="Controllers\DeviceController.cs" />
     <Compile Include="Controllers\DeviceIdentityController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IoTController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\QrCodeController.cs" />
     <Compile Include="Controllers\ReceipeController.cs" />
@@ -250,8 +252,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201606071756594_Initial.cs" />
+    <Compile Include="Migrations\201606071756594_Initial.Designer.cs">
+      <DependentUpon>201606071756594_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DeviceGroup.cs" />
     <Compile Include="Models\Device.cs" />
+    <Compile Include="Models\DeviceModel.cs" />
+    <Compile Include="Models\SerialNumbers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -317,7 +326,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
-    <Content Include="Views\Device\Create.cshtml" />
+    <Content Include="Views\Device\Register.cshtml" />
     <Content Include="Views\Device\Get.cshtml" />
     <Content Include="Views\Device\List.cshtml" />
     <Content Include="Views\Group\Create.cshtml" />
@@ -336,13 +345,17 @@
     </None>
     <Content Include="Views\QrCode\Index.cshtml" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201606071756594_Initial.resx">
+      <DependentUpon>201606071756594_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
