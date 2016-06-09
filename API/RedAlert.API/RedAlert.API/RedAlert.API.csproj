@@ -284,7 +284,6 @@
     <Content Include="Content\img\ipad.png" />
     <Content Include="Content\img\jenkins-solution.png" />
     <Content Include="Content\img\jenkins.jpg" />
-    <Content Include="Content\img\jenkins.png" />
     <Content Include="Content\img\logo.png" />
     <Content Include="Content\img\maker.png" />
     <Content Include="Content\img\makerurl.png" />
