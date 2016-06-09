@@ -18,31 +18,36 @@ namespace RedAlert.API.Controllers
         private string ApiUrl = ConfigurationManager.AppSettings["ApiUrl"];
 
         // GET: Device
-        public ActionResult Create()
+        public ActionResult Register()
         {
-
-            return View();
+            DeviceModel model = new DeviceModel();
+            return View(model);
         }
 
         [HttpPost]
-        public  ActionResult Create(Device model)
+        public async Task<ActionResult> Register(DeviceModel model)
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(ApiUrl);
-                var response = client.PostAsJsonAsync("api/DeviceIdentity", model.SerialNumber).Result;
-                if (response == null) throw new ArgumentNullException(nameof(response));
-                ViewData["deviceKey"] =  response.Content.ReadAsStringAsync().Result;
-            }
-            return View();
-        }
+                DeviceManagement dm = new DeviceManagement();
 
+                model = await dm.AddDeviceAsync(model.SerialNumber);
+
+                //client.BaseAddress = new Uri(ApiUrl);
+                //var response = await client.PostAsJsonAsync("http://localhost:63913/api/DeviceIdentity", model);
+                //if (!response.IsSuccessStatusCode) //throw BUBU?
+                //if (response == null) throw new ArgumentNullException(nameof(response));
+                //model =  await response.Content.ReadAsAsync<DeviceModel>();
+            }
+            return View(model);
+        }
+        
         public ActionResult Get()
         {
 
             return View();
         }
-
+        
         [HttpPost]
         public async Task<ActionResult> Get(Device model)
         {
@@ -59,7 +64,8 @@ namespace RedAlert.API.Controllers
 
         public async Task<ActionResult> List()
         {
-            var devices = await IotHubHelper.GetDevices();
+            DeviceManagement dm = new DeviceManagement();
+            var devices = await dm.GetDevices();
 
             return View(devices);
         }
