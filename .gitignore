@@ -203,3 +203,4 @@ Web.*.config
 applicationhost.config
 /API/RedAlert.API/.vs/config
 /API/RedAlert.API/RedAlert.API/.vs/config
+API/RedAlert.API/RedAlert.API/debugconfig.json
