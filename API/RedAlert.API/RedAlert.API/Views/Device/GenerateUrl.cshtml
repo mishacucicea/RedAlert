@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewBag.Title = "GenerateUrl";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/clipboard.min.js"></script>
+
+<script>
+var clipboard = new Clipboard('.btn');
+
+
+</script>
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6  col-md-offset-2">
+                <div class="panel panel-default  device-panel">
+                    </br>
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Your Url is:</h3>
+                    </div>
+                    <div class="panel-body">
+
+                      <input id="foo" type="text" value="http://redalertxfd.azurewebsites.net/Device/Register">
+                    </br>
+                  </br>
+                    </hr>
+                      <button type="button" class="btn btn-default btn-lg" data-clipboard-action="copy" data-clipboard-target="#foo">
+                        <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Copy to Clipboard
+                      </button>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

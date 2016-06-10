@@ -75,6 +75,12 @@ namespace RedAlert.API.Controllers
             return View("SendMessage");
         }
 
+
+        public ActionResult GenerateUrl()
+        {
+            return View();
+        }
+
         //why do we need it??
         //public async Task<ActionResult> SendMessage(string id, string message)
         //{

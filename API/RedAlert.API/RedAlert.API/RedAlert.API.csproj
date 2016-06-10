@@ -238,6 +238,7 @@
     <Compile Include="BL\DeviceManagement.cs" />
     <Compile Include="BL\QrCoderGenerator.cs" />
     <Compile Include="BL\RandomProvider.cs" />
+    <Compile Include="Controllers\ColorController.cs" />
     <Compile Include="Controllers\DeviceController.cs" />
     <Compile Include="Controllers\DeviceIdentityController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
@@ -267,11 +268,38 @@
     <Content Include="Content\agency.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\colorpicker.css" />
     <Content Include="Content\custom.css" />
     <Content Include="Content\img\banner-bg.jpg" />
     <Content Include="Content\img\chooseaction.png" />
     <Content Include="Content\img\choosetrigger.png" />
     <Content Include="Content\img\choosetriggerchanel.PNG" />
+    <Content Include="Content\img\color-picker\blank.gif" />
+    <Content Include="Content\img\color-picker\colorpicker_background.png" />
+    <Content Include="Content\img\color-picker\colorpicker_hex.png" />
+    <Content Include="Content\img\color-picker\colorpicker_hsb_b.png" />
+    <Content Include="Content\img\color-picker\colorpicker_hsb_h.png" />
+    <Content Include="Content\img\color-picker\colorpicker_hsb_s.png" />
+    <Content Include="Content\img\color-picker\colorpicker_indic.gif" />
+    <Content Include="Content\img\color-picker\colorpicker_overlay.png" />
+    <Content Include="Content\img\color-picker\colorpicker_rgb_b.png" />
+    <Content Include="Content\img\color-picker\colorpicker_rgb_g.png" />
+    <Content Include="Content\img\color-picker\colorpicker_rgb_r.png" />
+    <Content Include="Content\img\color-picker\colorpicker_select.gif" />
+    <Content Include="Content\img\color-picker\colorpicker_submit.png" />
+    <Content Include="Content\img\color-picker\custom_background.png" />
+    <Content Include="Content\img\color-picker\custom_hex.png" />
+    <Content Include="Content\img\color-picker\custom_hsb_b.png" />
+    <Content Include="Content\img\color-picker\custom_hsb_h.png" />
+    <Content Include="Content\img\color-picker\custom_hsb_s.png" />
+    <Content Include="Content\img\color-picker\custom_indic.gif" />
+    <Content Include="Content\img\color-picker\custom_rgb_b.png" />
+    <Content Include="Content\img\color-picker\custom_rgb_g.png" />
+    <Content Include="Content\img\color-picker\custom_rgb_r.png" />
+    <Content Include="Content\img\color-picker\custom_submit.png" />
+    <Content Include="Content\img\color-picker\select.png" />
+    <Content Include="Content\img\color-picker\select2.png" />
+    <Content Include="Content\img\color-picker\slider.png" />
     <Content Include="Content\img\colorbubble.png" />
     <Content Include="Content\img\Colorbubbles.jpg" />
     <Content Include="Content\img\devicecomponent.gif" />
@@ -301,6 +329,7 @@
     <Content Include="Content\img\team\2.jpg" />
     <Content Include="Content\img\team\3.jpg" />
     <Content Include="Content\landing-page.css" />
+    <Content Include="Content\layout.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\font-awesome\css\font-awesome.css" />
     <Content Include="fonts\font-awesome\css\font-awesome.min.css">
@@ -354,13 +383,20 @@
     <Content Include="fonts\font-awesome\scss\_variables.scss" />
     <None Include="debugconfig.json" />
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
+    <Content Include="Scripts\clipboard.js" />
+    <Content Include="Scripts\clipboard.min.js" />
+    <Content Include="Scripts\colorpicker.js" />
+    <Content Include="Scripts\eye.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery.js" />
+    <Content Include="Scripts\layout.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\utils.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
@@ -378,6 +414,8 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Receipe\Index.cshtml" />
+    <Content Include="Views\Color\Index.cshtml" />
+    <Content Include="Views\Device\GenerateUrl.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>

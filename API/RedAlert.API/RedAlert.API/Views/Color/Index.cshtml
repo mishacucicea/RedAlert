@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" media="screen" type="text/css" href="~/Content/colorpicker.css" />
+<script type="text/javascript" src="~/Scripts/colorpicker.js"></script>
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6  col-md-offset-2">
+                <div class="panel panel-default  device-panel">
+                    </br>
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Default Color</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <div id="colorpickerHolder" class="inl-bl"></div>
+                        <style>
+                            .inl-bl {
+                                display: inline-block;
+                            }
+                        </style>
+                        <script>
+                          $('#colorpickerHolder').ColorPicker({flat: true});
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
