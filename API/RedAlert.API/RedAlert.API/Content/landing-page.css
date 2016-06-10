@@ -27,6 +27,28 @@ h6 {
 .topnav {
     font-size: 14px;
 }
+#qr-Image
+{
+  width: 50%;
+}
+.device-panel
+{
+  text-align:center;
+}
+.blink {
+  animation: blink-animation 2s steps(5, start) infinite;
+  -webkit-animation: blink-animation 2s steps(5, start) infinite;
+}
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
 
 .lead {
     font-size: 18px;
@@ -48,7 +70,7 @@ opacity: 0.7;
 
 .intro-message {
     position: relative;
-  
+
 }
 
 .intro-message > h1 {

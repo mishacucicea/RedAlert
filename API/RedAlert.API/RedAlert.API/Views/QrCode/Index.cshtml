@@ -4,12 +4,34 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6  col-md-offset-2">
+              <div class="panel panel-default  device-panel">
+                  </br>
+              <div class="panel-heading">
+                  <h3 class="panel-title">Your personal QR Code</h3>
+              </div>
+              <div class="panel-body">
+
+              <img id="qr-Image" src='@Url.Action("GenerateQr")' alt="" />
+
+                @section Scripts {
+                    @Scripts.Render("~/bundles/jqueryval")
+                }
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+</div>
+
 
 <div class="jumbotron">
     <div class="container">
 
-        <h2>You can scan this QR Code to turn you light on .      </h2>
-        <img src='@Url.Action("GenerateQr")' alt="" />
+
 
     </div>
 </div>
