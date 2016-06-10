@@ -22,9 +22,7 @@ namespace RedAlert.API
                 var fileContents = File.ReadAllText(configOverridePath);
                 var overrideConfig = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(fileContents);
                 foreach (var pair in overrideConfig)
-
                 {
-                    
                     if (ConfigurationManager.ConnectionStrings[pair.Key] != null)
                     {
                         //some extra magic is required here:
