@@ -15,7 +15,9 @@
     <link href="~/Content/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="~/Content/landing-page.css" rel="stylesheet">
-
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
     <!-- Custom Fonts -->
     <link href="~/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
@@ -44,8 +46,12 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Device Management <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li>@Html.ActionLink("Register Device", "Register", "Device", new {area = ""}, null)</li>
-                        
-                        <li>@Html.ActionLink("Get Device Key", "Get", "Device", new { area = "" }, null)</li>
+
+                        <li>@Html.ActionLink("Get Device Key", "Get", "Device", new {area = ""}, null)</li>
+
+                        <li>@Html.ActionLink("Set the Color", "Index", "Color", new {area = ""}, null)</li>
+
+                        <li>@Html.ActionLink("Generate Url", "GenerateUrl", "Device", new { area = "" }, null)</li>
                     </ul>
                 </li>
                 <li>@Html.ActionLink("Create QR Code", "Index", "QrCode", new {area = ""}, null)</li>
@@ -96,8 +102,6 @@
 
 
 
-@Scripts.Render("~/bundles/jquery")
-@Scripts.Render("~/bundles/bootstrap")
-@RenderSection("scripts", required: false)
+
 </body>
 </html>
