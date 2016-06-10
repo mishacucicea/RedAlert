@@ -10,7 +10,7 @@
 <div class="jumbotron">
     <div class="container">
         <div class="row">
-            <div class="col-md-6  col-md-offset-2">
+            <div class="col-md-8  col-md-offset-2">
                 <div class="panel panel-default  device-panel">
                     </br>
                     <div class="panel-heading">
@@ -20,22 +20,22 @@
 
                         <script>
 
-            $(document).ready(function () {
-                $('#devicePng').ColorPicker({
-                    color: '#0000ff',
-                    onShow: function(colpkr) {
-                        $(colpkr).fadeIn(500);
-                        return false;
-                    },
-                    onHide: function(colpkr) {
-                        $(colpkr).fadeOut(500);
-                        return false;
-                    },
-                    onChange: function(hsb, hex, rgb) {
-                        $('#devicePng').css('backgroundColor', '#' + hex);
-                    }
-                });
-            });
+                            $(document).ready(function () {
+                                $('#devicePng').ColorPicker({
+                                    color: '#0000ff',
+                                    onShow: function (colpkr) {
+                                        $(colpkr).fadeIn(500);
+                                        return false;
+                                    },
+                                    onHide: function (colpkr) {
+                                        $(colpkr).fadeOut(500);
+                                        return false;
+                                    },
+                                    onChange: function (hsb, hex, rgb) {
+                                        $('#devicePng').css('backgroundColor', '#' + hex);
+                                    }
+                                });
+                            });
 
 
                         </script>
