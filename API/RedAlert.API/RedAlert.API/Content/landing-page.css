@@ -35,6 +35,10 @@ h6 {
 {
   text-align:center;
 }
+#devicePng {
+    background-color: white;
+}
+
 .blink {
   animation: blink-animation 2s steps(5, start) infinite;
   -webkit-animation: blink-animation 2s steps(5, start) infinite;

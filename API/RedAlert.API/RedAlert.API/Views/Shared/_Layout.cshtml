@@ -45,16 +45,19 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Device Management <span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        </br>
                         <li>@Html.ActionLink("Register Device", "Register", "Device", new {area = ""}, null)</li>
-
+                        <hr>
                         <li>@Html.ActionLink("Get Device Key", "Get", "Device", new {area = ""}, null)</li>
-
+                        <hr>
                         <li>@Html.ActionLink("Set the Color", "Index", "Color", new {area = ""}, null)</li>
-
-                        <li>@Html.ActionLink("Generate Url", "GenerateUrl", "Device", new { area = "" }, null)</li>
+                        <hr>
+                        <li>@Html.ActionLink("Generate Url", "GenerateUrl", "Device", new {area = ""}, null)</li>
+                        <hr>
+                        <li>  @Html.ActionLink("Create QR Code", "Index", "QrCode", new { area = "" }, null)</li>
+                        </br>
                     </ul>
-                </li>
-                <li>@Html.ActionLink("Create QR Code", "Index", "QrCode", new {area = ""}, null)</li>
+                </li>        
                 <li>@Html.ActionLink("Create Group", "Create", "Group", new {area = ""}, null)</li>
                 <li>@Html.ActionLink("Create Recipes", "Index", "Receipe", new { area = "" }, null)</li>
             </ul>
