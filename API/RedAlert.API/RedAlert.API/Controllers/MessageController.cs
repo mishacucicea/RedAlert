@@ -19,7 +19,7 @@ namespace RedAlert.API.Controllers
         /// <param name="pattern">Specify the kind of pattern to use. Default is continunous.</param>
         /// <param name="timeout">How much time to keep the given color on (in seconds).</param>
         [HttpGet]
-        public async Task<IHttpActionResult> Send(string deviceId, string color, string pattern = null, uint? timeout = null)
+        public async Task<IHttpActionResult> Send(string deviceKey, string color, string pattern = null, uint? timeout = null)
         {
             try
             {
@@ -60,7 +60,8 @@ namespace RedAlert.API.Controllers
                     Array.Copy(timeoutBytes, 0, message, 4, 3);
                 }
 
-             //   await IotHubHelper.SendCloudToDeviceMessageAsync(deviceId, message);
+                DeviceManagement dm = new DeviceManagement();
+                await dm.SendCloudToDeviceMessageAsync(deviceKey, message);
 
                 return Ok();
             }

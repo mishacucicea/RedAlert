@@ -45,5 +45,7 @@ namespace RedAlert.API.Models
         [Index(IsUnique = true)]
         [MaxLength(20)]
         public string SenderKey { get; set; }
+        
+        public byte[] LastMessage { get; set; }
     }
 }
