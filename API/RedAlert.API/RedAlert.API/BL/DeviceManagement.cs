@@ -8,6 +8,7 @@ using System.Configuration;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Data.Entity;
 
 namespace RedAlert.API.BL
 {
@@ -38,7 +39,7 @@ namespace RedAlert.API.BL
 
             using (RedAlertContext context = new RedAlertContext())
             {
-                SerialNumber sn = context.SerialNumbers.SingleOrDefault(x => x.Code == serialNumber);
+                SerialNumber sn = await context.SerialNumbers.SingleOrDefaultAsync(x => x.Code == serialNumber);
 
                 if (sn == null)
                 {
@@ -46,7 +47,7 @@ namespace RedAlert.API.BL
                 }
 
                 //create keys - will be used to updated if already registered.
-                Models.Device device = context.Devices.SingleOrDefault(x => x.SerialNumber == serialNumber) ?? context.Devices.Create();
+                Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.SerialNumber == serialNumber) ?? context.Devices.Create();
                 
                 do
                 {
@@ -55,11 +56,14 @@ namespace RedAlert.API.BL
                     
                     //check for collisions!
                 }
-                while (context.Devices.Any(x => x.DeviceKey == device.DeviceKey || x.SenderKey == device.SenderKey));
+                while (await context.Devices.AnyAsync(x => x.DeviceKey == device.DeviceKey || x.SenderKey == device.SenderKey));
 
                 //if it's the first registration
                 if (device.SerialNumber == null)
                 {
+                    //the entity has been created so we need to add it to the collection
+                    context.Devices.Add(device);
+
                     //copy the serial number from the database!
                     device.SerialNumber = sn.Code;
 
@@ -142,14 +146,24 @@ namespace RedAlert.API.BL
         /// <summary>
         /// Sends the message.
         /// </summary>
-        /// <param name="deviceId">The serial number.</param>
+        /// <param name="deviceKey">The generated DeviceKey.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        public async Task SendCloudToDeviceMessageAsync(string deviceId, byte[] message)
+        public async Task SendCloudToDeviceMessageAsync(string deviceKey, byte[] message)
         {
-            ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
-            var messageToBytes = new Message(message);
-            await serviceClient.SendAsync(deviceId, messageToBytes);
+            using (RedAlertContext context = new RedAlertContext())
+            {
+                Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.DeviceKey == deviceKey);
+                
+                if (device == null)
+                {
+                    throw new ArgumentException("No such DeviceKey.");
+                }
+
+                ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
+                var messageToBytes = new Message(message);
+                await serviceClient.SendAsync(device.HubDeviceId, messageToBytes);
+            } 
         }
 
     }

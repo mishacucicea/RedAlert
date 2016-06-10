@@ -9,8 +9,6 @@ namespace RedAlert.API.DAL
     /// <seealso cref="System.Data.Entity.DbContext" />
     public class RedAlertContext : DbContext
     {
-        
-
         /// <summary>
         /// Gets or sets the devices.
         /// </summary>
