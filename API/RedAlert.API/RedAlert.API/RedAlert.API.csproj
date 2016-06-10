@@ -305,6 +305,7 @@
     <Content Include="Content\img\devicecomponent.gif" />
     <Content Include="Content\img\devicepsd.jpg" />
     <Content Include="Content\img\devicepsd.png" />
+    <Content Include="Content\img\devicepsdxx.png" />
     <Content Include="Content\img\dog.png" />
     <Content Include="Content\img\example-orig.png" />
     <Content Include="Content\img\Frame50.gif" />
