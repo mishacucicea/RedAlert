@@ -36,7 +36,7 @@ namespace RedAlert.API.Controllers
 
         [Obsolete("Just delete it...")]
         [HttpGet]
-        public async Task<HttpResponseMessage> Get(string id)
+        public async Task<HttpResponseMessage> Get(int id)
         {
             throw new NotImplementedException();
         }

@@ -258,6 +258,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Handlers\GlobalExceptionHandler.cs" />
     <Compile Include="Migrations\201606071756594_Initial.cs" />
     <Compile Include="Migrations\201606071756594_Initial.Designer.cs">
       <DependentUpon>201606071756594_Initial.cs</DependentUpon>
