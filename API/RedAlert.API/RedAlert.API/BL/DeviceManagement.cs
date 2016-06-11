@@ -22,8 +22,6 @@ namespace RedAlert.API.BL
         /// The registry manager
         /// </summary>
 
-        private string iotHubUri = ConfigurationManager.AppSettings["IotHubUri"];
-
 
         public async Task<String> GetDeviceSASKey(string deviceId)
         {
