@@ -9,7 +9,7 @@ using RedAlert.API.BL;
 
 namespace RedAlert.API.Controllers
 {
-    public class QrCodeController : Controller
+    public class QrCodeController : BaseController
     {
         // GET: QrCode
         public ActionResult GenerateQr()

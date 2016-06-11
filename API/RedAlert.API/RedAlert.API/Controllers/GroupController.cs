@@ -10,7 +10,7 @@ using RedAlert.API.DAL;
 
 namespace RedAlert.API.Controllers
 {
-    public class GroupController : Controller
+    public class GroupController : BaseController
     {
 
         private RedAlertContext _db;
