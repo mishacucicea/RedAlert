@@ -18,12 +18,16 @@ void handleSetup(void) {
   for (int i = 0; i < SSID_MAX + PASS_MAX + APIKEY_MAX; ++i) { EEPROM.write(i, 0); }
   
   String qsid = server.arg("ssid");
+  qsid.trim();
   Debug2("New SSID: ", qsid);
   
   String qpass = server.arg("pass");
+  qpass.trim();
   Debug2("New Password: ", qpass);
   
+  
   String qsn = server.arg("apikey");
+  qsn.trim();
   Debug2("New API Key: ", qsn);
   
   Debug("writing eeprom ssid");
@@ -217,19 +221,25 @@ void WiFiSetup::loadStationSettings(void) {
   if (hasSettings) {
     Debug("Reading EEPROM ssid");
     for (int i = 0; i < SSID_MAX; ++i) {
-        ssid += char(EEPROM.read(eepromOffset + i));
+      char readChar = char(EEPROM.read(eepromOffset + i));
+      if (readChar == 0) break;
+      ssid += readChar;
     }
     Debug2("SSID: ", ssid);
     
     Debug("Reading EEPROM pass");
     for (int i = SSID_MAX; i < SSID_MAX + PASS_MAX; ++i) {
-        pass += char(EEPROM.read(eepromOffset + i));
+      char readChar = char(EEPROM.read(eepromOffset + i));
+      if (readChar == 0) break;
+      pass += readChar;
     }
     Debug2("Password: ", pass);
   
     Debug("Reading EEPROM API Key");
     for (int i = SSID_MAX + PASS_MAX; i < SSID_MAX + PASS_MAX + APIKEY_MAX; ++i) {
-      apiKey += char(EEPROM.read(eepromOffset + i));
+      char readChar = char(EEPROM.read(eepromOffset + i));
+      if (readChar == 0) break;
+      apiKey += readChar;
     }
     Debug2("Hub: ", apiKey);
   } else {
