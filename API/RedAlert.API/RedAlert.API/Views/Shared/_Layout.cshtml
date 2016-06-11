@@ -65,8 +65,17 @@
                         <li>@Html.ActionLink("Mood", "ViewSendMessage", "Device")</li>
                         </br>
                     </ul>
-                </li>        
-                <li>@Html.ActionLink("Create Group", "Create", "Group", new {area = ""}, null)</li>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Group Management <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        </br>
+                        <li>@Html.ActionLink("Create Group", "Create", "Group", new { area = "" }, null)</li>
+                        <hr>
+                        <li>@Html.ActionLink("Add Device to Group", "AddDeviceToGroup", "Group", new { area = "" }, null)</li>                       
+                        </br>
+                    </ul>
+                </li>
                 <li>@Html.ActionLink("Recipes", "Index", "Recipe", new { area = "" }, null)</li>
             </ul>
         </div>
