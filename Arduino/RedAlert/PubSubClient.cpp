@@ -3,9 +3,11 @@
   Nick O'Leary
   http://knolleary.net
 */
-
 #include "PubSubClient.h"
 #include "Arduino.h"
+
+//response codes:
+//http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/os/mqtt-v3.1.1-os.html#_Toc398718032
 
 PubSubClient::PubSubClient() {
     this->_state = MQTT_DISCONNECTED;
@@ -188,6 +190,7 @@ boolean PubSubClient::connect(const char *id, const char *user, const char *pass
 
             if (len == 4) {
                 if (buffer[3] == 0) {
+                  
                     lastInActivity = millis();
                     pingOutstanding = false;
                     _state = MQTT_CONNECTED;
