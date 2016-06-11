@@ -1,6 +1,8 @@
 ﻿using RedAlert.API.BL;
+using RedAlert.API.DAL;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -12,14 +14,14 @@ namespace RedAlert.API.Controllers
     public class MessageController : ApiController
     {
         /// <summary>
-        /// 
+        /// Client facing API.
         /// </summary>
         /// <param name="deviceId"></param>
         /// <param name="color">RGB (six character) or named color. Case insensitive.</param>
         /// <param name="pattern">Specify the kind of pattern to use. Default is continunous.</param>
         /// <param name="timeout">How much time to keep the given color on (in seconds).</param>
         [HttpGet]
-        public async Task<IHttpActionResult> Send(string deviceKey, string color, string pattern = null, uint? timeout = null)
+        public async Task<IHttpActionResult> Send(string senderKey, string color, string pattern = null, uint? timeout = null)
         {
             try
             {
@@ -59,10 +61,20 @@ namespace RedAlert.API.Controllers
                     Array.Reverse(timeoutBytes);
                     Array.Copy(timeoutBytes, 0, message, 4, 3);
                 }
+                using (RedAlertContext context = new RedAlertContext())
+                {
+                    Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.SenderKey == senderKey);
 
-                DeviceManagement dm = new DeviceManagement();
-                await dm.SendCloudToDeviceMessageAsync(deviceKey, message);
+                    if (device == null)
+                    {
+                        return BadRequest();
+                    }
 
+                    device.LastMessage = message;
+
+                    DeviceManagement dm = new DeviceManagement();
+                    await dm.SendCloudToDeviceMessageAsync(device.DeviceKey, message);
+                }
                 return Ok();
             }
             catch
