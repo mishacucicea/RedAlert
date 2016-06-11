@@ -246,7 +246,7 @@
     <Compile Include="Controllers\IoTController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\QrCodeController.cs" />
-    <Compile Include="Controllers\ReceipeController.cs" />
+    <Compile Include="Controllers\RecipeController.cs" />
     <Compile Include="DAL\IRepository.cs" />
     <Compile Include="DAL\RedAlertContext.cs" />
     <Compile Include="Global.asax.cs">
@@ -414,7 +414,7 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Views\Receipe\Index.cshtml" />
+    <Content Include="Views\Recipe\Index.cshtml" />
     <Content Include="Views\Color\Index.cshtml" />
     <Content Include="Views\Device\GenerateUrl.cshtml" />
     <None Include="Web.Debug.config">
