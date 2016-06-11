@@ -18,19 +18,11 @@ namespace RedAlert.API.Models
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the password.
-        /// </summary>
-        /// <value>
-        /// The password.
-        /// </value>
-        public string Password { get; set; }
-
-        /// <summary>
         /// Gets or sets the serial numbers.
         /// </summary>
         /// <value>
         /// The serial numbers.
         /// </value>
-        public List<string> SerialNumbers { get; set; }
+        public virtual List<Device> Devices { get; set; }
     }
 }
