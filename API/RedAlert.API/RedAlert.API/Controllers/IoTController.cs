@@ -15,7 +15,7 @@ using System.Web.Http;
 namespace RedAlert.API.Controllers
 {
     /// <summary>
-    /// This controller is responsible for providing the devices with required API methods.
+    /// Device facing API - This controller is responsible for providing the devices with required API methods.
     /// </summary>
     public class IoTController : ApiController
     {
