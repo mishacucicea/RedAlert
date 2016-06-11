@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace RedAlert.API.Controllers
 {
-    public class GroupController : Controller
+    public class GroupController : BaseController
     {
         //
         // GET: /Group/

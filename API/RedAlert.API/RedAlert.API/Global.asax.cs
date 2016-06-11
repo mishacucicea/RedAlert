@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -41,12 +42,23 @@ namespace RedAlert.API
                 }
             }
 
-
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+        }
+
+        protected void Application_Error(object sender, EventArgs e)
+        {
+            // Get the exception object.
+            Exception ex = Server.GetLastError();
+
+            var logger = LogManager.GetLogger("RedAlert");
+            logger.Error(ex);
+
+            // Clear the error from the server.
+            Server.ClearError();
         }
     }
 }
