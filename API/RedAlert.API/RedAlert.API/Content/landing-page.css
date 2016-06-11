@@ -5,6 +5,13 @@
  */
 
 
+@media (min-width: 768px) {
+  .navbar-right .dropdown-menu {
+    right: 0;
+    left: auto;
+    width: 100%;
+  }
+}
 
 
 body,

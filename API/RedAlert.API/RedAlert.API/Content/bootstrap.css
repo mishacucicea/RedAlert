@@ -96,6 +96,7 @@ hr {
 
 mark {
   color: #000;
+  color: #000;
   background: #ff0;
 }
 
@@ -3354,7 +3355,6 @@ input[type="button"].btn-block {
   .navbar-right .dropdown-menu {
     right: 0;
     left: auto;
-   width: 100%;
   }
 }
 
