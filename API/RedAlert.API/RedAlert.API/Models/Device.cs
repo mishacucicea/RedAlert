@@ -15,7 +15,7 @@ namespace RedAlert.API.Models
         public int DeviceId { get; set; }
 
         /// <summary>
-        /// Gets or sets the serial number.
+        /// Gets or sets the serial number. This is the physical key attached to the device.
         /// </summary>
         /// <value>
         /// The serial number.

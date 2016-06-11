@@ -89,6 +89,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.3.4\lib\net45\NLog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System">
       <Private>True</Private>
     </Reference>
@@ -215,6 +219,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Content\less\" />
     <Folder Include="Storage\" />
+    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -238,6 +243,7 @@
     <Compile Include="BL\DeviceManagement.cs" />
     <Compile Include="BL\QrCoderGenerator.cs" />
     <Compile Include="BL\RandomProvider.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ColorController.cs" />
     <Compile Include="Controllers\DeviceController.cs" />
     <Compile Include="Controllers\DeviceIdentityController.cs" />
@@ -252,6 +258,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Handlers\GlobalExceptionHandler.cs" />
     <Compile Include="Migrations\201606071756594_Initial.cs" />
     <Compile Include="Migrations\201606071756594_Initial.Designer.cs">
       <DependentUpon>201606071756594_Initial.cs</DependentUpon>
@@ -383,6 +390,12 @@
     <Content Include="fonts\font-awesome\scss\_stacked.scss" />
     <Content Include="fonts\font-awesome\scss\_variables.scss" />
     <None Include="debugconfig.json" />
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
     <Content Include="Scripts\clipboard.js" />
     <Content Include="Scripts\clipboard.min.js" />
@@ -431,7 +444,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>

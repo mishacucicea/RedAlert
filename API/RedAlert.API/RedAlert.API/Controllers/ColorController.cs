@@ -13,5 +13,10 @@ namespace RedAlert.API.Controllers
         {
             return View();
         }
+
+        public ActionResult Exception()
+        {
+            throw new Exception("Error in ColorController");
+        }
     }
 }
