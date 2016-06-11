@@ -417,6 +417,7 @@
     <Content Include="Views\Recipe\Index.cshtml" />
     <Content Include="Views\Color\Index.cshtml" />
     <Content Include="Views\Device\GenerateUrl.cshtml" />
+    <Content Include="Views\Group\AddDeviceToGroup.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>

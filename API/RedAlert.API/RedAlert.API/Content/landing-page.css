@@ -38,6 +38,9 @@ h6 {
 {
   width: 50%;
 }
+.succesResult {
+    color: green;
+}
 .device-panel
 {
   text-align:center;
