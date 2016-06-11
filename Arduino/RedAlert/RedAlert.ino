@@ -145,7 +145,7 @@ void loop() {
     
     //TODO: check for time agains google
     //do the wifi client and shit
-    String s = "http://redalertxfd.azurewebsites.net/api/device/";
+    String s = "http://redalertxfd.azurewebsites.net/api/iot/authentication?devicekey=";
     s += wifiSetup.getApiKey();
     
     HTTPClient http;
