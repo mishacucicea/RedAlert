@@ -1,7 +1,9 @@
-﻿using RedAlert.API.DAL;
+﻿using RedAlert.API.BL;
+using RedAlert.API.DAL;
 using RedAlert.API.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -13,7 +15,7 @@ using System.Web.Http;
 namespace RedAlert.API.Controllers
 {
     /// <summary>
-    /// This controller is responsible for providing the devices with required API methods.
+    /// Device facing API - This controller is responsible for providing the devices with required API methods.
     /// </summary>
     public class IoTController : ApiController
     {
@@ -42,7 +44,7 @@ namespace RedAlert.API.Controllers
                 //5. hubTopic "devices/pocDevice/messages/devicebound/#"
 
                 //device id should be looked up in the db based on the api key
-                string deviceId = "pocDevice";
+                string deviceId = device.HubDeviceId;
 
                 //should get from the config
                 string hubAddress = "arduhub.azure-devices.net";
@@ -60,11 +62,21 @@ namespace RedAlert.API.Controllers
                 {
                     response = Request.CreateResponse(HttpStatusCode.OK);
                     response.Content = new StringContent(responseMessage);
+
+                    // if there was a previous message we have to resend it to make sure the device is always
+                    //showing the latest state
+                    if (device.LastMessage != null)
+                    {
+                        //TODO: it does not behave well with messages that have a timeout/expiry
+                        DeviceManagement dm = new DeviceManagement();
+                        await dm.SendCloudToDeviceMessageAsync(device.HubDeviceId, device.LastMessage);
+                    }
                 }
                 catch
                 {
                     response = Request.CreateResponse(HttpStatusCode.InternalServerError);
                 }
+
                 return response;
             }
         }
@@ -81,9 +93,11 @@ namespace RedAlert.API.Controllers
         {
             //Device Policy Primary key:
             //2BiZDXCkPaIgSAV0qPgREpNd+mfvy9uEjoRQQyLUl0o=
+            string devicePolicyKey = ConfigurationManager.AppSettings["DevicePolicyKey"];
             byte[] signingKey = Convert.FromBase64String("2BiZDXCkPaIgSAV0qPgREpNd+mfvy9uEjoRQQyLUl0o=");
 
-            string expiring = DateTimeToUnixTimestamp(DateTime.Now.AddHours(24)).ToString();
+            //add one extra hour for uncallibrated RTCs
+            string expiring = DateTimeToUnixTimestamp(DateTime.Now.AddHours(25)).ToString();
 
             //should be getting this from the config
             string resourceUri = ("arduhub.azure-devices.net/devices/" + deviceId).ToLower();

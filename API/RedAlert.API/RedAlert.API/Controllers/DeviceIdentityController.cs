@@ -28,7 +28,7 @@ namespace RedAlert.API.Controllers
                 return Ok(device);
                 
             }
-            catch
+            catch (Exception e)
             {
                 return BadRequest();
             }
