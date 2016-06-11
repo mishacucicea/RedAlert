@@ -12,7 +12,7 @@ using System.Web.Mvc;
 
 namespace RedAlert.API.Controllers
 {
-    public class DeviceController : Controller
+    public class DeviceController : BaseController
     {
 
         private string ApiUrl = ConfigurationManager.AppSettings["ApiUrl"];
