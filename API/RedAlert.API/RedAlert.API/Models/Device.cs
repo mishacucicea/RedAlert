@@ -47,5 +47,6 @@ namespace RedAlert.API.Models
         public string SenderKey { get; set; }
         
         public byte[] LastMessage { get; set; }
+        public virtual DeviceGroup Group { get; set; }
     }
 }
