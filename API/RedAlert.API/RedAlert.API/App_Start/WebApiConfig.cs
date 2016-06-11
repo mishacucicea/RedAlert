@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using RedAlert.API.Handlers;
 using System.Web.Http;
+using System.Web.Http.ExceptionHandling;
 
 namespace RedAlert.API
 {
@@ -27,6 +26,8 @@ namespace RedAlert.API
             );
 
             config.MapHttpAttributeRoutes();
+
+            config.Services.Replace(typeof(IExceptionHandler), new GlobalExceptionHandler());
         }
     }
 }
