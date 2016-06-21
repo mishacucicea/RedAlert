@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using RedAlert.API.BL;
 using RedAlert.API.DAL;
 
 namespace RedAlert.API.Controllers
@@ -47,6 +48,38 @@ namespace RedAlert.API.Controllers
            
             return View();
         }
+
+        [HttpGet]
+        public ViewResult SendMessageToGroup()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SendMessageToGroup(string groupName, string color)
+        {
+            var group = await _db.DeviceGroups.Include(d => d.Devices).SingleOrDefaultAsync(x => x.Name == groupName);
+            if (group == null)
+            {
+                ModelState.AddModelError("groupName", "This group does not exist");
+            }
+            else
+            {
+                var devices = group.Devices.ToList();
+                try
+                {
+                    GroupHelper.SendGroupMessage(devices, color);
+                    ViewBag.Result = $"The message was send to the group";
+                }
+                catch (Exception e)
+                {
+                    ViewBag.Result = $"Something went wrong, the error is {e.Message}";
+                }
+ 
+            }
+            return View();
+        }
+
         [HttpPost]
         public async Task<ActionResult> AddDeviceToGroup(string serialNumber, string groupName)
         {
