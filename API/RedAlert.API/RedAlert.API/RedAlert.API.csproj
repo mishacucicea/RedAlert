@@ -241,6 +241,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="BL\DeviceManagement.cs" />
+    <Compile Include="BL\GroupHelper.cs" />
     <Compile Include="BL\QrCoderGenerator.cs" />
     <Compile Include="BL\RandomProvider.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -431,6 +432,7 @@
     <Content Include="Views\Color\Index.cshtml" />
     <Content Include="Views\Device\GenerateUrl.cshtml" />
     <Content Include="Views\Group\AddDeviceToGroup.cshtml" />
+    <Content Include="Views\Group\SendMessageToGroup.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
