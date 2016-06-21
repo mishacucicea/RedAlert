@@ -1,5 +1,3 @@
-
-
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
 
@@ -32,7 +30,7 @@ PubSubClient client(wclient);
 char hubAddress[100];
 char deviceId[100];
 char hubUser[100];
-char hubPass[100];
+char hubPass[256];
 char hubTopic[100];
 
 void setColor(int r, int g, int b)
@@ -79,7 +77,7 @@ void setup() {
   pinMode(BLUE_PIN, OUTPUT);
 
   //for pin testing
-  while(true)
+  //while(true)
   {
     setColor(1023, 0, 0);
     delay(1000);
@@ -87,7 +85,7 @@ void setup() {
     delay(1000);
     setColor(0, 0, 1023);
     delay(1000);
-    //setColor(0, 0, 0);
+    setColor(0, 0, 0);
   }
   
   //initializing the wifi module
@@ -147,10 +145,51 @@ void loop() {
     //do the wifi client and shit
     String s = "http://redalertxfd.azurewebsites.net/api/iot/authentication?devicekey=";
     s += wifiSetup.getApiKey();
+    //String s = "http://www.prefix.io";
+    
+    Debug2("Making HTTP request to:", s);
     
     HTTPClient http;
     http.begin(s);
+    http.setTimeout(30000);
     int httpCode = http.GET();
+
+    /*
+    WiFiClient tcpClient;
+    if (!tcpClient.connect("redalertxfd.azurewebsites.net", 80)) {
+      Serial.println("connection failed");
+      return;
+    }
+
+    // We now create a URI for the request
+    String url = "http://redalertxfd.azurewebsites.net/api/iot/authentication?devicekey=";
+    //String apiKey = wifiSetup.getApiKey();
+    url += wifiSetup.getApiKey();//apiKey.substring(0, 8);
+
+    // This will send the request to the server
+    String getBody = String("GET ") + url + " HTTP/1.1\r\n" +
+                 "Host: " + "redalertxfd.azurewebsites.net" + "\r\n" + 
+                 "Connection: close\r\n\r\n";
+    Debug(getBody);
+    tcpClient.print(getBody);
+
+    Debug("<-- follows the response -->");
+    
+    unsigned long timeout = millis();
+    while (tcpClient.available() == 0) {
+      if (millis() - timeout > 30000) {
+        Debug("Client Timeout!");
+        tcpClient.stop();
+        return;
+      }
+    }
+
+    // Read all the lines of the reply from server and print them to Serial
+    while(tcpClient.available()){
+      String line = tcpClient.readStringUntil('\r');
+      Debug(line);
+    }
+    */
 
     if (httpCode > 0) {
       if (httpCode == HTTP_CODE_OK) {
@@ -159,25 +198,30 @@ void loop() {
         //now we have to split the payload
         int index = payload.indexOf('\n');
         String hubAddress_ = payload.substring(0, index);
+        hubAddress_.trim();
         hubAddress_.toCharArray(hubAddress, hubAddress_.length() + 1);
-        payload.remove(0, index);
+        payload.remove(0, index+1);
 
         index = payload.indexOf('\n');
         String deviceId_ = payload.substring(0, index);
+        deviceId_.trim();
         deviceId_.toCharArray(deviceId, deviceId_.length() + 1);
-        payload.remove(0, index);
+        payload.remove(0, index+1);
 
         index = payload.indexOf('\n');
         String hubUser_ = payload.substring(0, index);
+        hubUser_.trim();
         hubUser_.toCharArray(hubUser, hubUser_.length() + 1);
-        payload.remove(0, index);
+        payload.remove(0, index+1);
 
         index = payload.indexOf('\n');
         String hubPass_ = payload.substring(0, index);
+        hubPass_.trim();
         hubPass_.toCharArray(hubPass, hubPass_.length() + 1);
-        payload.remove(0, index);
+        payload.remove(0, index+1);
 
         //what's left is the hubTopic
+        payload.trim();
         payload.toCharArray(hubTopic, payload.length() + 1);
 
         //just for testing:
@@ -189,12 +233,12 @@ void loop() {
       }
       else {
         //TODO: what do we do?
-        Debug("Error status code"); 
+        Debug2("Error status code", httpCode); 
       }
     }
     else {
       //TODO: an error occurred, what do we do?
-      Debug("Failed to GET");
+      Debug2("Failed to GET: ", httpCode);
     }
 
     //TODO: so what happens after 24H?...

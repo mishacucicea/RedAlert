@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using Microsoft.Azure.Devices.Common.Security;
 
 namespace RedAlert.API.Controllers
 {
@@ -47,11 +48,12 @@ namespace RedAlert.API.Controllers
                 string deviceId = device.HubDeviceId;
 
                 //should get from the config
-                string hubAddress = "arduhub.azure-devices.net";
+
+                string hubAddress = ConfigurationManager.AppSettings["IotHubUri"];
 
                 string hubName = deviceId;
                 string hubUser = $"{hubAddress}/{deviceId}";
-                string hubConn = GenerateDeviceConnectionString(deviceId);
+                string hubConn = await GenerateDeviceConnectionString(deviceId);
                 string hubTopic = $"devices/{deviceId}/messages/devicebound/#";
 
                 string responseMessage = $"{hubAddress}\n{hubName}\n{hubUser}\n{hubConn}\n{hubTopic}";
@@ -72,7 +74,7 @@ namespace RedAlert.API.Controllers
                         await dm.SendCloudToDeviceMessageAsync(device.HubDeviceId, device.LastMessage);
                     }
                 }
-                catch
+                catch (Exception e)
                 {
                     response = Request.CreateResponse(HttpStatusCode.InternalServerError);
                 }
@@ -89,31 +91,22 @@ namespace RedAlert.API.Controllers
         /// </summary>
         /// <param name="deviceId">IoT Hub DeviceId</param>
         /// <returns></returns>
-        private string GenerateDeviceConnectionString(string deviceId)
+        private async Task<string> GenerateDeviceConnectionString(string deviceId)
         {
-            //Device Policy Primary key:
-            //2BiZDXCkPaIgSAV0qPgREpNd+mfvy9uEjoRQQyLUl0o=
-            string devicePolicyKey = ConfigurationManager.AppSettings["DevicePolicyKey"];
-            byte[] signingKey = Convert.FromBase64String("2BiZDXCkPaIgSAV0qPgREpNd+mfvy9uEjoRQQyLUl0o=");
+            DeviceManagement dm = new DeviceManagement();
+            string deviceSasKey = await dm.GetDeviceSASKey(deviceId);
 
-            //add one extra hour for uncallibrated RTCs
-            string expiring = DateTimeToUnixTimestamp(DateTime.Now.AddHours(25)).ToString();
+            var sasBuilder = new SharedAccessSignatureBuilder()
+            {
+                Key = deviceSasKey,
+                Target = String.Format("{0}/devices/{1}", ConfigurationManager.AppSettings["IotHubUri"], WebUtility.UrlEncode(deviceId)),
+                
+                TimeToLive = TimeSpan.FromHours(25)
+            };
 
-            //should be getting this from the config
-            string resourceUri = ("arduhub.azure-devices.net/devices/" + deviceId).ToLower();
+            string sasKey = sasBuilder.ToSignature();
 
-            string signature = resourceUri + "\n" + expiring;
-
-            HMACSHA256 hash = new HMACSHA256(signingKey);
-
-            System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
-            byte[] message = encoding.GetBytes(signature);
-            string signedMessage = HttpUtility.UrlEncode(Convert.ToBase64String(hash.ComputeHash(message)));
-            string encodedResourceUri = HttpUtility.UrlEncode(resourceUri);
-
-            string connectionString = $"SharedAccessSignature sig={signedMessage}&se={expiring}&sr={encodedResourceUri}";
-
-            return connectionString;
+            return sasKey;
         }
 
         private long DateTimeToUnixTimestamp(DateTime dateTime)

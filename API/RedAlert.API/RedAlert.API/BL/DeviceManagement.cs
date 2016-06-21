@@ -22,10 +22,13 @@ namespace RedAlert.API.BL
         /// The registry manager
         /// </summary>
 
-        private string iotHubUri = ConfigurationManager.AppSettings["IotHubUri"];
 
-
-
+        public async Task<String> GetDeviceSASKey(string deviceId)
+        {
+            RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+            Microsoft.Azure.Devices.Device IoTdevice = await registryManager.GetDeviceAsync(deviceId);
+            return IoTdevice.Authentication.SymmetricKey.PrimaryKey;
+        }
 
         /// <summary>
         /// Adds the device asynchronous.
