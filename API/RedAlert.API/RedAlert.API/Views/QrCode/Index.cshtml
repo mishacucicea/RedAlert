@@ -22,11 +22,11 @@
 
                             $(document).ready(function () {
                                 var senderKey = localStorage.getItem("senderKey");
-                                
+                                var color = localStorage.getItem("color");
                                 if (senderKey == null) {
                                     $('#messageBox').text('Have you registered you device ?');
                                 } else {
-                                    var color = localStorage.getItem("color");
+                                    
                                     $("#qr-Image").attr("src", "http://redalertxfd.azurewebsites.net/QrCode/GenerateQr?senderKey="+senderKey+"&color="+color);
                                 }
                             });
