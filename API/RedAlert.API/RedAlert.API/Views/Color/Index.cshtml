@@ -28,7 +28,7 @@
                             $(document).ready(function () {
                                 var savedColor = localStorage.getItem("color");
                                 if (savedColor == null) {
-                                    savedColor = "#ff0000";
+                                    savedColor = "ff0000";
                                     localStorage.setItem("color", savedColor);
                                 }
 
@@ -40,7 +40,7 @@
 
                             $('#saveButton').click(function() {
                                 var color = $('.colorpicker_hex input').val();
-                                localStorage.setItem("color","#"+ color);
+                                localStorage.setItem("color", color);
                             });
                             });
 

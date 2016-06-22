@@ -22,12 +22,19 @@
                             <h3 class="panel-title">Your Url is:</h3>
                         </div>
                         <div class="panel-body">
-
-                            <input id="foo" type="text" value="http://redalertxfd.azurewebsites.net/Device/Register">
+                            <script>
+                                $(function () {
+                                  
+                                var senderKey = localStorage.getItem("senderKey");
+                                var color = localStorage.getItem("color");
+                                $('#textBoxUrl').val('http://redalertxfd.azurewebsites.net/api/message?senderkey=' + senderKey + '&color=' + color);
+                                });
+                            </script>
+                            <input id="textBoxUrl" type="text" value="" >
                             </br>
                             </br>
                             </hr>
-                            <button type="button" class="btn btn-default btn-lg" data-clipboard-action="copy" data-clipboard-target="#foo">
+                            <button type="button" class="btn btn-default btn-lg" data-clipboard-action="copy" data-clipboard-target="#textBoxUrl">
                                 <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Copy to Clipboard
                             </button>
 

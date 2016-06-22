@@ -15,7 +15,7 @@ namespace RedAlert.API.Controllers
         public ActionResult GenerateQr(string senderKey, string color)
         {
 
-            var apiUrl = "http://redalertxfd.azurewebsites.net/api/message?senderkey="+ senderKey+"&color="+ color;                    
+            var apiUrl = "http://redalertxfd.azurewebsites.net/api/message?senderkey="+ senderKey +"&color="+ color;                    
             var generator = new QrCoderGenerator();
 
             var image = generator.GetQrCodeFromString(apiUrl);
