@@ -17,12 +17,29 @@
                         </div>
                         <div class="panel-body">
 
-                            <img id="qr-Image" src='@Url.Action("GenerateQr")' alt="" />
+                            <script>
 
-                            @section Scripts {
-                                @Scripts.Render("~/bundles/jqueryval")
-                            }
-                        </div>
+
+                            $(document).ready(function () {
+                                var senderKey = localStorage.getItem("senderKey");
+                                
+                                if (senderKey == null) {
+                                    $('#messageBox').text('Have you registered you device ?');
+                                } else {
+                                    var color = localStorage.getItem("color");
+                                    $("#qr-Image").attr("src", "http://redalertxfd.azurewebsites.net/QrCode/GenerateQr?senderKey="+senderKey+"&color="+color);
+                                }
+                            });
+
+                            </script>
+                            <div id="messageBox">
+                                </div>
+                                <img id="qr-Image"  alt=""/>
+
+                                @section Scripts {
+                                    @Scripts.Render("~/bundles/jqueryval")
+                                }
+                            </div>
                     </div>
                 </div>
             </div>

@@ -23,9 +23,31 @@
                             }
                         </style>
                         <script>
-                            $('#colorpickerHolder').ColorPicker({ flat: true });
+                            
+
+                            $(document).ready(function () {
+                                var savedColor = localStorage.getItem("color");
+                                $('#colorpickerHolder').ColorPicker({
+                                color:savedColor,
+                                flat: true
+                                
+                            });
+
+                            $('#saveButton').click(function() {
+                                var color = $('.colorpicker_hex input').val();
+                                localStorage.setItem("color","#"+ color);
+                            });
+                            });
+
                         </script>
+
+
+
                     </div>
+                    <button type="button" id="saveButton" class="btn btn-default btn-lg" data-clipboard-action="copy" data-clipboard-target="#foo">
+                        <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Save the color
+                    </button>
+                    </br>
                 </div>
             </div>
         </div>
