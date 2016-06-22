@@ -22,6 +22,12 @@
                         <div class="panel-body">
                             @if (Model.DeviceKey != null)
                             {
+                                <script>
+                                    $(document).ready(function () {
+                                        localStorage.setItem("deviceKey", "@Model.DeviceKey");
+                                        localStorage.setItem("senderKey", "@Model.SenderKey");
+                                    });
+                                </script>
                                 <h2> Your Device key is: @Model.DeviceKey</h2>
                                 <h2> Your Sender Key is: @Model.SenderKey</h2>
                             }
