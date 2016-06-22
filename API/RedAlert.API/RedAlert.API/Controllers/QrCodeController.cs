@@ -12,15 +12,13 @@ namespace RedAlert.API.Controllers
     public class QrCodeController : BaseController
     {
         // GET: QrCode
-        public ActionResult GenerateQr()
+        public ActionResult GenerateQr(string senderKey, string color)
         {
 
-            var apiUrl = "http://redalert.com/";
-            var token = "sdasfrgrgdfgdf344554dff";
-            var message = apiUrl + token;
+            var apiUrl = "http://redalertxfd.azurewebsites.net/api/message?senderkey="+ senderKey+"&color="+ color;                    
             var generator = new QrCoderGenerator();
 
-            var image = generator.GetQrCodeFromString(message);
+            var image = generator.GetQrCodeFromString(apiUrl);
 
             var bitmapBytes = BitmapToBytes(image); //Convert bitmap into a byte array
             return File(bitmapBytes, "image/jpeg");
