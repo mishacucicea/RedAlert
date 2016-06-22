@@ -27,7 +27,12 @@
 
                             $(document).ready(function () {
                                 var savedColor = localStorage.getItem("color");
-                                $('#colorpickerHolder').ColorPicker({
+                                if (savedColor == null) {
+                                    savedColor = "#ff0000";
+                                    localStorage.setItem("color", savedColor);
+                                }
+
+                                $('#colorpickerHolder').ColorPicker({                                   
                                 color:savedColor,
                                 flat: true
                                 
