@@ -253,7 +253,7 @@
     <Compile Include="Controllers\IoTController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\QrCodeController.cs" />
-    <Compile Include="Controllers\RecipeController.cs" />
+    <Compile Include="Controllers\Recipe.cs" />
     <Compile Include="DAL\IRepository.cs" />
     <Compile Include="DAL\RedAlertContext.cs" />
     <Compile Include="Global.asax.cs">

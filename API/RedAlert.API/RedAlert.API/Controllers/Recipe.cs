@@ -6,9 +6,9 @@ using System.Web.Mvc;
 
 namespace RedAlert.API.Controllers
 {
-    public class ReceipeController : BaseController
+    public class RecipeController : BaseController
     {
-        // GET: Receipe
+        // GET: Recipe
         public ActionResult Index()
         {
             return View();
