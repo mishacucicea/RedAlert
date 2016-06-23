@@ -20,6 +20,15 @@
                         </div>
                         <div class="panel-body">
 
+                            <div class="form-group">
+                                @Html.Label("Senderkey", new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    <input id="senderkeyidmess" type="text" value="">
+                                    @Html.ValidationMessage("Senderkey")
+
+                                </div>
+                            </div>
+
                             <script>
 
                                 $(document).ready(function () {
@@ -38,8 +47,18 @@
                                         }
                                     });
 
+                                    var senderKey = localStorage.getItem("senderKey");
+                                    if (senderKey != null) {
+                                        $('#senderkeyidmess').val(senderKey);
+                                    }
+
+                                    $("#senderkeyidmess").change(function () {
+                                         senderKey = $('#senderkeyidmess').val();
+                                       
+                                    });
+
                                     $("#sendMessageButton").click(function () {
-                                        var senderKey = localStorage.getItem("senderKey");                                                                             
+                                                                                                                 
                                         var color = $('.colorpicker_hex input').val();                                                                                
                                         $.get("http://redalertxfd.azurewebsites.net/api/message?senderkey=" + senderKey + "&color=" + color);
                                         });

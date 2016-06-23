@@ -23,17 +23,48 @@
                         </div>
                         <div class="panel-body">
                             <script>
-                                $(function () {
-                                  
-                                var senderKey = localStorage.getItem("senderKey");
-                                var color = localStorage.getItem("color");
-                                $('#textBoxUrl').val('http://redalertxfd.azurewebsites.net/api/message?senderkey=' + senderKey + '&color=' + color);
+                                $(function() {
+
+                                    var senderKey = localStorage.getItem("senderKey");
+                                    var color = localStorage.getItem("color");
+
+                                    if (senderKey != null) {
+                                        $('#senderkeyid').val(senderKey);
+                                    }
+
+                                    if (senderKey != null) {
+                                        $('#textBoxUrl').val('http://redalertxfd.azurewebsites.net/api/message?senderkey=' + senderKey + '&color=' + color);
+                                    }
+
+
+                                    $("#senderkeyid").change(function() {
+                                        var senderKeyBox = $('#senderkeyid').val();
+                                        if (senderKeyBox != null) {
+                                            $('#textBoxUrl').val('http://redalertxfd.azurewebsites.net/api/message?senderkey=' + senderKeyBox + '&color=' + color);
+                                        }
+                                    });
                                 });
                             </script>
-                            <input id="textBoxUrl" type="text" value="" >
-                            </br>
-                            </br>
-                            </hr>
+
+                           
+                            <div class="form-group">
+                                @Html.Label("Senderkey", new {@class = "control-label col-md-2"})
+                                <div class="col-md-10">
+                                    <input id="senderkeyid" type="text" value="">
+                                    @Html.ValidationMessage("Senderkey")
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("GeneratedUrl", new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    <input id="textBoxUrl" type="text" value="">
+                                    @Html.ValidationMessage("GeneratedUrl")
+                                    
+                                </div>
+                            </div>
+                          
+                           
                             <button type="button" class="btn btn-default btn-lg" data-clipboard-action="copy" data-clipboard-target="#textBoxUrl">
                                 <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Copy to Clipboard
                             </button>
