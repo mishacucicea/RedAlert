@@ -20,6 +20,9 @@ unsigned long lastTimeCheck = 0;
 #define BLUE_PIN 13
 #define GREEN_PIN 12
 
+#define PATTERN_CONTINUOUS 0
+#define PATTERN_WAVES 1
+
 //ref: https://github.com/oh1ko/ESP82666_OLED_clock/blob/master/ESP8266_OLED_clock.ino
 
 //ref: https://github.com/chriscook8/esp-arduino-apboot/blob/master/ESP-wifiboot.ino
@@ -32,6 +35,11 @@ char deviceId[100];
 char hubUser[100];
 char hubPass[256];
 char hubTopic[100];
+
+bool hasColor = false;
+byte pattern;
+int patternStage;
+byte color[3];
 
 void setColor(int r, int g, int b)
 {
@@ -50,7 +58,15 @@ void callback(char* topic, byte* payload, unsigned int length) {
     //3 bytes is the RGB value
     //1 bytes is the pattern number - not supported yet
     //4 bytes is the timeout - not supported yet
-    setColor(payload[1], payload[2], payload[3]);
+    setColor(payload[1]<<2, payload[2]<<2, payload[3]<<2);
+
+    hasColor = true;
+    pattern = payload[4];
+    patternStage = 0;
+    color[0] = payload[1];
+    color[1] = payload[2];
+    color[2] = payload[3];
+    
   }
   else {
 
@@ -131,9 +147,13 @@ void setup() {
   configTime(3 * 3600, 0, "pool.ntp.org", "time.nist.gov");
 }
 
+unsigned long last1000;
+
 void loop() {
 
   unsigned long now = millis();
+
+
 
   //TODO: fix bug: after 47 days the now will reset to 0
   
@@ -145,7 +165,6 @@ void loop() {
     //do the wifi client and shit
     String s = "http://redalertxfd.azurewebsites.net/api/iot/authentication?devicekey=";
     s += wifiSetup.getApiKey();
-    //String s = "http://www.prefix.io";
     
     Debug2("Making HTTP request to:", s);
     
@@ -153,43 +172,6 @@ void loop() {
     http.begin(s);
     http.setTimeout(30000);
     int httpCode = http.GET();
-
-    /*
-    WiFiClient tcpClient;
-    if (!tcpClient.connect("redalertxfd.azurewebsites.net", 80)) {
-      Serial.println("connection failed");
-      return;
-    }
-
-    // We now create a URI for the request
-    String url = "http://redalertxfd.azurewebsites.net/api/iot/authentication?devicekey=";
-    //String apiKey = wifiSetup.getApiKey();
-    url += wifiSetup.getApiKey();//apiKey.substring(0, 8);
-
-    // This will send the request to the server
-    String getBody = String("GET ") + url + " HTTP/1.1\r\n" +
-                 "Host: " + "redalertxfd.azurewebsites.net" + "\r\n" + 
-                 "Connection: close\r\n\r\n";
-    Debug(getBody);
-    tcpClient.print(getBody);
-
-    Debug("<-- follows the response -->");
-    
-    unsigned long timeout = millis();
-    while (tcpClient.available() == 0) {
-      if (millis() - timeout > 30000) {
-        Debug("Client Timeout!");
-        tcpClient.stop();
-        return;
-      }
-    }
-
-    // Read all the lines of the reply from server and print them to Serial
-    while(tcpClient.available()){
-      String line = tcpClient.readStringUntil('\r');
-      Debug(line);
-    }
-    */
 
     if (httpCode > 0) {
       if (httpCode == HTTP_CODE_OK) {
@@ -251,47 +233,62 @@ void loop() {
     client.setCallback(callback);
   }
 
-/*
-  if (WiFi.status() != WL_CONNECTED) {
-    //TODO: debug info
-    WiFi.begin(ssid.c_str(), pass.c_str());
-
-    if (WiFi.waitForConnectResult() != WL_CONNECTED) {
-      //TODO: log the fail reason?
-      return;
-    }
-
-    //TOOD: log 
-  }
-*/
-
-  Debug("Checking for wifi connected");
-  if (WiFi.status() == WL_CONNECTED) {
-    Debug("WiFi is connected");
-    if (!client.connected()) {
-      Debug("MQTT connecting..");
-      if (client.connect(deviceId, hubUser, hubPass)) {
-        //TODO: log connected status
-        Debug("MQTT connected.");
-
-        //client.publish("outTopic", "test");
-        Debug("Subscribing to the MQTT topic");
-        client.subscribe(hubTopic);
-        Info("Ready to receive messages.");
-      } else {
-        Debug("Could not connect :(");
-      }
-    }
+  //every second
+  if (last1000 == 0 || now - last1000 >= 1000 || now < last1000) {
+    last1000 = now;
     
-    Debug("checking if MQTT is connected");
-    if (client.connected()) {
-      Debug("MQTT is connected!");
-      if (!client.loop()) {
-        Debug("MQTT failed to loop");
+    Debug("Checking for wifi connected");
+    if (WiFi.status() == WL_CONNECTED) {
+      Debug("WiFi is connected");
+      if (!client.connected()) {
+        Debug("MQTT connecting..");
+        if (client.connect(deviceId, hubUser, hubPass)) {
+          //TODO: log connected status
+          Debug("MQTT connected.");
+  
+          //client.publish("outTopic", "test");
+          Debug("Subscribing to the MQTT topic");
+          client.subscribe(hubTopic);
+          Info("Ready to receive messages.");
+        } else {
+          Debug("Could not connect :(");
+        }
+      }
+      
+      Debug("checking if MQTT is connected");
+      if (client.connected()) {
+        Debug("MQTT is connected!");
+        if (!client.loop()) {
+          Debug("MQTT failed to loop");
+        }
       }
     }
   }
 
-  delay(1000);
+  //ideally will be executed every 10ms, but we don't really care about accuracy in here
+  if (hasColor = true) {
+    if (pattern == PATTERN_WAVES) {
+      patternStage = ++patternStage % 400;
+      
+      //total pattern cycle is 4 sec - max stage = 400
+      int red = color[0] << 2;
+      int green = color[1] << 2;
+      int blue = color[2] << 2;
+  
+      //warning - we're losing precision in here, move to floating point?
+      if (patternStage < 200) {
+        red = red / 200 * patternStage;
+        green = green / 200 * patternStage;
+        blue = blue / 200 * patternStage;
+      } else {
+        red = red / 200 * (400 - patternStage);
+        green = green / 200 * (400 - patternStage);
+        blue = blue / 200 * (400 - patternStage);
+      }
+      setColor(red, green, blue);
+    }
+  }
+
+  delay(10);
 }
 
