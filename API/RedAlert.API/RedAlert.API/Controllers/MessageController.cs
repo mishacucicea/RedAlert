@@ -53,6 +53,15 @@ namespace RedAlert.API.Controllers
                 message[2] = colorRGB.G;
                 message[3] = colorRGB.B;
 
+                if (pattern.HasValue)
+                {
+                    if (string.Compare(pattern, "waves", true) == 0)
+                    {
+                        //PATTERN_WAVES
+                        message[4] = 1;
+                    }
+                }
+
                 if (timeout.HasValue)
                 {
                     byte[] timeoutBytes = BitConverter.GetBytes(timeout.Value);
@@ -61,6 +70,7 @@ namespace RedAlert.API.Controllers
                     Array.Reverse(timeoutBytes);
                     Array.Copy(timeoutBytes, 0, message, 4, 3);
                 }
+
                 using (RedAlertContext context = new RedAlertContext())
                 {
                     Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.SenderKey == senderKey);
