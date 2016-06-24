@@ -52,9 +52,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Device Management <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         </br>
-                        <li>@Html.ActionLink("Register Device", "Register", "Device", new {area = ""}, null)</li>
-                        <hr>
-                        <li>@Html.ActionLink("Get Device Key", "Get", "Device", new {area = ""}, null)</li>
+                        <li>@Html.ActionLink("Register Device", "Register", "Device", new {area = ""}, null)</li>                        
                         <hr>
                         <li>@Html.ActionLink("Set the Color", "Index", "Color", new {area = ""}, null)</li>
                         <hr>
@@ -63,6 +61,8 @@
                         <li> @Html.ActionLink("Create QR Code", "Index", "QrCode", new {area = ""}, null)</li>
                         <hr>
                         <li>@Html.ActionLink("Mood", "ViewSendMessage", "Device")</li>
+                        <hr>
+                        <li>@Html.ActionLink("Voting", "Voting", "Color")</li>
                         </br>
                     </ul>
                 </li>
@@ -114,7 +114,7 @@
                             <a href="#contact">Contact</a>
                         </li>
                     </ul>
-                    <p class="copyright text-muted small">Copyright &copy; Your Company 2014. All Rights Reserved</p>
+                    <p class="copyright text-muted small">Copyright &copy; LightFeeD 2016. All Rights Reserved</p>
                 </div>
             </div>
         </div>

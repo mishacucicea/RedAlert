@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewBag.Title = "Voting";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-section-a">
+    <div class="jumbotron">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8  col-md-offset-2">
+                    <div class="panel panel-default  device-panel">
+
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Your personal QR Code</h3>
+                        </div>
+                        <div class="panel-body">
+
+                            <script>
+                                $(document).ready(function() {
+                                    var senderKey = localStorage.getItem("senderKey");
+                                   
+                                    
+                                    $("#qr-Imageup").attr("src", "http://redalert/QrCode/GenerateVotingQr?answer=UpVote");
+
+                                    $("#qr-Imagedown").attr("src", "http://redalert/QrCode/GenerateVotingQr?answer=DownVote");
+
+                                    if (senderKey == null) {
+                                        $('#messageBox').text('Have you registered you device ?');
+                                    } else {
+                                        $('#senderkeyidVotingQR').val(senderKey);
+                                        $.post("http://redalert/Color/Voting?senderKey=" + senderKey);
+
+                                    }
+                                    $("#senderkeyidVotingQR").change(function () {
+                                        var senderKeyBox = $('#senderkeyidVotingQR').val();
+                                        if (senderKeyBox != null) {
+                                            $.post("http://redalert/Color/Voting?senderKey=" + senderKey);
+                                        }
+                                    });
+                                    setInterval(function () {
+                                        $.post("http://redalert/Color/Voting?senderKey=" + senderKey);
+                                    }, 2000);
+                                });                             
+                            </script>
+
+                            <div class="form-group">
+                                @Html.Label("Senderkey", new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    <input id="senderkeyidVotingQR" type="text" value="">
+                                    @Html.ValidationMessage("Senderkey")
+
+                                </div>
+
+                                <div class="col-md-10">
+                                    @Html.Label("ThumbsUp", new { @class = "control-label col-md-2" })
+                                    <img id="qr-Imageup" alt="" />
+                                </div>
+
+                                <div class="col-md-10">
+                                    @Html.Label("ThumbsDown", new { @class = "control-label col-md-2" })
+                                    <img id="qr-Imagedown" alt="" />
+                                </div>
+                            </div>
+
+                            <div id="messageBox">
+                            </div>
+                            
+
+                            @section Scripts {
+                                @Scripts.Render("~/bundles/jqueryval")
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
