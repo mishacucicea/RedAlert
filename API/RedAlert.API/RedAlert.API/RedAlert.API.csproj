@@ -252,7 +252,7 @@
     <Compile Include="Controllers\DeviceIdentityController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\IoTController.cs" />
+    <Compile Include="Controllers\API\IoTController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\QrCodeController.cs" />
     <Compile Include="Controllers\Recipe.cs" />
@@ -396,6 +396,9 @@
     <None Include="debugconfig.json" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Firmware\dev-05.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
