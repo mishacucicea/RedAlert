@@ -9,7 +9,7 @@ using RedAlert.API.BL;
 
 namespace RedAlert.API.Controllers
 {
-    public class ColorController : Controller
+    public class ColorController : BaseController
     {
         private string ApiUrl = ConfigurationManager.AppSettings["ApiUrl"];
         // GET: Color
