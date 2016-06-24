@@ -38,6 +38,12 @@ h6 {
 {
   width: 50%;
 }
+#qr-Imageup {
+   width: 50%; 
+}
+#qr-Imagedown {
+   width: 50%; 
+}
 .succesResult {
     color: green;
 }

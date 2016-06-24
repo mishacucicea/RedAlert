@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -11,11 +12,13 @@ namespace RedAlert.API.Controllers
 {
     public class QrCodeController : BaseController
     {
+        private readonly string ApiUrl = ConfigurationManager.AppSettings["ApiUrl"];
         // GET: QrCode
+        [HttpGet]
         public ActionResult GenerateQr(string senderKey, string color)
         {
 
-            var apiUrl = "http://redalertxfd.azurewebsites.net/api/message?senderkey="+ senderKey +"&color="+ color;                    
+            var apiUrl = ApiUrl + "/api/message?senderkey="+ senderKey +"&color="+ color;                    
             var generator = new QrCoderGenerator();
 
             var image = generator.GetQrCodeFromString(apiUrl);
@@ -24,7 +27,20 @@ namespace RedAlert.API.Controllers
             return File(bitmapBytes, "image/jpeg");
           
         }
+       [HttpGet]
+        public ActionResult GenerateVotingQr(string answer)
+        {
+            
+            var apiUrl = ApiUrl + "/api/Voting/"+ answer;
+                    
+            var generator = new QrCoderGenerator();
 
+            var image = generator.GetQrCodeFromString(apiUrl);
+
+            var bitmapBytes = BitmapToBytes(image); //Convert bitmap into a byte array
+            return File(bitmapBytes, "image/jpeg");
+
+        }
         public ActionResult Index()
         {
             return View();

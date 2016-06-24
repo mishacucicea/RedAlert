@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Microsoft.Ajax.Utilities;
 
 namespace RedAlert.API.Controllers
 {
@@ -53,7 +54,7 @@ namespace RedAlert.API.Controllers
                 message[2] = colorRGB.G;
                 message[3] = colorRGB.B;
 
-                if (pattern.HasValue)
+                if (!pattern.IsNullOrWhiteSpace())
                 {
                     if (string.Compare(pattern, "waves", true) == 0)
                     {
