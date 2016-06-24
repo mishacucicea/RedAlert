@@ -31,7 +31,7 @@ namespace RedAlert.API.Controllers
         public ActionResult GenerateVotingQr(string answer)
         {
             
-            var apiUrl = ApiUrl + "/api/Voting/"+ answer;
+            var apiUrl = ApiUrl + "/Voting/"+ answer;
                     
             var generator = new QrCoderGenerator();
 

@@ -21,9 +21,9 @@
                                     var senderKey = localStorage.getItem("senderKey");
                                    
                                     
-                                    $("#qr-Imageup").attr("src", "http://redalertxfd.azurewebsites.net/QrCode/GenerateVotingQr?answer=UpVote");
+                                    $("#qr-Imageup").attr("src", "http://redalertxfd.azurewebsites.net/QrCode/GenerateVotingQr?answer=Up");
 
-                                    $("#qr-Imagedown").attr("src", "http://redalertxfd.azurewebsites.net/QrCode/GenerateVotingQr?answer=DownVote");
+                                    $("#qr-Imagedown").attr("src", "http://redalertxfd.azurewebsites.net/QrCode/GenerateVotingQr?answer=Down");
 
                                     if (senderKey == null) {
                                         $('#messageBox').text('Have you registered you device ?');
