@@ -13,6 +13,7 @@ namespace RedAlert.API.Controllers
     {
         
         [HttpGet]
+        public ActionResult Up()
         {
             ColorHelper.TotalResponse++;
             ColorHelper.YesAnswer++;
@@ -22,6 +23,7 @@ namespace RedAlert.API.Controllers
         }
 
         [HttpGet]
+        public ActionResult Down()
         {
             ColorHelper.TotalResponse++;
             ColorHelper.NoAnswer++;
