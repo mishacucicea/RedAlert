@@ -12,8 +12,11 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using Microsoft.Azure.Devices.Common.Security;
+using System.IO;
+using System.Net.Http.Headers;
+using System.Text;
 
-namespace RedAlert.API.Controllers
+namespace RedAlert.API.Controllers.API
 {
     /// <summary>
     /// Device facing API - This controller is responsible for providing the devices with required API methods.
@@ -83,6 +86,62 @@ namespace RedAlert.API.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<HttpResponseMessage> Update()
+        {
+            //[HTTP_X_ESP8266_FREE_SPACE] => 671744
+            //[HTTP_X_ESP8266_VERSION] => DOOR-7-g14f53a19
+
+            IEnumerable<string> headerValues = Request.Headers.GetValues("HTTP_X_ESP8266_FREE_SPACE");
+
+            //0 will also be considered as unknown
+            int freeSpace;
+            int.TryParse(headerValues.FirstOrDefault(), out freeSpace);
+
+            headerValues = Request.Headers.GetValues("HTTP_X_ESP8266_VERSION");
+            string version = headerValues.FirstOrDefault();
+
+            //we need the version so we don't update the device in an infinite loop
+            if (string.IsNullOrEmpty(version))
+            {
+                return Request.CreateResponse(HttpStatusCode.Forbidden);
+            }
+
+            //if version is already up to date then return 304
+            string[] splitVersion = version.Split('-');
+            if (int.Parse(splitVersion[1]) >= 5)
+            {
+                return Request.CreateResponse(HttpStatusCode.NotModified);
+            }
+
+            string newVersion = "dev-05";
+
+            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+            var stream = new FileStream(System.Web.HttpContext.Current.Server.MapPath("~/Firmware/" + newVersion + ".bin"), FileMode.Open);
+
+            //have to calculate md5
+            MD5 md5 = System.Security.Cryptography.MD5.Create();
+            byte[] hash = md5.ComputeHash(stream);
+            //initialize with 32 to avoid buffer resizing
+            StringBuilder sb = new StringBuilder(32);
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("X2"));
+            }
+
+            string md5hash = sb.ToString();
+
+            //Don't forget to rest the stream!
+            stream.Position = 0;
+            result.Content = new StreamContent(stream);
+            result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+            result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+            {
+                FileName = newVersion + ".bin"
+            };
+            result.Content.Headers.Add("x-MD5", md5hash);
+            return result;
+        }
 
         #region private methods
 
@@ -100,7 +159,7 @@ namespace RedAlert.API.Controllers
             {
                 Key = deviceSasKey,
                 Target = String.Format("{0}/devices/{1}", ConfigurationManager.AppSettings["IotHubUri"], WebUtility.UrlEncode(deviceId)),
-                
+
                 TimeToLive = TimeSpan.FromHours(25)
             };
 
