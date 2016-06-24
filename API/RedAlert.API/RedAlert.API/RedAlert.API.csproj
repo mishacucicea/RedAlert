@@ -242,6 +242,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="BL\DeviceManagement.cs" />
     <Compile Include="BL\GroupHelper.cs" />
+    <Compile Include="BL\MessageBuilder.cs" />
     <Compile Include="BL\QrCoderGenerator.cs" />
     <Compile Include="BL\RandomProvider.cs" />
     <Compile Include="Controllers\BaseController.cs" />
