@@ -240,6 +240,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="BL\ColorHelper.cs" />
     <Compile Include="BL\DeviceManagement.cs" />
     <Compile Include="BL\GroupHelper.cs" />
     <Compile Include="BL\MessageBuilder.cs" />
@@ -255,6 +256,7 @@
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\QrCodeController.cs" />
     <Compile Include="Controllers\Recipe.cs" />
+    <Compile Include="Controllers\VotingController.cs" />
     <Compile Include="DAL\IRepository.cs" />
     <Compile Include="DAL\RedAlertContext.cs" />
     <Compile Include="Global.asax.cs">
@@ -434,6 +436,7 @@
     <Content Include="Views\Device\GenerateUrl.cshtml" />
     <Content Include="Views\Group\AddDeviceToGroup.cshtml" />
     <Content Include="Views\Group\SendMessageToGroup.cshtml" />
+    <Content Include="Views\Color\Voting.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
