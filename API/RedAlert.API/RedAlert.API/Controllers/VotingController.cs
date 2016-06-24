@@ -3,26 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
 using RedAlert.API.BL;
+using System.Web.Mvc;
 
 namespace RedAlert.API.Controllers
 {
-    public class VotingController : ApiController
+
+    public class VotingController : BaseController
     {
+        
         [HttpGet]
-        [Route("Voting/up")]
-        public void UpVote()
         {
             ColorHelper.TotalResponse++;
             ColorHelper.YesAnswer++;
+
+            return View("Thanks");
+            //return Content("Success! You have Up Voted.");
         }
+
         [HttpGet]
-        [Route("Voting/down")]
-        public void DownVote()
         {
             ColorHelper.TotalResponse++;
             ColorHelper.NoAnswer++;
+
+            return View("Thanks");
         }
     }
 }

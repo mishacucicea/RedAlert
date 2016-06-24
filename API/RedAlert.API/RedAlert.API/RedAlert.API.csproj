@@ -437,6 +437,7 @@
     <Content Include="Views\Group\AddDeviceToGroup.cshtml" />
     <Content Include="Views\Group\SendMessageToGroup.cshtml" />
     <Content Include="Views\Color\Voting.cshtml" />
+    <Content Include="Views\Voting\Thanks.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>

@@ -79,7 +79,7 @@ namespace RedAlert.API.Controllers
 
         }
 
-        public static byte[] StringToByteArray(string hex)
+        private static byte[] StringToByteArray(string hex)
         {
             if (hex.Length % 2 != 0) throw new FormatException("Not a hex string.");
 
