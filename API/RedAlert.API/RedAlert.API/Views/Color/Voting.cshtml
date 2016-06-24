@@ -21,25 +21,25 @@
                                     var senderKey = localStorage.getItem("senderKey");
                                    
                                     
-                                    $("#qr-Imageup").attr("src", "http://redalert/QrCode/GenerateVotingQr?answer=UpVote");
+                                    $("#qr-Imageup").attr("src", "http://redalertxfd.azurewebsites.net/QrCode/GenerateVotingQr?answer=UpVote");
 
-                                    $("#qr-Imagedown").attr("src", "http://redalert/QrCode/GenerateVotingQr?answer=DownVote");
+                                    $("#qr-Imagedown").attr("src", "http://redalertxfd.azurewebsites.net/QrCode/GenerateVotingQr?answer=DownVote");
 
                                     if (senderKey == null) {
                                         $('#messageBox').text('Have you registered you device ?');
                                     } else {
                                         $('#senderkeyidVotingQR').val(senderKey);
-                                        $.post("http://redalert/Color/Voting?senderKey=" + senderKey);
+                                        $.post("http://redalertxfd.azurewebsites.net/Color/Voting?senderKey=" + senderKey);
 
                                     }
                                     $("#senderkeyidVotingQR").change(function () {
                                         var senderKeyBox = $('#senderkeyidVotingQR').val();
                                         if (senderKeyBox != null) {
-                                            $.post("http://redalert/Color/Voting?senderKey=" + senderKey);
+                                            $.post("http://redalertxfd.azurewebsites.net/Color/Voting?senderKey=" + senderKey);
                                         }
                                     });
                                     setInterval(function () {
-                                        $.post("http://redalert/Color/Voting?senderKey=" + senderKey);
+                                        $.post("http://redalertxfd.azurewebsites.net/Color/Voting?senderKey=" + senderKey);
                                     }, 2000);
                                 });                             
                             </script>
