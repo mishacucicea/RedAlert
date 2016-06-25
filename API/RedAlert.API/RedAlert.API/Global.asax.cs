@@ -57,8 +57,8 @@ namespace RedAlert.API
             var logger = LogManager.GetLogger("RedAlert");
             logger.Error(ex);
 
-            // Clear the error from the server.
-            Server.ClearError();
+            // Redirect to the error page.
+            Response.Redirect("/Home/Error");
         }
     }
 }

@@ -1,71 +1,48 @@
 ﻿
 @{
     ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<div class="panel-heading">
+    <h3 class="panel-title">Your personal QR Code</h3>
+</div>
+<div class="panel-body">
+    <script>
+        $(document).ready(function () {
+            var senderKey = localStorage.getItem("senderKey");
+            var color = localStorage.getItem("color");
 
-<div class="content-section-a">
-    <div class="jumbotron">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8  col-md-offset-2">
-                    <div class="panel panel-default  device-panel">
-                    
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Your personal QR Code</h3>
-                        </div>
-                        <div class="panel-body">
+            if (senderKey == null) {
+                $('#messageBox').text('Have you registered you device ?');
+            } else {
+                $('#senderkeyidQR').val(senderKey);
+                $("#qr-Image").attr("src", "http://redalertxfd.azurewebsites.net/QrCode/GenerateQr?senderKey=" + senderKey + "&color=" + color);
 
-                            <script>
-
-
-                                $(document).ready(function() {
-                                    var senderKey = localStorage.getItem("senderKey");
-                                    var color = localStorage.getItem("color");
-
-                                    
-
-                                    if (senderKey == null) {
-                                        $('#messageBox').text('Have you registered you device ?');
-                                    } else {
-                                        $('#senderkeyidQR').val(senderKey);
-                                        $("#qr-Image").attr("src", "http://redalertxfd.azurewebsites.net/QrCode/GenerateQr?senderKey=" + senderKey + "&color=" + color);
-
-                                    }
+            }
 
 
-                                    $("#senderkeyidQR").change(function () {
-                                        var senderKeyBox = $('#senderkeyidQR').val();
-                                        if (senderKeyBox != null) {
-                                            $("#qr-Image").attr("src", "http://redalertxfd.azurewebsites.net/QrCode/GenerateQr?senderKey=" + senderKeyBox + "&color=" + color);
-                                        }
-                                    });
+            $("#senderkeyidQR").change(function () {
+                var senderKeyBox = $('#senderkeyidQR').val();
+                if (senderKeyBox != null) {
+                    $("#qr-Image").attr("src", "http://redalertxfd.azurewebsites.net/QrCode/GenerateQr?senderKey=" + senderKeyBox + "&color=" + color);
+                }
+            });
 
-                                });
+        });
 
-                            </script>
+    </script>
 
-                            <div class="form-group">
-                                @Html.Label("Senderkey", new { @class = "control-label col-md-2" })
-                                <div class="col-md-10">
-                                    <input id="senderkeyidQR" type="text" value="">
-                                    @Html.ValidationMessage("Senderkey")
+    <div class="form-group">
+        @Html.Label("Senderkey", new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <input id="senderkeyidQR" type="text" value="">
+            @Html.ValidationMessage("Senderkey")
 
-                                </div>
-                            </div>
-
-                            <div id="messageBox">
-                                </div>
-                                <img id="qr-Image"  alt=""/>
-
-                                @section Scripts {
-                                    @Scripts.Render("~/bundles/jqueryval")
-                                }
-                            </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
+
+    <div id="messageBox">
     </div>
+    <img id="qr-Image" alt="" />
+
+</div>

@@ -1,79 +1,64 @@
 ﻿
 @{
     ViewBag.Title = "GenerateUrl";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <script src="~/Scripts/clipboard.min.js"></script>
 
 <script>
     var clipboard = new Clipboard('.btn');
-
-
 </script>
 
-<div class="content-section-a">
-    <div class="jumbotron">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8  col-md-offset-2">
-                    <div class="panel panel-default  device-panel">
-                        
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Your Url is:</h3>
-                        </div>
-                        <div class="panel-body">
-                            <script>
-                                $(function() {
 
-                                    var senderKey = localStorage.getItem("senderKey");
-                                    var color = localStorage.getItem("color");
+<div class="panel-heading">
+    <h3 class="panel-title">Your Url is:</h3>
+</div>
+<div class="panel-body">
+    <script>
+        $(function () {
 
-                                    if (senderKey != null) {
-                                        $('#senderkeyid').val(senderKey);
-                                    }
+            var senderKey = localStorage.getItem("senderKey");
+            var color = localStorage.getItem("color");
 
-                                    if (senderKey != null) {
-                                        $('#textBoxUrl').val('http://redalertxfd.azurewebsites.net/api/message?senderkey=' + senderKey + '&color=' + color);
-                                    }
+            if (senderKey != null) {
+                $('#senderkeyid').val(senderKey);
+            }
+
+            if (senderKey != null) {
+                $('#textBoxUrl').val('http://redalertxfd.azurewebsites.net/api/message?senderkey=' + senderKey + '&color=' + color);
+            }
 
 
-                                    $("#senderkeyid").change(function() {
-                                        var senderKeyBox = $('#senderkeyid').val();
-                                        if (senderKeyBox != null) {
-                                            $('#textBoxUrl').val('http://redalertxfd.azurewebsites.net/api/message?senderkey=' + senderKeyBox + '&color=' + color);
-                                        }
-                                    });
-                                });
-                            </script>
-
-                           
-                            <div class="form-group">
-                                @Html.Label("Senderkey", new {@class = "control-label col-md-2"})
-                                <div class="col-md-10">
-                                    <input id="senderkeyid" type="text" value="">
-                                    @Html.ValidationMessage("Senderkey")
-
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                @Html.Label("GeneratedUrl", new { @class = "control-label col-md-2" })
-                                <div class="col-md-10">
-                                    <input id="textBoxUrl" type="text" value="">
-                                    @Html.ValidationMessage("GeneratedUrl")
-                                    
-                                </div>
-                            </div>
-                          
-                           
-                            <button type="button" class="btn btn-default btn-lg" data-clipboard-action="copy" data-clipboard-target="#textBoxUrl">
-                                <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Copy to Clipboard
-                            </button>
+            $("#senderkeyid").change(function () {
+                var senderKeyBox = $('#senderkeyid').val();
+                if (senderKeyBox != null) {
+                    $('#textBoxUrl').val('http://redalertxfd.azurewebsites.net/api/message?senderkey=' + senderKeyBox + '&color=' + color);
+                }
+            });
+        });
+    </script>
 
 
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="form-group">
+        @Html.Label("Senderkey", new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <input id="senderkeyid" type="text" value="">
+            @Html.ValidationMessage("Senderkey")
+
         </div>
     </div>
+    <div class="form-group">
+        @Html.Label("GeneratedUrl", new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <input id="textBoxUrl" type="text" value="">
+            @Html.ValidationMessage("GeneratedUrl")
+
+        </div>
+    </div>
+
+
+    <button type="button" class="btn btn-default btn-lg" data-clipboard-action="copy" data-clipboard-target="#textBoxUrl">
+        <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Copy to Clipboard
+    </button>
+
+
 </div>
