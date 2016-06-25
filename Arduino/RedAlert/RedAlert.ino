@@ -1,3 +1,5 @@
+#define DEBUG_ESP_HTTP_UPDATE
+
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
 #include <ESP8266httpUpdate.h>
@@ -9,7 +11,7 @@
 #include "Logging.h"
 
 //don't forget to update!
-char VERSION[] = "dev-05";
+char VERSION[] = "dev-06";
 
 unsigned long lastTimeCheck = 0;
 
@@ -107,6 +109,8 @@ void setup() {
     delay(1000);
     setColor(0, 0, 0);
   }
+
+  Debug2("Version: ", VERSION);
   
   //initializing the wifi module
   wifiSetup.eepromOffset = 0;
@@ -168,8 +172,14 @@ void loop() {
     //first we have to check for the update, as the device will restart after update
     t_httpUpdate_return ret = ESPhttpUpdate.update("redalertxfd.azurewebsites.net", 80, "/api/iot/update", VERSION);
     switch(ret) {
-        case HTTP_UPDATE_FAILED:
-            Debug("[update] Update failed.");
+        case HTTP_UPDATE_FAILED: {
+              Debug("[update] Update failed.");
+  
+              int lastError = ESPhttpUpdate.getLastError();
+              Debug2("Last error: ", lastError);
+              String lastErrorString = ESPhttpUpdate.getLastErrorString();
+              Debug2("Last error: ", lastErrorString);
+          }
             break;
         case HTTP_UPDATE_NO_UPDATES:
             Debug("[update] Update no Update.");
