@@ -9,11 +9,29 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.Ajax.Utilities;
+using NLog;
 
 namespace RedAlert.API.Controllers
 {
     public class MessageController : ApiController
     {
+        /// <summary>
+        /// Gets or sets the logger.
+        /// </summary>
+        /// <value>
+        /// The logger.
+        /// </value>
+        public ILogger Logger { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseController"/> class.
+        /// </summary>
+        public MessageController()
+        {
+            Logger = LogManager.GetLogger("RedAlert");
+        }
+
+
         /// <summary>
         /// Client facing API.
         /// </summary>
@@ -58,7 +76,12 @@ namespace RedAlert.API.Controllers
                     device.LastMessage = message;
 
                     DeviceManagement dm = new DeviceManagement();
+
+                    Logger.Debug("Sending the message: " + ByteToHex(message));
+
+                    //TODO: figure out how to await in parallel
                     await dm.SendCloudToDeviceMessageAsync(device.DeviceKey, message);
+                    await context.SaveChangesAsync();
                 }
                 return Ok();
             }
@@ -87,6 +110,18 @@ namespace RedAlert.API.Controllers
                              .Where(x => x % 2 == 0)
                              .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
                              .ToArray();
+        }
+
+        private string ByteToHex(byte[] array)
+        {
+            string output = string.Empty;
+
+            foreach (byte b in array)
+            {
+                output += b.ToString("x2");
+            }
+
+            return output;
         }
     }
 }
