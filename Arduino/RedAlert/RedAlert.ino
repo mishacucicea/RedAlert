@@ -1,4 +1,3 @@
-#define DEBUG_ESP_HTTP_UPDATE
 
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
