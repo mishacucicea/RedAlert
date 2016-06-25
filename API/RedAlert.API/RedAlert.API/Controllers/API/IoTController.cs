@@ -15,6 +15,7 @@ using Microsoft.Azure.Devices.Common.Security;
 using System.IO;
 using System.Net.Http.Headers;
 using System.Text;
+using NLog;
 
 namespace RedAlert.API.Controllers.API
 {
@@ -23,6 +24,22 @@ namespace RedAlert.API.Controllers.API
     /// </summary>
     public class IoTController : ApiController
     {
+        /// <summary>
+        /// Gets or sets the logger.
+        /// </summary>
+        /// <value>
+        /// The logger.
+        /// </value>
+        public ILogger Logger { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseController"/> class.
+        /// </summary>
+        public IoTController()
+        {
+            Logger = LogManager.GetLogger("RedAlert");
+        }
+
         [HttpGet]
         public async Task<HttpResponseMessage> Authentication(string deviceKey)
         {
@@ -89,6 +106,10 @@ namespace RedAlert.API.Controllers.API
         [HttpGet]
         public async Task<HttpResponseMessage> Update()
         {
+            Logger.Debug("Update entered.");
+            Request.Headers.ToList().ForEach(x => Logger.Debug(x.Key + "=" + x.Value));
+            
+
             //[HTTP_X_ESP8266_FREE_SPACE] => 671744
             //[HTTP_X_ESP8266_VERSION] => DOOR-7-g14f53a19
 
@@ -140,6 +161,8 @@ namespace RedAlert.API.Controllers.API
                 FileName = newVersion + ".bin"
             };
             result.Content.Headers.Add("x-MD5", md5hash);
+
+
             return result;
         }
 
