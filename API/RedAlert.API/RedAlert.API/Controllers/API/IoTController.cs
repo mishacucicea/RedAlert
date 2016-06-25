@@ -123,12 +123,12 @@ namespace RedAlert.API.Controllers.API
 
             //if version is already up to date then return 304
             string[] splitVersion = version.Split('-');
-            if (int.Parse(splitVersion[1]) >= 5)
+            if (int.Parse(splitVersion[1]) >= 6)
             {
                 return Request.CreateResponse(HttpStatusCode.NotModified);
             }
 
-            string newVersion = "dev-05";
+            string newVersion = "dev-06";
 
             HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
             var stream = new FileStream(System.Web.HttpContext.Current.Server.MapPath("~/Firmware/" + newVersion + ".bin"), FileMode.Open);
