@@ -13,25 +13,25 @@
             var senderKey = localStorage.getItem("senderKey");
 
 
-            $("#qr-Imageup").attr("src", "http://redalertxfd.azurewebsites.net/QrCode/GenerateVotingQr?answer=Up");
+            $("#qr-Imageup").attr("src", "/QrCode/GenerateVotingQr?answer=Up");
 
-            $("#qr-Imagedown").attr("src", "http://redalertxfd.azurewebsites.net/QrCode/GenerateVotingQr?answer=Down");
+            $("#qr-Imagedown").attr("src", "/QrCode/GenerateVotingQr?answer=Down");
 
             if (senderKey == null) {
                 $('#messageBox').text('Have you registered you device ?');
             } else {
                 $('#senderkeyidVotingQR').val(senderKey);
-                $.post("http://redalertxfd.azurewebsites.net/Color/Voting?senderKey=" + senderKey);
+                $.post("/Color/Voting?senderKey=" + senderKey);
 
             }
             $("#senderkeyidVotingQR").change(function () {
                 var senderKeyBox = $('#senderkeyidVotingQR').val();
                 if (senderKeyBox != null) {
-                    $.post("http://redalertxfd.azurewebsites.net/Color/Voting?senderKey=" + senderKey);
+                    $.post("/Color/Voting?senderKey=" + senderKey);
                 }
             });
             setInterval(function () {
-                $.post("http://redalertxfd.azurewebsites.net/Color/Voting?senderKey=" + senderKey);
+                $.post("/Color/Voting?senderKey=" + senderKey);
             }, 2000);
         });
     </script>

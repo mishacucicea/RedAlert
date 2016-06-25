@@ -47,14 +47,14 @@
 
             });
 
-                                    $("#sendMessageButton").click(function () {
-                                                                                                                 
-                                        var color = $('.colorpicker_hex input').val();                                                                                
-                                        $.get("~/api/message/send?senderkey=" + senderKey + "&color=" + color);
-                                        });
-                                   
-                                });
-                            </script>
+            $("#sendMessageButton").click(function () {
+
+                var color = $('.colorpicker_hex input').val();
+                $.get("/api/message/send?senderkey=" + senderKey + "&color=" + color);
+            });
+
+        });
+    </script>
 
     <img class="img-responsive" id="devicePng" src="~/Content/img/devicepsd.png" alt="">
     <hr>

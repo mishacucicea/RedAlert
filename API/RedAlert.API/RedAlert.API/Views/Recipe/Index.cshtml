@@ -69,7 +69,7 @@
 
 
                 <h2> This is your generated url:</h2>
-                @Html.TextArea("myTextArea", "http://redalertxfd.azurewebsites.net/api/?message=djfsfds&token=sdasdasdasdsdfd", new { @class = "form-control" })
+                @Html.TextArea("myTextArea", Request.Url.Host + "/api/?message=djfsfds&token=sdasdasdasdsdfd", new { @class = "form-control" })
 
                 <br>
                 <img src='~/Content/img/makerurl.png' alt="" />

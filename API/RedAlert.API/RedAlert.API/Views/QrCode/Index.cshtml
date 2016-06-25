@@ -16,7 +16,7 @@
                 $('#messageBox').text('Have you registered you device ?');
             } else {
                 $('#senderkeyidQR').val(senderKey);
-                $("#qr-Image").attr("src", "http://redalertxfd.azurewebsites.net/QrCode/GenerateQr?senderKey=" + senderKey + "&color=" + color);
+                $("#qr-Image").attr("src", "/QrCode/GenerateQr?senderKey=" + senderKey + "&color=" + color);
 
             }
 
@@ -24,7 +24,7 @@
             $("#senderkeyidQR").change(function () {
                 var senderKeyBox = $('#senderkeyidQR').val();
                 if (senderKeyBox != null) {
-                    $("#qr-Image").attr("src", "http://redalertxfd.azurewebsites.net/QrCode/GenerateQr?senderKey=" + senderKeyBox + "&color=" + color);
+                    $("#qr-Image").attr("src", "/QrCode/GenerateQr?senderKey=" + senderKeyBox + "&color=" + color);
                 }
             });
 
