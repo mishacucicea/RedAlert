@@ -1,11 +1,15 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
+#include <ESP8266httpUpdate.h>
 
 #include <WiFiClientSecure.h>
 #include <ESP8266HTTPClient.h>
 #include "WiFiSetup.h"
 #include "PubSubClient.h"
 #include "Logging.h"
+
+//don't forget to update!
+char VERSION[] = "dev-05";
 
 unsigned long lastTimeCheck = 0;
 
@@ -160,6 +164,20 @@ void loop() {
   //at start, or once each day
   if (lastTimeCheck == 0 || now - lastTimeCheck > 24*3600*1000 || now < lastTimeCheck) {
     lastTimeCheck = now;
+
+    //first we have to check for the update, as the device will restart after update
+    t_httpUpdate_return ret = ESPhttpUpdate.update("redalertxfd.azurewebsites.net", 80, "/iot/update", VERSION);
+    switch(ret) {
+        case HTTP_UPDATE_FAILED:
+            Debug("[update] Update failed.");
+            break;
+        case HTTP_UPDATE_NO_UPDATES:
+            Debug("[update] Update no Update.");
+            break;
+        case HTTP_UPDATE_OK:
+            Debug("[update] Update ok."); // may not called we reboot the ESP
+            break;
+    }
     
     //TODO: check for time agains google
     //do the wifi client and shit
