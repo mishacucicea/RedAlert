@@ -24,107 +24,11 @@
 </head>
 <body>
 
-<nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
-    <div class="container topnav">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-
-
-
-            <a href="@Url.Action("Index", "Home")">
-                <img src="~/Content/img/logo.png" />
-            </a>
-
-           
-        </div>
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                <li>@Html.ActionLink("Home", "Index", "Home", new {area = ""}, null)</li>
-               
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Device Management <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        </br>
-                        <li>@Html.ActionLink("Register Device", "Register", "Device", new {area = ""}, null)</li>                        
-                        <hr>
-                        <li>@Html.ActionLink("Set the Color", "Index", "Color", new {area = ""}, null)</li>
-                        <hr>
-                        <li>@Html.ActionLink("Generate Url", "GenerateUrl", "Device", new {area = ""}, null)</li>
-                        <hr>
-                        <li> @Html.ActionLink("Create QR Code", "Index", "QrCode", new {area = ""}, null)</li>
-                        <hr>
-                        <li>@Html.ActionLink("Mood", "ViewSendMessage", "Device")</li>
-                        <hr>
-                        <li>@Html.ActionLink("Voting", "Voting", "Color")</li>
-                        </br>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Group Management <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        </br>
-                        <li>@Html.ActionLink("Create Group", "Create", "Group", new { area = "" }, null)</li>
-                        <hr>
-                        <li>@Html.ActionLink("Add Device to Group", "AddDeviceToGroup", "Group", new { area = "" }, null)</li>
-                        </br>
-                        <hr>
-                        <li>@Html.ActionLink("Send color to Group", "SendMessageToGroup", "Group", new { area = "" }, null)</li>
-                        </br>
-                    </ul>
-                </li>
-                <li>@Html.ActionLink("Recipes", "Index", "Recipe", new { area = "" }, null)</li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
-    </div>
-    <!-- /.container -->
-</nav>
-
+    @Html.Partial("Header")
 
     @RenderBody()
 
-
-    <!-- /.banner -->
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <ul class="list-inline">
-                        <li>
-                            <a href="#">Home</a>
-                        </li>
-                        <li class="footer-menu-divider">&sdot;</li>
-                        <li>
-                            <a href="#about">About</a>
-                        </li>
-                        <li class="footer-menu-divider">&sdot;</li>
-                        <li>
-                            <a href="#services">Services</a>
-                        </li>
-                        <li class="footer-menu-divider">&sdot;</li>
-                        <li>
-                            <a href="#contact">Contact</a>
-                        </li>
-                    </ul>
-                    <p class="copyright text-muted small">Copyright &copy; LightFeeD 2016. All Rights Reserved</p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-
-
-
-
-
+    @Html.Partial("Footer")
 
 </body>
 </html>
