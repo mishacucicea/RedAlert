@@ -219,7 +219,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Content\less\" />
     <Folder Include="Storage\" />
-    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -441,6 +440,8 @@
     <Content Include="Views\Group\SendMessageToGroup.cshtml" />
     <Content Include="Views\Color\Voting.cshtml" />
     <Content Include="Views\Voting\Thanks.cshtml" />
+    <Content Include="Views\Shared\Header.cshtml" />
+    <Content Include="Views\Shared\Footer.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
