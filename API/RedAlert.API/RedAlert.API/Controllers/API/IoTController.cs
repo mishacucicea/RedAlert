@@ -106,20 +106,13 @@ namespace RedAlert.API.Controllers.API
         [HttpGet]
         public async Task<HttpResponseMessage> Update()
         {
-            Logger.Debug("Update entered.");
-            Request.Headers.ToList().ForEach(x => Logger.Debug(x.Key + "=" + x.Value));
-            
-
-            //[HTTP_X_ESP8266_FREE_SPACE] => 671744
-            //[HTTP_X_ESP8266_VERSION] => DOOR-7-g14f53a19
-
-            IEnumerable<string> headerValues = Request.Headers.GetValues("HTTP_X_ESP8266_FREE_SPACE");
+            IEnumerable<string> headerValues = Request.Headers.GetValues("x-ESP8266-free-space");
 
             //0 will also be considered as unknown
             int freeSpace;
             int.TryParse(headerValues.FirstOrDefault(), out freeSpace);
 
-            headerValues = Request.Headers.GetValues("HTTP_X_ESP8266_VERSION");
+            headerValues = Request.Headers.GetValues("x-ESP8266-version");
             string version = headerValues.FirstOrDefault();
 
             //we need the version so we don't update the device in an infinite loop
