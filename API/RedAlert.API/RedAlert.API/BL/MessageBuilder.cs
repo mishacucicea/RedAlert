@@ -8,7 +8,8 @@ namespace RedAlert.API.BL
     public class MessageBuilder
     {
         private System.Drawing.Color _colorRGB;
-        private byte _pattern = 0;
+        //waves  is the default pattern
+        private byte _pattern = 1;
         private uint _timeout = 0;
 
         public bool TrySetColor(string color)

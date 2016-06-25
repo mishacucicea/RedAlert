@@ -60,7 +60,7 @@
                                     $("#sendMessageButton").click(function () {
                                                                                                                  
                                         var color = $('.colorpicker_hex input').val();                                                                                
-                                        $.get("http://redalertxfd.azurewebsites.net/api/message?senderkey=" + senderKey + "&color=" + color);
+                                        $.get("~/api/message/send?senderkey=" + senderKey + "&color=" + color);
                                         });
                                    
                                 });
