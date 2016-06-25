@@ -14,5 +14,12 @@ namespace RedAlert.API.Controllers
 
             return View();
         }
+
+        public ActionResult Error()
+        {
+            ViewBag.Title = "Error";
+
+            return PartialView("Error");
+        }
     }
 }

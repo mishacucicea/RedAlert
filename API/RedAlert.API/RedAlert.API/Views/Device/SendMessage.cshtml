@@ -5,57 +5,47 @@
 <link rel="stylesheet" media="screen" type="text/css" href="~/Content/colorpicker.css" />
 <script type="text/javascript" src="~/Scripts/colorpicker.js"></script>
 
+<div class="panel-heading">
+    <h3 class="panel-title">Click on the image </h3>
+</div>
+<div class="panel-body">
 
-</script>
+    <div class="form-group">
+        @Html.Label("Senderkey", new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <input id="senderkeyidmess" type="text" value="">
+            @Html.ValidationMessage("Senderkey")
 
-<div class="content-section-a">
-    <div class="jumbotron">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8  col-md-offset-2">
-                    <div class="panel panel-default  device-panel">
-                      
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Click on the image </h3>
-                        </div>
-                        <div class="panel-body">
+        </div>
+    </div>
 
-                            <div class="form-group">
-                                @Html.Label("Senderkey", new { @class = "control-label col-md-2" })
-                                <div class="col-md-10">
-                                    <input id="senderkeyidmess" type="text" value="">
-                                    @Html.ValidationMessage("Senderkey")
+    <script>
 
-                                </div>
-                            </div>
+        $(document).ready(function () {
+            $('#devicePng').ColorPicker({
+                color: '#0000ff',
+                onShow: function (colpkr) {
+                    $(colpkr).fadeIn(500);
+                    return false;
+                },
+                onHide: function (colpkr) {
+                    $(colpkr).fadeOut(500);
+                    return false;
+                },
+                onChange: function (hsb, hex, rgb) {
+                    $('#devicePng').css('backgroundColor', '#' + hex);
+                }
+            });
 
-                            <script>
+            var senderKey = localStorage.getItem("senderKey");
+            if (senderKey != null) {
+                $('#senderkeyidmess').val(senderKey);
+            }
 
-                                $(document).ready(function () {
-                                    $('#devicePng').ColorPicker({
-                                        color: '#0000ff',
-                                        onShow: function (colpkr) {
-                                            $(colpkr).fadeIn(500);
-                                            return false;
-                                        },
-                                        onHide: function (colpkr) {
-                                            $(colpkr).fadeOut(500);
-                                            return false;
-                                        },
-                                        onChange: function (hsb, hex, rgb) {
-                                            $('#devicePng').css('backgroundColor', '#' + hex);
-                                        }
-                                    });
+            $("#senderkeyidmess").change(function () {
+                senderKey = $('#senderkeyidmess').val();
 
-                                    var senderKey = localStorage.getItem("senderKey");
-                                    if (senderKey != null) {
-                                        $('#senderkeyidmess').val(senderKey);
-                                    }
-
-                                    $("#senderkeyidmess").change(function () {
-                                         senderKey = $('#senderkeyidmess').val();
-                                       
-                                    });
+            });
 
                                     $("#sendMessageButton").click(function () {
                                                                                                                  
@@ -66,17 +56,9 @@
                                 });
                             </script>
 
-                            <img class="img-responsive" id="devicePng" src="~/Content/img/devicepsd.png" alt="">
-                            <hr>
-                            <button type="button" id ="sendMessageButton"  class="btn btn-default btn-lg" data-clipboard-action="copy" data-clipboard-target="#foo">
-                                <span class="glyphicon glyphicon-send" aria-hidden="true"></span> Send to Device
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <img class="img-responsive" id="devicePng" src="~/Content/img/devicepsd.png" alt="">
+    <hr>
+    <button type="button" id="sendMessageButton" class="btn btn-default btn-lg" data-clipboard-action="copy" data-clipboard-target="#foo">
+        <span class="glyphicon glyphicon-send" aria-hidden="true"></span> Send to Device
+    </button>
 </div>
-

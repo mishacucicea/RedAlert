@@ -1,13 +1,9 @@
 ﻿using RedAlert.API.BL;
 using RedAlert.API.Models;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace RedAlert.API.Controllers
@@ -31,14 +27,16 @@ namespace RedAlert.API.Controllers
             {
                 DeviceManagement dm = new DeviceManagement();
 
-                model = await dm.AddDeviceAsync(model.SerialNumber);
-
-                //client.BaseAddress = new Uri(ApiUrl);
-                //var response = await client.PostAsJsonAsync("http://localhost:63913/api/DeviceIdentity", model);
-                //if (!response.IsSuccessStatusCode) //throw BUBU?
-                //if (response == null) throw new ArgumentNullException(nameof(response));
-                //model =  await response.Content.ReadAsAsync<DeviceModel>();
+                try
+                {
+                    model = await dm.AddDeviceAsync(model.SerialNumber);
+                }
+                catch (ArgumentException)
+                {
+                    ModelState.AddModelError("SerialNumber", "Invalid serial number.");
+                }
             }
+
             return View(model);
         }
         
@@ -80,13 +78,5 @@ namespace RedAlert.API.Controllers
         {
             return View();
         }
-
-        //why do we need it??
-        //public async Task<ActionResult> SendMessage(string id, string message)
-        //{
-        //    await IotHubHelper.SendCloudToDeviceMessageAsync(id, message);
-
-        //    return View("SendMessage");
-        //}
     }
 }
