@@ -38,6 +38,10 @@ namespace RedAlert.API.BL
                 //PATTERN_WAVES
                 _pattern = 1;
             }
+            else if (string.Compare(pattern, "fixed", true) == 0)
+            {
+                _pattern = 0;
+            }
             else
             {
                 return false;
@@ -72,7 +76,7 @@ namespace RedAlert.API.BL
 
             //because we're running on a little indian machine
             Array.Reverse(timeoutBytes);
-            Array.Copy(timeoutBytes, 0, message, 4, 3);
+            Array.Copy(timeoutBytes, 0, message, 5, 4);
 
             return message;
         }
