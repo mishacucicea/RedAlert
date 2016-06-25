@@ -140,7 +140,7 @@ namespace RedAlert.API.Controllers.API
             StringBuilder sb = new StringBuilder(32);
             for (int i = 0; i < hash.Length; i++)
             {
-                sb.Append(hash[i].ToString("X2"));
+                sb.Append(hash[i].ToString("x2"));
             }
 
             string md5hash = sb.ToString();
