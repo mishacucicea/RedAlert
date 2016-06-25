@@ -166,7 +166,7 @@ void loop() {
     lastTimeCheck = now;
 
     //first we have to check for the update, as the device will restart after update
-    t_httpUpdate_return ret = ESPhttpUpdate.update("redalertxfd.azurewebsites.net", 80, "/iot/update", VERSION);
+    t_httpUpdate_return ret = ESPhttpUpdate.update("redalertxfd.azurewebsites.net", 80, "api/iot/update", VERSION);
     switch(ret) {
         case HTTP_UPDATE_FAILED:
             Debug("[update] Update failed.");
