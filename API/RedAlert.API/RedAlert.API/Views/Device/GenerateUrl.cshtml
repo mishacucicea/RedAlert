@@ -15,7 +15,7 @@
 <div class="panel-body">
     <script>
         $(function () {
-
+            var apiUrl = window.location.protocol + "//" + window.location.host;
             var senderKey = localStorage.getItem("senderKey");
             var color = localStorage.getItem("color");
 
@@ -24,14 +24,14 @@
             }
 
             if (senderKey != null) {
-                $('#textBoxUrl').val('http://redalertxfd.azurewebsites.net/api/message?senderkey=' + senderKey + '&color=' + color);
+                $('#textBoxUrl').val(apiUrl+'/api/message/send?senderkey=' + senderKey + '&color=' + color);
             }
 
 
             $("#senderkeyid").change(function () {
                 var senderKeyBox = $('#senderkeyid').val();
                 if (senderKeyBox != null) {
-                    $('#textBoxUrl').val('http://redalertxfd.azurewebsites.net/api/message?senderkey=' + senderKeyBox + '&color=' + color);
+                    $('#textBoxUrl').val(apiUrl+'/api/message/send?senderkey=' + senderKeyBox + '&color=' + color);
                 }
             });
         });
