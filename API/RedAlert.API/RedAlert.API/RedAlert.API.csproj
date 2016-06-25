@@ -442,6 +442,8 @@
     <Content Include="Views\Voting\Thanks.cshtml" />
     <Content Include="Views\Shared\Header.cshtml" />
     <Content Include="Views\Shared\Footer.cshtml" />
+    <Content Include="Views\Shared\_SimpleLayout.cshtml" />
+    <Content Include="Views\Shared\Head.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
