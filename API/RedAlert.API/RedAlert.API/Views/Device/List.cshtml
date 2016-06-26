@@ -22,7 +22,7 @@
             {
             <tr>
                 <td>
-                    @item.SerialNumber
+                    @Html.ActionLink(item.SerialNumber, "Details", new { id = item.DeviceId })
                 </td>
                 <td>
                     @item.SenderKey

@@ -6,19 +6,9 @@
 <script type="text/javascript" src="~/Scripts/colorpicker.js"></script>
 
 <div class="panel-heading">
-    <h3 class="panel-title">Click on the image </h3>
+    <h3 class="panel-title">Click on the image to select a color </h3>
 </div>
 <div class="panel-body">
-
-    <div class="form-group">
-        @Html.Label("Senderkey", new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            <input id="senderkeyidmess" type="text" value="">
-            @Html.ValidationMessage("Senderkey")
-
-        </div>
-    </div>
-
     <script>
 
         $(document).ready(function () {
@@ -37,20 +27,12 @@
                 }
             });
 
-            var senderKey = localStorage.getItem("senderKey");
-            if (senderKey != null) {
-                $('#senderkeyidmess').val(senderKey);
-            }
-
-            $("#senderkeyidmess").change(function () {
-                senderKey = $('#senderkeyidmess').val();
-
-            });
-
             $("#sendMessageButton").click(function () {
 
                 var color = $('.colorpicker_hex input').val();
-                $.get("/api/message/send?senderkey=" + senderKey + "&color=" + color);
+
+                // it's assumed that a sender key is already in the local storage.
+                $.get("/api/message/send?senderkey=" + localStorage.getItem("senderKey") + "&color=" + color);
             });
 
         });

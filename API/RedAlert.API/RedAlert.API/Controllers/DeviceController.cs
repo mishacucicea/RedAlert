@@ -13,6 +13,8 @@ namespace RedAlert.API.Controllers
 
         private string ApiUrl = ConfigurationManager.AppSettings["ApiUrl"];
 
+        DeviceManagement dm = new DeviceManagement();
+
         // GET: Device
         public ActionResult Register()
         {
@@ -23,23 +25,32 @@ namespace RedAlert.API.Controllers
         [HttpPost]
         public async Task<ActionResult> Register(DeviceModel model)
         {
-            using (var client = new HttpClient())
+            try
             {
-                DeviceManagement dm = new DeviceManagement();
-
-                try
-                {
-                    model = await dm.AddDeviceAsync(model.SerialNumber);
-                }
-                catch (ArgumentException)
-                {
-                    ModelState.AddModelError("SerialNumber", "Invalid serial number.");
-                }
+                model = await dm.AddDeviceAsync(model.SerialNumber);
+            }
+            catch (ArgumentException)
+            {
+                ModelState.AddModelError("SerialNumber", "Invalid serial number.");
             }
 
             return View(model);
         }
-        
+
+        /// <summary>
+        /// Details the specified device.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>The view corresponding to the device details.</returns>
+        public async Task<ActionResult> Details(int id)
+        {
+            var model = await dm.GetDeviceAsync(id);
+
+            ViewBag.ApiUrl = $"{ApiUrl}/api/message/send?senderkey={model.SenderKey}&color=red";
+
+            return View(model);
+        }
+
         public ActionResult Get()
         {
             return View();
@@ -47,7 +58,6 @@ namespace RedAlert.API.Controllers
 
         public async Task<ActionResult> List()
         {
-            DeviceManagement dm = new DeviceManagement();
             var devices = await dm.GetDevices();
 
             return View(devices);
