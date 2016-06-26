@@ -34,7 +34,8 @@ namespace RedAlert.API.Controllers
             {
                 client.BaseAddress = new Uri(ApiUrl);
                 var color = ColorHelper.CreateColorFromPercent();
-                await client.GetAsync("/api/message?senderkey=" + senderKey + "&color=" + color);
+                
+                await client.GetAsync("/api/message?senderkey=" + senderKey + "&color=" + color + "&pattern=fixed");
                          
             }
             ViewData["Votes"] = ColorHelper.TotalResponse;

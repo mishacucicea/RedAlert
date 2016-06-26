@@ -123,12 +123,12 @@ namespace RedAlert.API.Controllers.API
 
             //if version is already up to date then return 304
             string[] splitVersion = version.Split('-');
-            if (int.Parse(splitVersion[1]) >= 5)
+            if (int.Parse(splitVersion[1]) >= 6)
             {
                 return Request.CreateResponse(HttpStatusCode.NotModified);
             }
 
-            string newVersion = "dev-05";
+            string newVersion = "dev-06";
 
             HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
             var stream = new FileStream(System.Web.HttpContext.Current.Server.MapPath("~/Firmware/" + newVersion + ".bin"), FileMode.Open);
@@ -140,7 +140,7 @@ namespace RedAlert.API.Controllers.API
             StringBuilder sb = new StringBuilder(32);
             for (int i = 0; i < hash.Length; i++)
             {
-                sb.Append(hash[i].ToString("X2"));
+                sb.Append(hash[i].ToString("x2"));
             }
 
             string md5hash = sb.ToString();
