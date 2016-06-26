@@ -74,7 +74,7 @@ namespace RedAlert.API.BL
 
             byte[] timeoutBytes = BitConverter.GetBytes(_timeout);
 
-            //because we're running on a little indian machine
+            //because we're running on a little endian machine
             Array.Reverse(timeoutBytes);
             Array.Copy(timeoutBytes, 0, message, 5, 4);
 

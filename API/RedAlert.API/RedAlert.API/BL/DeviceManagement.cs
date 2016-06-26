@@ -102,23 +102,15 @@ namespace RedAlert.API.BL
         /// Gets the device asynchronous.
         /// </summary>
         /// <param name="deviceId">The device identifier.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception">Device Does not Exist</exception>
-        public async Task<string> GetDeviceAsync(string deviceId)
+        /// <returns>The device.</returns>
+        public async Task<Models.Device> GetDeviceAsync(int deviceId)
         {
-            throw new NotImplementedException();
+            using (RedAlertContext context = new RedAlertContext())
+            {
+                var device = await context.Devices.FirstOrDefaultAsync(d=>d.DeviceId == deviceId);
 
-            //try
-            //{
-            //    var device = await registryManager.GetDeviceAsync(deviceId);
-            //    return device.Authentication.SymmetricKey.PrimaryKey;
-            //}
-            //catch (DeviceNotFoundException)
-            //{
-            //    throw new Exception("Device Does not Exist");
-            //}
-
-
+                return device;
+            }
         }
 
         /// <summary>
