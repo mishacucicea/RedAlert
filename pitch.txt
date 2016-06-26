@@ -3,7 +3,7 @@ Xtreme feedback device.
 1. Title
 Team name, members
 
-Red Alert is an extreme feedback device that is controlled through the internet. Our extreme feedback device will be a mini lamp that can be put on the desk, stick on a wall or carried between between spaces.
+Red Alert is a visual feedback device that is controlled through the internet. Our extreme feedback device will be a mini lamp that can be put on the desk, stick on a wall or carried between between spaces.
 
 2. problem/need that is addressed
 Often we'd like to feel a better pulse of reality, and our proposal is a device that shows realtime feedback using the power of lights and colors.
