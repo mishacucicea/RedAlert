@@ -18,10 +18,6 @@ namespace RedAlert.API.BL
         /// The connection string
         /// </summary>
         private string connectionString = ConfigurationManager.ConnectionStrings["IotHubConnectionString"].ConnectionString;
-        /// <summary>
-        /// The registry manager
-        /// </summary>
-
 
         public async Task<String> GetDeviceSASKey(string deviceId)
         {
@@ -128,22 +124,13 @@ namespace RedAlert.API.BL
         /// <summary>
         /// Gets the devices.
         /// </summary>
-        /// <returns></returns>
-        /// <exception cref="System.Exception">Device Does not Exist</exception>
-        public async Task<IEnumerable<Models.Device>> GetDevices()
+        /// <returns>The list of devices.</returns>
+        public async Task<List<Models.Device>> GetDevices()
         {
-            throw new NotImplementedException();
-
-            //try
-            //{
-            //    var devices = await registryManager.GetDevicesAsync(100);
-            //    return devices;
-            //}
-
-            //catch (DeviceNotFoundException)
-            //{
-            //    throw new Exception("Device Does not Exist");
-            //}
+            using (RedAlertContext context = new RedAlertContext())
+            {
+                return await context.Devices.ToListAsync();
+            }
         }
 
         /// <summary>

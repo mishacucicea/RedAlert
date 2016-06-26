@@ -1,10 +1,11 @@
-﻿@model IEnumerable<Microsoft.Azure.Devices.Device>
+﻿@model IList<RedAlert.API.Models.Device>
 
 @{
     ViewBag.Title = "Device List";
 }
 
-<h2>List</h2>
+<h2>Devices</h2>
+
 <table class="table">
     <thead>
         <tr>
@@ -12,19 +13,21 @@
                 Serial Number
             </th>
             <th>
-                Hub Key
+                Sender Key
             </th>
         </tr>
     </thead>
-    @foreach (var item in Model)
+    <tbody>
+        @foreach (var item in Model)
             {
-        <tr>
-            <td>
-                @item.Id
-            </td>
-            <td>
-                @item.Authentication.SymmetricKey.PrimaryKey
-            </td>
-        </tr>
-    }
+            <tr>
+                <td>
+                    @item.SerialNumber
+                </td>
+                <td>
+                    @item.SenderKey
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
