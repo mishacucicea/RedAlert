@@ -338,8 +338,10 @@
     <Content Include="Content\img\team\1.jpg" />
     <Content Include="Content\img\team\2.jpg" />
     <Content Include="Content\img\team\3.jpg" />
+    <Content Include="Content\img\text-color.png" />
     <Content Include="Content\landing-page.css" />
     <Content Include="Content\layout.css" />
+    <Content Include="Content\tinycolorpicker.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\font-awesome\css\font-awesome.css" />
     <Content Include="fonts\font-awesome\css\font-awesome.min.css">
@@ -412,6 +414,7 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\jquery.js" />
+    <Content Include="Scripts\jquery.tinycolorpicker.min.js" />
     <Content Include="Scripts\layout.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
@@ -448,6 +451,7 @@
     <Content Include="Views\Shared\_SimpleLayout.cshtml" />
     <Content Include="Views\Shared\Head.cshtml" />
     <Content Include="Views\Device\Details.cshtml" />
+    <Content Include="Views\Device\Mood.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
