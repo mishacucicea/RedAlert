@@ -45,12 +45,12 @@
         <dd>
             <span id="deviceUrl">@ViewBag.ApiUrl</span>
             <button type="button" class="btn" data-clipboard-target="#deviceUrl" title="Copy to clipboard">
-                <span class="glyphicon glyphicon-save" aria-hidden="true"></span> 
+                <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
             </button>
         </dd>
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.DeviceId }) |
+    @Html.ActionLink("Mood", "ViewSendMessage", new { id = Model.DeviceId }) |
     @Html.ActionLink("Back to List", "List")
 </p>

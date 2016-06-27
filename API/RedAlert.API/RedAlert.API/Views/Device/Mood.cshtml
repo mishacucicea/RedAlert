@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "Mood";
+}
+<link rel="stylesheet" media="screen" type="text/css" href="~/Content/tinycolorpicker.css" />
+<script type="text/javascript" src="~/Scripts/jquery.tinycolorpicker.min.js"></script>
+
+
+
+<h2>Mood</h2>
+<div id="colorPicker">
+    <a class="color"><div class="colorInner"></div></a>
+    <div class="track"></div>
+    <ul class="dropdown"><li></li></ul>
+    <input type="hidden" class="colorInput" />
+</div>
+
+
+<hr>
+
+<button type="button" id="sendMessageButton" class="btn btn-default btn-lg" data-clipboard-target="#foo">
+    <span class="glyphicon glyphicon-send" aria-hidden="true"></span> Send to Device
+</button>
+
+<script>
+    $(function ()
+    {
+        $("#colorPicker").tinycolorpicker();
+
+        $("#sendMessageButton").click(function () {
+            var picker = $("#colorPicker").data("plugin_tinycolorpicker");
+
+            // it's assumed that a sender key is already in the local storage.
+            var url = "/api/message/send";// + localStorage.getItem("senderKey") + "&color=" + picker.colorHex;
+
+            $.get(url, { senderkey: localStorage.getItem("senderKey"), color: picker.colorHex });
+        });
+
+    });
+</script>
