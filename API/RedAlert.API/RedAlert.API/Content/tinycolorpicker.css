@@ -11,7 +11,7 @@
         height: 150px;
         width: 150px;
         padding: 10px;
-        position: relative;
+        position: absolute;
         cursor: crosshair;
         float: left;
         left: 32%;
@@ -44,28 +44,28 @@
     }
 
 @media screen and (max-width: 768px) {
-  #colorPicker .colorInner, #colorPicker  {
+    #colorPicker .colorInner, #colorPicker {
         height: 200px;
         width: 250px;
     }
 
-    #colorPicker .track {
-        left:15%;
-    }
+        #colorPicker .track {
+            left: 15%;
+        }
 }
 
-    #colorPicker .dropdown {
-        list-style: none;
-        display: none;
-        width: 27px;
-        position: absolute;
-        top: 28px;
-        border: 1px solid #ccc;
-        left: 0;
-        z-index: 1000;
-    }
+#colorPicker .dropdown {
+    list-style: none;
+    display: none;
+    width: 27px;
+    position: absolute;
+    top: 28px;
+    border: 1px solid #ccc;
+    left: 0;
+    z-index: 1000;
+}
 
-        #colorPicker .dropdown li {
-            height: 25px;
-            cursor: pointer;
-        }
+    #colorPicker .dropdown li {
+        height: 25px;
+        cursor: pointer;
+    }
