@@ -77,10 +77,5 @@ namespace RedAlert.API.Controllers
         {
             return View();
         }
-
-        public async Task<ActionResult> MoodSimple()
-        {
-            return View();
-        }
     }
 }
