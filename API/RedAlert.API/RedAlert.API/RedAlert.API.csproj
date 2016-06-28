@@ -409,8 +409,6 @@
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
     <Content Include="Scripts\clipboard.js" />
     <Content Include="Scripts\clipboard.min.js" />
-    <Content Include="Scripts\colorpicker.js" />
-    <Content Include="Scripts\eye.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\jquery.js" />
@@ -435,7 +433,6 @@
     <Content Include="Views\Device\List.cshtml" />
     <Content Include="Views\Group\Create.cshtml" />
     <Content Include="Views\Group\Get.cshtml" />
-    <Content Include="Views\Device\SendMessage.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

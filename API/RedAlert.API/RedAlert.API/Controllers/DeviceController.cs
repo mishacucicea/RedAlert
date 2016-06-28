@@ -63,17 +63,12 @@ namespace RedAlert.API.Controllers
             return View(devices);
         }
 
-        public ActionResult ViewSendMessage()
-        {
-            return View("SendMessage");
-        }
-
         public ActionResult GenerateUrl()
         {
             return View();
         }
 
-        public async Task<ActionResult> Mood()
+        public ActionResult Mood()
         {
             return View();
         }
