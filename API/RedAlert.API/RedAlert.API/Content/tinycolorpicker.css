@@ -42,6 +42,13 @@
         background-position: center;
     }
 
+@media screen and (max-width: 768px) {
+  #colorPicker .colorInner, #colorPicker  {
+        height: 200px;
+        width: 250px;
+    }
+}
+
     #colorPicker .dropdown {
         list-style: none;
         display: none;
