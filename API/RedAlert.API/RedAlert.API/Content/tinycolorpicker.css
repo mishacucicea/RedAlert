@@ -11,10 +11,11 @@
         height: 150px;
         width: 150px;
         padding: 10px;
-        position: fixed;
+        position: relative;
         cursor: crosshair;
         float: left;
-        left: 45%;
+        left: 32%;
+        top: 25%;
         display: none;
         border: 1px solid #ccc;
         z-index: 100;
@@ -46,6 +47,10 @@
   #colorPicker .colorInner, #colorPicker  {
         height: 200px;
         width: 250px;
+    }
+
+    #colorPicker .track {
+        left:15%;
     }
 }
 
