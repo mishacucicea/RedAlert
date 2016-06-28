@@ -23,17 +23,17 @@
 </button>
 
 <script>
-    $(function ()
-    {
+    $(function () {
         $("#colorPicker").tinycolorpicker();
 
         $("#sendMessageButton").click(function () {
             var picker = $("#colorPicker").data("plugin_tinycolorpicker");
 
             // it's assumed that a sender key is already in the local storage.
-            var url = "/api/message/send";// + localStorage.getItem("senderKey") + "&color=" + picker.colorHex;
-
-            $.get(url, { senderkey: localStorage.getItem("senderKey"), color: picker.colorHex });
+            $.get("/api/message/send", {
+                senderkey: localStorage.getItem("senderKey"),
+                color: picker.colorHex.substring(1)
+            });
         });
 
     });
