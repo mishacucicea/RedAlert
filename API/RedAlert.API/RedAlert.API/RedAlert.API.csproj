@@ -422,7 +422,6 @@
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\site.js" />
-    <Content Include="Scripts\tinycolorpicker.min.js" />
     <Content Include="Scripts\utils.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\Web.config" />
