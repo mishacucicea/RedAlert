@@ -10,4 +10,5 @@
 /// <reference path="modernizr-2.6.2.js" />
 /// <reference path="respond.js" />
 /// <reference path="site.js" />
+/// <reference path="tinycolorpicker.min.js" />
 /// <reference path="utils.js" />

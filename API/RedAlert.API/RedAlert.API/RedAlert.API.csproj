@@ -422,6 +422,7 @@
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\site.js" />
+    <Content Include="Scripts\tinycolorpicker.min.js" />
     <Content Include="Scripts\utils.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\Web.config" />
@@ -452,6 +453,7 @@
     <Content Include="Views\Shared\Head.cshtml" />
     <Content Include="Views\Device\Details.cshtml" />
     <Content Include="Views\Device\Mood.cshtml" />
+    <Content Include="Views\Device\MoodSimple.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
