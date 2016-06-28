@@ -28,8 +28,8 @@
     }
 
     #colorPicker .color {
-        width: 0px;
-        height: 0px;
+        width: 1px;
+        height: 1px;
         display: block;
         position: relative;
     }
