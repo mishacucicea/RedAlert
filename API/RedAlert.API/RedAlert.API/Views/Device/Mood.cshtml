@@ -1,40 +1,38 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Mood";
 }
 <link rel="stylesheet" media="screen" type="text/css" href="~/Content/tinycolorpicker.css" />
 <script type="text/javascript" src="~/Scripts/jquery.tinycolorpicker.min.js"></script>
 
+<div class="panel-body">
+    <h2>Mood</h2>
+    <div id="colorPicker">
+        <a class="color"><div class="colorInner"></div></a>
+        <div class="track"></div>
+        <ul class="dropdown"><li></li></ul>
+        <input type="hidden" class="colorInput" />
+    </div>
+    
+    <hr>
+    
+    <button type="button" id="sendMessageButton" class="btn btn-default btn-lg" data-clipboard-target="#foo">
+        <span class="glyphicon glyphicon-send" aria-hidden="true"></span> Send to Device
+    </button>
 
+    <script>
+        $(function () {
+            $("#colorPicker").tinycolorpicker();
 
-<h2>Mood</h2>
-<div id="colorPicker">
-    <a class="color"><div class="colorInner"></div></a>
-    <div class="track"></div>
-    <ul class="dropdown"><li></li></ul>
-    <input type="hidden" class="colorInput" />
-</div>
+            $("#sendMessageButton").click(function () {
+                var picker = $("#colorPicker").data("plugin_tinycolorpicker");
 
-
-<hr>
-
-<button type="button" id="sendMessageButton" class="btn btn-default btn-lg" data-clipboard-target="#foo">
-    <span class="glyphicon glyphicon-send" aria-hidden="true"></span> Send to Device
-</button>
-
-<script>
-    $(function () {
-        $("#colorPicker").tinycolorpicker();
-
-        $("#sendMessageButton").click(function () {
-            var picker = $("#colorPicker").data("plugin_tinycolorpicker");
-
-            // it's assumed that a sender key is already in the local storage.
-            $.get("/api/message/send", {
-                senderkey: localStorage.getItem("senderKey"),
-                color: picker.colorHex.substring(1)
+                // it's assumed that a sender key is already in the local storage.
+                $.get("/api/message/send", {
+                    senderkey: localStorage.getItem("senderKey"),
+                    color: picker.colorHex.substring(1)
+                });
             });
-        });
 
-    });
-</script>
+        });
+    </script>
+</div>
