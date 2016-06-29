@@ -9,11 +9,29 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.Ajax.Utilities;
+using NLog;
 
 namespace RedAlert.API.Controllers
 {
     public class MessageController : ApiController
     {
+        /// <summary>
+        /// Gets or sets the logger.
+        /// </summary>
+        /// <value>
+        /// The logger.
+        /// </value>
+        public ILogger Logger { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseController"/> class.
+        /// </summary>
+        public MessageController()
+        {
+            Logger = LogManager.GetLogger("RedAlert");
+        }
+
+
         /// <summary>
         /// Client facing API.
         /// </summary>
@@ -27,53 +45,27 @@ namespace RedAlert.API.Controllers
             try
             {
                 //we'll be building the message to be sent to the IoT Hub
+                MessageBuilder mb = new MessageBuilder();
 
-                byte[] message = new byte[9];
-                //1 byte is the type of the message
-                //3 bytes is the RGB value
-                //1 bytes is the pattern number
-                //4 bytes is the timeout
-                message[0] = 1;
-
-                System.Drawing.Color colorRGB;
-                try
+                if (!mb.TrySetColor(color))
                 {
-                    colorRGB = System.Drawing.ColorTranslator.FromHtml("#"+color);
-                }
-                catch
-                {
-                    colorRGB = System.Drawing.Color.FromName(color);
-
-                    if (colorRGB.ToArgb() == 0)
-                    {
-                        return BadRequest("Unknown color.");
-                    }
+                    return BadRequest("Unknown color.");
                 }
 
-                message[1] = colorRGB.R;
-                message[2] = colorRGB.G;
-                message[3] = colorRGB.B;
-
-                if (!pattern.IsNullOrWhiteSpace())
+                if (!string.IsNullOrEmpty(pattern) && !mb.TrySetPattern(pattern))
                 {
-                    if (string.Compare(pattern, "waves", true) == 0)
-                    {
-                        //PATTERN_WAVES
-                        message[4] = 1;
-                    }
+                    return BadRequest("Unknown pattern.");
                 }
 
                 if (timeout.HasValue)
                 {
-                    byte[] timeoutBytes = BitConverter.GetBytes(timeout.Value);
-
-                    //because we're running on a little indian machine
-                    Array.Reverse(timeoutBytes);
-                    Array.Copy(timeoutBytes, 0, message, 4, 3);
+                    mb.SetTimeout(timeout.Value);
                 }
 
                 using (RedAlertContext context = new RedAlertContext())
                 {
+                    byte[] message = mb.GetBytes();
+
                     Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.SenderKey == senderKey);
 
                     if (device == null)
@@ -84,7 +76,12 @@ namespace RedAlert.API.Controllers
                     device.LastMessage = message;
 
                     DeviceManagement dm = new DeviceManagement();
+
+                    Logger.Debug("Sending the message: " + ByteToHex(message));
+
+                    //TODO: figure out how to await in parallel
                     await dm.SendCloudToDeviceMessageAsync(device.DeviceKey, message);
+                    await context.SaveChangesAsync();
                 }
                 return Ok();
             }
@@ -97,46 +94,15 @@ namespace RedAlert.API.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> SendToGroup(string groupName, string message)
         {
+
+
+
             throw new NotImplementedException();
 
-            //var groupList = new List<string>();
-            //groupList.Add("sl2yUZS+bC1fN/vU7/uxrkV3g9Z45oXvjPCpTY9kAws=");
-            //groupList.Add("WZZqpXbpSAwuBBS9VoWam+eqc+2C59ENk/yjMv1OOzw=");
-            //groupList.Add("5y/tgCuiCsriN8t71FCndQosAeBqf1DUmWx/ZbmUDkg=");
 
-            //try
-            //{
-            //    foreach (var item in groupList)
-            //    {
-            //        await IotHubHelper.SendCloudToDeviceMessageAsync(item, message);
-            //    }
-
-            //    return Ok();
-            //}
-            //catch
-            //{
-            //    return InternalServerError();
-            //}
         }
 
-        //[HttpGet]
-        //public async Task<HttpResponseMessage> Receive(string id)
-        //{
-        //    HttpResponseMessage response;
-        //    try
-        //    {
-        //        var message = await IotHubHelper.ReceiveMessage(id);
-
-        //        response = Request.CreateResponse(HttpStatusCode.OK, message);
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        response = Request.CreateResponse(HttpStatusCode.InternalServerError);
-        //    }
-        //    return response;
-        //}
-
-        public static byte[] StringToByteArray(string hex)
+        private static byte[] StringToByteArray(string hex)
         {
             if (hex.Length % 2 != 0) throw new FormatException("Not a hex string.");
 
@@ -144,6 +110,18 @@ namespace RedAlert.API.Controllers
                              .Where(x => x % 2 == 0)
                              .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
                              .ToArray();
+        }
+
+        private string ByteToHex(byte[] array)
+        {
+            string output = string.Empty;
+
+            foreach (byte b in array)
+            {
+                output += b.ToString("x2");
+            }
+
+            return output;
         }
     }
 }

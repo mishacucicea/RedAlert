@@ -1,0 +1,71 @@
+#colorPicker {
+    height: 400px;
+    width: 500px;
+    position: relative;
+    clear: both;
+    margin: auto;
+}
+
+    #colorPicker .track {
+        background: #EFEFEF url(img/text-color.png) no-repeat 50% 50%;
+        height: 150px;
+        width: 150px;
+        padding: 10px;
+        position: absolute;
+        cursor: crosshair;
+        float: left;
+        left: 32%;
+        top: 25%;
+        display: none;
+        border: 1px solid #ccc;
+        z-index: 100;
+        -webkit-border-radius: 150px;
+        -moz-border-radius: 150px;
+        border-radius: 150px;
+        -webkit-box-sizing: initial;
+        -moz-box-sizing: initial;
+        box-sizing: initial;
+    }
+
+    #colorPicker .color {
+        width: 1px;
+        height: 1px;
+        display: block;
+        position: relative;
+    }
+
+    #colorPicker .colorInner {
+        background-image: url(/Content/img/devicepsd.png);
+        height: 400px;
+        width: 500px;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+    }
+
+@media screen and (max-width: 768px) {
+    #colorPicker .colorInner, #colorPicker {
+        height: 200px;
+        width: 250px;
+    }
+
+        #colorPicker .track {
+            left: 15%;
+        }
+}
+
+#colorPicker .dropdown {
+    list-style: none;
+    display: none;
+    width: 27px;
+    position: absolute;
+    top: 28px;
+    border: 1px solid #ccc;
+    left: 0;
+    z-index: 1000;
+}
+
+    #colorPicker .dropdown li {
+        height: 25px;
+        cursor: pointer;
+    }

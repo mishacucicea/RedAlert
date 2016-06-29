@@ -1,13 +1,9 @@
 ﻿using RedAlert.API.BL;
 using RedAlert.API.Models;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace RedAlert.API.Controllers
@@ -16,6 +12,8 @@ namespace RedAlert.API.Controllers
     {
 
         private string ApiUrl = ConfigurationManager.AppSettings["ApiUrl"];
+
+        DeviceManagement dm = new DeviceManagement();
 
         // GET: Device
         public ActionResult Register()
@@ -27,66 +25,61 @@ namespace RedAlert.API.Controllers
         [HttpPost]
         public async Task<ActionResult> Register(DeviceModel model)
         {
-            using (var client = new HttpClient())
+            try
             {
-                DeviceManagement dm = new DeviceManagement();
-
                 model = await dm.AddDeviceAsync(model.SerialNumber);
-
-                //client.BaseAddress = new Uri(ApiUrl);
-                //var response = await client.PostAsJsonAsync("http://localhost:63913/api/DeviceIdentity", model);
-                //if (!response.IsSuccessStatusCode) //throw BUBU?
-                //if (response == null) throw new ArgumentNullException(nameof(response));
-                //model =  await response.Content.ReadAsAsync<DeviceModel>();
             }
+            catch (ArgumentException)
+            {
+                ModelState.AddModelError("SerialNumber", "Invalid serial number.");
+            }
+
             return View(model);
         }
-        
+
+        /// <summary>
+        /// Details the specified device.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>The view corresponding to the device details.</returns>
+        public async Task<ActionResult> Details(int id)
+        {
+            var model = await dm.GetDeviceAsync(id);
+
+            ViewBag.ApiUrl = $"{ApiUrl}/api/message/send?senderkey={model.SenderKey}&color=red";
+
+            return View(model);
+        }
+
         public ActionResult Get()
         {
-
-            return View();
-        }
-        
-        [HttpPost]
-        public async Task<ActionResult> Get(Device model)
-        {
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(ApiUrl);
-                var response =  await client.GetAsync("api/DeviceIdentity/" + model.SerialNumber);
-                
-                ViewData["deviceKey"] = response.Content.ReadAsStringAsync().Result;
-            }
-           
             return View();
         }
 
         public async Task<ActionResult> List()
         {
-            DeviceManagement dm = new DeviceManagement();
             var devices = await dm.GetDevices();
 
             return View(devices);
         }
-
-        public ActionResult ViewSendMessage()
-        {
-            return View("SendMessage");
-        }
-
 
         public ActionResult GenerateUrl()
         {
             return View();
         }
 
-        //why do we need it??
-        //public async Task<ActionResult> SendMessage(string id, string message)
-        //{
-        //    await IotHubHelper.SendCloudToDeviceMessageAsync(id, message);
+        public async Task<ActionResult> Mood(int id, string senderKey)
+        {
+            if (string.IsNullOrEmpty(senderKey))
+            {
+                // sender Key was not given, get the device by id.
+                var device = await dm.GetDeviceAsync(id);
+                senderKey = device.SenderKey;
+            }
 
-        //    return View("SendMessage");
-        //}
+            ViewBag.SenderKey = senderKey;
+
+            return View();
+        }
     }
 }

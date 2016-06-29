@@ -1,79 +1,60 @@
 ﻿
 @{
     ViewBag.Title = "Voting";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="content-section-a">
-    <div class="jumbotron">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8  col-md-offset-2">
-                    <div class="panel panel-default  device-panel">
+<div class="panel-heading">
+    <h3 class="panel-title">Your personal QR Code</h3>
+</div>
+<div class="panel-body">
 
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Your personal QR Code</h3>
-                        </div>
-                        <div class="panel-body">
+    <script>
+        $(document).ready(function () {
+            var senderKey = localStorage.getItem("senderKey");
 
-                            <script>
-                                $(document).ready(function() {
-                                    var senderKey = localStorage.getItem("senderKey");
-                                   
-                                    
-                                    $("#qr-Imageup").attr("src", "http://redalertxfd.azurewebsites.net/QrCode/GenerateVotingQr?answer=Up");
 
-                                    $("#qr-Imagedown").attr("src", "http://redalertxfd.azurewebsites.net/QrCode/GenerateVotingQr?answer=Down");
+            $("#qr-Imageup").attr("src", "/QrCode/GenerateVotingQr?answer=Up");
 
-                                    if (senderKey == null) {
-                                        $('#messageBox').text('Have you registered you device ?');
-                                    } else {
-                                        $('#senderkeyidVotingQR').val(senderKey);
-                                        $.post("http://redalertxfd.azurewebsites.net/Color/Voting?senderKey=" + senderKey);
+            $("#qr-Imagedown").attr("src", "/QrCode/GenerateVotingQr?answer=Down");
 
-                                    }
-                                    $("#senderkeyidVotingQR").change(function () {
-                                        var senderKeyBox = $('#senderkeyidVotingQR').val();
-                                        if (senderKeyBox != null) {
-                                            $.post("http://redalertxfd.azurewebsites.net/Color/Voting?senderKey=" + senderKey);
-                                        }
-                                    });
-                                    setInterval(function () {
-                                        $.post("http://redalertxfd.azurewebsites.net/Color/Voting?senderKey=" + senderKey);
-                                    }, 2000);
-                                });                             
-                            </script>
+            if (senderKey == null) {
+                $('#messageBox').text('Have you registered you device ?');
+            } else {
+                $('#senderkeyidVotingQR').val(senderKey);
+                $.post("/Color/Voting?senderKey=" + senderKey);
 
-                            <div class="form-group">
-                                @Html.Label("Senderkey", new { @class = "control-label col-md-2" })
-                                <div class="col-md-10">
-                                    <input id="senderkeyidVotingQR" type="text" value="">
-                                    @Html.ValidationMessage("Senderkey")
+            }
+            $("#senderkeyidVotingQR").change(function () {
+                var senderKeyBox = $('#senderkeyidVotingQR').val();
+                if (senderKeyBox != null) {
+                    $.post("/Color/Voting?senderKey=" + senderKey);
+                }
+            });
+            setInterval(function () {
+                $.post("/Color/Voting?senderKey=" + senderKey);
+            }, 2000);
+        });
+    </script>
 
-                                </div>
+    <div class="form-group">
+        @Html.Label("Senderkey", new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <input id="senderkeyidVotingQR" type="text" value="">
+            @Html.ValidationMessage("Senderkey")
 
-                                <div class="col-md-10">
-                                    @Html.Label("ThumbsUp", new { @class = "control-label col-md-2" })
-                                    <img id="qr-Imageup" alt="" />
-                                </div>
-
-                                <div class="col-md-10">
-                                    @Html.Label("ThumbsDown", new { @class = "control-label col-md-2" })
-                                    <img id="qr-Imagedown" alt="" />
-                                </div>
-                            </div>
-
-                            <div id="messageBox">
-                            </div>
-                            
-
-                            @section Scripts {
-                                @Scripts.Render("~/bundles/jqueryval")
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
+
+        <div class="col-md-10">
+            @Html.Label("ThumbsUp", new { @class = "control-label col-md-2" })
+            <img id="qr-Imageup" alt="" />
+        </div>
+
+        <div class="col-md-10">
+            @Html.Label("ThumbsDown", new { @class = "control-label col-md-2" })
+            <img id="qr-Imagedown" alt="" />
+        </div>
+    </div>
+
+    <div id="messageBox">
     </div>
 </div>

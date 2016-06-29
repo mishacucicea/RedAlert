@@ -1,11 +1,16 @@
+
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
+#include <ESP8266httpUpdate.h>
 
 #include <WiFiClientSecure.h>
 #include <ESP8266HTTPClient.h>
 #include "WiFiSetup.h"
 #include "PubSubClient.h"
 #include "Logging.h"
+
+//don't forget to update!
+char VERSION[] = "dev-07";
 
 unsigned long lastTimeCheck = 0;
 
@@ -41,6 +46,15 @@ byte pattern;
 int patternStage;
 byte color[3];
 
+/*
+ * Expands a 8 bit number to 10bits
+ */
+int expand10(byte value) {
+  //ROL 2 and then ROR 6 to add the 2 upper bits as the lower ones
+  int expanded = (value<<2) + (value>>6);
+  return expanded;
+}
+
 void setColor(int r, int g, int b)
 {
   //not exact, there is some loss in values.
@@ -58,15 +72,16 @@ void callback(char* topic, byte* payload, unsigned int length) {
     //3 bytes is the RGB value
     //1 bytes is the pattern number - not supported yet
     //4 bytes is the timeout - not supported yet
-    setColor(payload[1]<<2, payload[2]<<2, payload[3]<<2);
-
+    
     hasColor = true;
     pattern = payload[4];
+    
     patternStage = 0;
     color[0] = payload[1];
     color[1] = payload[2];
     color[2] = payload[3];
-    
+
+    setColor(expand10(color[0]), expand10(color[1]), expand10(color[2]));
   }
   else {
 
@@ -77,6 +92,91 @@ void callback(char* topic, byte* payload, unsigned int length) {
     }
   
     Info2("Message received: ", msg);
+  }
+}
+
+void tryUpdate() {
+  t_httpUpdate_return ret = ESPhttpUpdate.update("redalertxfd.azurewebsites.net", 80, "/api/iot/update", VERSION);
+  switch(ret) {
+      case HTTP_UPDATE_FAILED: {
+            Debug("[update] Update failed.");
+
+            int lastError = ESPhttpUpdate.getLastError();
+            Debug2("Last error: ", lastError);
+            String lastErrorString = ESPhttpUpdate.getLastErrorString();
+            Debug2("Last error: ", lastErrorString);
+        }
+          break;
+      case HTTP_UPDATE_NO_UPDATES:
+          Debug("[update] Update no Update.");
+          break;
+      case HTTP_UPDATE_OK:
+          Debug("[update] Update ok."); // may not called we reboot the ESP
+          break;
+  }
+}
+
+void retrieveCredentials() {
+  //TODO: check for time agains google
+  //do the wifi client and shit
+  String s = "http://redalertxfd.azurewebsites.net/api/iot/authentication?devicekey=";
+  s += wifiSetup.getApiKey();
+  
+  Debug2("Making HTTP request to:", s);
+  
+  HTTPClient http;
+  http.begin(s);
+  http.setTimeout(30000);
+  int httpCode = http.GET();
+
+  if (httpCode > 0) {
+    if (httpCode == HTTP_CODE_OK) {
+      Debug("Getting authetnication data");
+      String payload = http.getString();
+      //now we have to split the payload
+      int index = payload.indexOf('\n');
+      String hubAddress_ = payload.substring(0, index);
+      hubAddress_.trim();
+      hubAddress_.toCharArray(hubAddress, hubAddress_.length() + 1);
+      payload.remove(0, index+1);
+
+      index = payload.indexOf('\n');
+      String deviceId_ = payload.substring(0, index);
+      deviceId_.trim();
+      deviceId_.toCharArray(deviceId, deviceId_.length() + 1);
+      payload.remove(0, index+1);
+
+      index = payload.indexOf('\n');
+      String hubUser_ = payload.substring(0, index);
+      hubUser_.trim();
+      hubUser_.toCharArray(hubUser, hubUser_.length() + 1);
+      payload.remove(0, index+1);
+
+      index = payload.indexOf('\n');
+      String hubPass_ = payload.substring(0, index);
+      hubPass_.trim();
+      hubPass_.toCharArray(hubPass, hubPass_.length() + 1);
+      payload.remove(0, index+1);
+
+      //what's left is the hubTopic
+      payload.trim();
+      payload.toCharArray(hubTopic, payload.length() + 1);
+
+      //just for testing:
+      Debug2("hubAddress: ", hubAddress);
+      Debug2("deviceId: ", deviceId);
+      Debug2("hubUser: ", hubUser);
+      Debug2("hubPass: ", hubPass);
+      Debug2("hubTopic: ", hubTopic);
+    }
+    else {
+      //TODO: what do we do?
+      Debug2("Error status code", httpCode); 
+    }
+  }
+  else {
+    //TODO: an error occurred, what do we do?
+    Debug2("Failed to GET: ", httpCode);
   }
 }
 
@@ -103,6 +203,8 @@ void setup() {
     delay(1000);
     setColor(0, 0, 0);
   }
+
+  Debug2("Version: ", VERSION);
   
   //initializing the wifi module
   wifiSetup.eepromOffset = 0;
@@ -160,69 +262,12 @@ void loop() {
   //at start, or once each day
   if (lastTimeCheck == 0 || now - lastTimeCheck > 24*3600*1000 || now < lastTimeCheck) {
     lastTimeCheck = now;
+
+    //first we have to check for the update, as the device will restart after update
+    tryUpdate();
     
-    //TODO: check for time agains google
-    //do the wifi client and shit
-    String s = "http://redalertxfd.azurewebsites.net/api/iot/authentication?devicekey=";
-    s += wifiSetup.getApiKey();
+    retrieveCredentials();
     
-    Debug2("Making HTTP request to:", s);
-    
-    HTTPClient http;
-    http.begin(s);
-    http.setTimeout(30000);
-    int httpCode = http.GET();
-
-    if (httpCode > 0) {
-      if (httpCode == HTTP_CODE_OK) {
-        Debug("Getting authetnication data");
-        String payload = http.getString();
-        //now we have to split the payload
-        int index = payload.indexOf('\n');
-        String hubAddress_ = payload.substring(0, index);
-        hubAddress_.trim();
-        hubAddress_.toCharArray(hubAddress, hubAddress_.length() + 1);
-        payload.remove(0, index+1);
-
-        index = payload.indexOf('\n');
-        String deviceId_ = payload.substring(0, index);
-        deviceId_.trim();
-        deviceId_.toCharArray(deviceId, deviceId_.length() + 1);
-        payload.remove(0, index+1);
-
-        index = payload.indexOf('\n');
-        String hubUser_ = payload.substring(0, index);
-        hubUser_.trim();
-        hubUser_.toCharArray(hubUser, hubUser_.length() + 1);
-        payload.remove(0, index+1);
-
-        index = payload.indexOf('\n');
-        String hubPass_ = payload.substring(0, index);
-        hubPass_.trim();
-        hubPass_.toCharArray(hubPass, hubPass_.length() + 1);
-        payload.remove(0, index+1);
-
-        //what's left is the hubTopic
-        payload.trim();
-        payload.toCharArray(hubTopic, payload.length() + 1);
-
-        //just for testing:
-        Debug2("hubAddress: ", hubAddress);
-        Debug2("deviceId: ", deviceId);
-        Debug2("hubUser: ", hubUser);
-        Debug2("hubPass: ", hubPass);
-        Debug2("hubTopic: ", hubTopic);
-      }
-      else {
-        //TODO: what do we do?
-        Debug2("Error status code", httpCode); 
-      }
-    }
-    else {
-      //TODO: an error occurred, what do we do?
-      Debug2("Failed to GET: ", httpCode);
-    }
-
     //TODO: so what happens after 24H?...
     
     Debug("Setting server for MQTT");
@@ -237,9 +282,9 @@ void loop() {
   if (last1000 == 0 || now - last1000 >= 1000 || now < last1000) {
     last1000 = now;
     
-    Debug("Checking for wifi connected");
+    //Debug("Checking for wifi connected");
     if (WiFi.status() == WL_CONNECTED) {
-      Debug("WiFi is connected");
+      //Debug("WiFi is connected");
       if (!client.connected()) {
         Debug("MQTT connecting..");
         if (client.connect(deviceId, hubUser, hubPass)) {
@@ -255,13 +300,17 @@ void loop() {
         }
       }
       
-      Debug("checking if MQTT is connected");
+      //Debug("checking if MQTT is connected");
       if (client.connected()) {
-        Debug("MQTT is connected!");
+        //Debug("MQTT is connected!");
         if (!client.loop()) {
           Debug("MQTT failed to loop");
         }
       }
+    } else {
+      Debug("WiFi is not connected!");
+
+      //TODO: wifi reconnect logic in here?
     }
   }
 
@@ -271,20 +320,21 @@ void loop() {
       patternStage = ++patternStage % 400;
       
       //total pattern cycle is 4 sec - max stage = 400
-      int red = color[0] << 2;
-      int green = color[1] << 2;
-      int blue = color[2] << 2;
+      int red = expand10(color[0]);
+      int green = expand10(color[1]);
+      int blue = expand10(color[2]);
   
       //warning - we're losing precision in here, move to floating point?
       if (patternStage < 200) {
-        red = red / 200 * patternStage;
-        green = green / 200 * patternStage;
-        blue = blue / 200 * patternStage;
+        red = (int)((float)red / 200 * patternStage);
+        green = (int)((float)green / 200 * patternStage);
+        blue = (int)((float)blue / 200 * patternStage);
       } else {
-        red = red / 200 * (400 - patternStage);
-        green = green / 200 * (400 - patternStage);
-        blue = blue / 200 * (400 - patternStage);
+        red = (int)((float)red / 200 * (400 - patternStage));
+        green = (int)((float)green / 200 * (400 - patternStage));
+        blue = (int)((float)blue / 200 * (400 - patternStage));
       }
+
       setColor(red, green, blue);
     }
   }

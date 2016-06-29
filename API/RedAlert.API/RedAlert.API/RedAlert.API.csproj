@@ -219,7 +219,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Content\less\" />
     <Folder Include="Storage\" />
-    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -243,15 +242,15 @@
     <Compile Include="BL\ColorHelper.cs" />
     <Compile Include="BL\DeviceManagement.cs" />
     <Compile Include="BL\GroupHelper.cs" />
+    <Compile Include="BL\MessageBuilder.cs" />
     <Compile Include="BL\QrCoderGenerator.cs" />
     <Compile Include="BL\RandomProvider.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ColorController.cs" />
     <Compile Include="Controllers\DeviceController.cs" />
-    <Compile Include="Controllers\DeviceIdentityController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\IoTController.cs" />
+    <Compile Include="Controllers\API\IoTController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\QrCodeController.cs" />
     <Compile Include="Controllers\Recipe.cs" />
@@ -339,8 +338,10 @@
     <Content Include="Content\img\team\1.jpg" />
     <Content Include="Content\img\team\2.jpg" />
     <Content Include="Content\img\team\3.jpg" />
+    <Content Include="Content\img\text-color.png" />
     <Content Include="Content\landing-page.css" />
     <Content Include="Content\layout.css" />
+    <Content Include="Content\tinycolorpicker.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\font-awesome\css\font-awesome.css" />
     <Content Include="fonts\font-awesome\css\font-awesome.min.css">
@@ -396,23 +397,29 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Firmware\dev-05.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Firmware\dev-06.bin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
     <Content Include="Scripts\clipboard.js" />
     <Content Include="Scripts\clipboard.min.js" />
-    <Content Include="Scripts\colorpicker.js" />
-    <Content Include="Scripts\eye.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\jquery.js" />
+    <Content Include="Scripts\jquery.tinycolorpicker.min.js" />
     <Content Include="Scripts\layout.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\site.js" />
     <Content Include="Scripts\utils.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\Web.config" />
@@ -426,7 +433,6 @@
     <Content Include="Views\Device\List.cshtml" />
     <Content Include="Views\Group\Create.cshtml" />
     <Content Include="Views\Group\Get.cshtml" />
-    <Content Include="Views\Device\SendMessage.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -436,6 +442,13 @@
     <Content Include="Views\Group\AddDeviceToGroup.cshtml" />
     <Content Include="Views\Group\SendMessageToGroup.cshtml" />
     <Content Include="Views\Color\Voting.cshtml" />
+    <Content Include="Views\Voting\Thanks.cshtml" />
+    <Content Include="Views\Shared\Header.cshtml" />
+    <Content Include="Views\Shared\Footer.cshtml" />
+    <Content Include="Views\Shared\_SimpleLayout.cshtml" />
+    <Content Include="Views\Shared\Head.cshtml" />
+    <Content Include="Views\Device\Details.cshtml" />
+    <Content Include="Views\Device\Mood.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
