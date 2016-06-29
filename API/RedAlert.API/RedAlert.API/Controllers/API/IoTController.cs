@@ -43,6 +43,7 @@ namespace RedAlert.API.Controllers.API
         [HttpGet]
         public async Task<HttpResponseMessage> Authentication(string deviceKey)
         {
+            Logger.Debug($"Authentication device with key: {deviceKey}");
             //the expected ID is the id generated on the portal (consider as an API key)
 
             //check that the key exists in the database
@@ -55,6 +56,7 @@ namespace RedAlert.API.Controllers.API
 
                 if (device == null)
                 {
+                    Logger.Debug($"Device key was invalid: {deviceKey}");
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Not allowed.");
                 }
 
