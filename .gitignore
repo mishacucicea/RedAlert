@@ -206,3 +206,4 @@ applicationhost.config
 API/RedAlert.API/RedAlert.API/debugconfig.json
 API/RedAlert.API/.vs/config/applicationhost.config
 /API/RedAlert.API/RedAlert.API/log.txt
+/API/RedAlert.API/RedAlert.API/logs
