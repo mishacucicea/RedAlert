@@ -68,8 +68,17 @@ namespace RedAlert.API.Controllers
             return View();
         }
 
-        public ActionResult Mood()
+        public async Task<ActionResult> Mood(int id, string senderKey)
         {
+            if (string.IsNullOrEmpty(senderKey))
+            {
+                // sender Key was not given, get the device by id.
+                var device = await dm.GetDeviceAsync(id);
+                senderKey = device.SenderKey;
+            }
+
+            ViewBag.SenderKey = senderKey;
+
             return View();
         }
     }
