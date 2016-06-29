@@ -9,7 +9,7 @@ using RedAlert.API.BL;
 
 namespace RedAlert.API.Controllers
 {
-    public class ColorController : Controller
+    public class ColorController : BaseController
     {
         private string ApiUrl = ConfigurationManager.AppSettings["ApiUrl"];
         // GET: Color
@@ -18,10 +18,6 @@ namespace RedAlert.API.Controllers
             return View();
         }
 
-        public ActionResult Exception()
-        {
-            throw new Exception("Error in ColorController");
-        }
         [HttpGet]
         public ActionResult Voting()
         {
@@ -34,7 +30,8 @@ namespace RedAlert.API.Controllers
             {
                 client.BaseAddress = new Uri(ApiUrl);
                 var color = ColorHelper.CreateColorFromPercent();
-                await client.GetAsync("/api/message?senderkey=" + senderKey + "&color=" + color);
+                
+                await client.GetAsync("/api/message?senderkey=" + senderKey + "&color=" + color + "&pattern=fixed");
                          
             }
             ViewData["Votes"] = ColorHelper.TotalResponse;

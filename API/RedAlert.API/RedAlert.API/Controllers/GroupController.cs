@@ -27,6 +27,7 @@ namespace RedAlert.API.Controllers
            
             return View();
         }
+
         [HttpPost]
         public async Task<ActionResult> Create(string groupName)
         {
@@ -39,6 +40,7 @@ namespace RedAlert.API.Controllers
             {
                 _db.DeviceGroups.Add(new DeviceGroup() {Name = groupName });
                 await _db.SaveChangesAsync();
+
                 ViewBag.Result = $"Group {groupName} has been added";
             }
             return View();

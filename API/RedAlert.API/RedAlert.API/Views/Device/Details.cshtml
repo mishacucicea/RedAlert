@@ -1,0 +1,56 @@
+﻿@model Device
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<script src="~/Scripts/clipboard.min.js"></script>
+
+<script>
+    var clipboard = new Clipboard('.btn');
+</script>
+
+<div>
+    <h4>@Html.DisplayFor(model => model.Name)</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.HubDeviceId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HubDeviceId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DeviceKey)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DeviceKey)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SenderKey)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SenderKey)
+        </dd>
+
+        <dt>
+            Device Url
+        </dt>
+
+        <dd>
+            <input type="text" id="deviceUrl" readonly value="@ViewBag.ApiUrl" />
+            <button type="button" class="btn" data-clipboard-target="#deviceUrl" title="Copy to clipboard">
+                <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+            </button>
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Mood", "Mood", new { id = Model.DeviceId}) |
+    @Html.ActionLink("Back to List", "List")
+</p>

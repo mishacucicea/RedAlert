@@ -1,35 +1,33 @@
-﻿@model IEnumerable<Microsoft.Azure.Devices.Device>
+﻿@model IList<Device>
 
 @{
-    ViewBag.Title = "Device List";
+    ViewBag.Title = "My Devices";
 }
 
-<div class="jumbotron">
-    <div class="container">
-        <h2>List</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        Serial Number
-                    </th>
-                    <th>
-                        Hub Key
-                    </th>
-                </tr>
-            </thead>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @item.Id
-                    </td>
-                    <td>
-                        @item.Authentication.SymmetricKey.PrimaryKey
-                    </td>
-                </tr>
-            }
-        </table>
-    </div>
-</div>
+<h2>My Devices</h2>
 
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Serial Number
+            </th>
+            <th>
+                Device Name
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.SerialNumber, "Details", new { id = item.DeviceId })
+                </td>
+                <td>
+                    @item.Name
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

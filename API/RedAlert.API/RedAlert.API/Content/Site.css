@@ -40,3 +40,19 @@ input[type="checkbox"].input-validation-error {
 .validation-summary-valid {
     display: none;
 }
+
+.device-panel td {
+text-align:left;
+}
+
+.navbar-nav .dropdown-menu > li > a {
+    padding: 10px;
+}
+
+li.dropdown.selected {
+   font-style: italic;
+}
+    
+li.dropdown.selected.open {
+   font-style: inherit;
+}

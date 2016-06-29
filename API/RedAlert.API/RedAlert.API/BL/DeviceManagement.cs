@@ -18,10 +18,6 @@ namespace RedAlert.API.BL
         /// The connection string
         /// </summary>
         private string connectionString = ConfigurationManager.ConnectionStrings["IotHubConnectionString"].ConnectionString;
-        /// <summary>
-        /// The registry manager
-        /// </summary>
-
 
         public async Task<String> GetDeviceSASKey(string deviceId)
         {
@@ -106,44 +102,27 @@ namespace RedAlert.API.BL
         /// Gets the device asynchronous.
         /// </summary>
         /// <param name="deviceId">The device identifier.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception">Device Does not Exist</exception>
-        public async Task<string> GetDeviceAsync(string deviceId)
+        /// <returns>The device.</returns>
+        public async Task<Models.Device> GetDeviceAsync(int deviceId)
         {
-            throw new NotImplementedException();
+            using (RedAlertContext context = new RedAlertContext())
+            {
+                var device = await context.Devices.FirstOrDefaultAsync(d=>d.DeviceId == deviceId);
 
-            //try
-            //{
-            //    var device = await registryManager.GetDeviceAsync(deviceId);
-            //    return device.Authentication.SymmetricKey.PrimaryKey;
-            //}
-            //catch (DeviceNotFoundException)
-            //{
-            //    throw new Exception("Device Does not Exist");
-            //}
-
-
+                return device;
+            }
         }
 
         /// <summary>
         /// Gets the devices.
         /// </summary>
-        /// <returns></returns>
-        /// <exception cref="System.Exception">Device Does not Exist</exception>
-        public async Task<IEnumerable<Models.Device>> GetDevices()
+        /// <returns>The list of devices.</returns>
+        public async Task<List<Models.Device>> GetDevices()
         {
-            throw new NotImplementedException();
-
-            //try
-            //{
-            //    var devices = await registryManager.GetDevicesAsync(100);
-            //    return devices;
-            //}
-
-            //catch (DeviceNotFoundException)
-            //{
-            //    throw new Exception("Device Does not Exist");
-            //}
+            using (RedAlertContext context = new RedAlertContext())
+            {
+                return await context.Devices.ToListAsync();
+            }
         }
 
         /// <summary>
