@@ -93,7 +93,7 @@ namespace RedAlert.API.Controllers.API
                     {
                         //TODO: it does not behave well with messages that have a timeout/expiry
                         DeviceManagement dm = new DeviceManagement();
-                        await dm.SendCloudToDeviceMessageAsync(device.HubDeviceId, device.LastMessage);
+                        await dm.SendCloudToDeviceMessageAsync(device.DeviceKey, device.LastMessage);
                     }
                 }
                 catch (Exception e)
