@@ -11,7 +11,7 @@
 </script>
 
 <div>
-    <h4>Device:  @Html.DisplayFor(model => model.SerialNumber)</h4>
+    <h4>@Html.DisplayFor(model => model.Name)</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -51,6 +51,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Mood", "ViewSendMessage", new { id = Model.DeviceId }) |
+    @Html.ActionLink("Mood", "Mood", new { id = Model.DeviceId}) |
     @Html.ActionLink("Back to List", "List")
 </p>

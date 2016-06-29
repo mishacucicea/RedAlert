@@ -13,7 +13,7 @@
                 Serial Number
             </th>
             <th>
-                Sender Key
+                Device Name
             </th>
         </tr>
     </thead>
@@ -25,7 +25,7 @@
                     @Html.ActionLink(item.SerialNumber, "Details", new { id = item.DeviceId })
                 </td>
                 <td>
-                    @item.SenderKey
+                    @item.Name
                 </td>
             </tr>
         }

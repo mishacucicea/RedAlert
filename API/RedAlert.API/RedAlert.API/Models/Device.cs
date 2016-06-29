@@ -45,7 +45,13 @@ namespace RedAlert.API.Models
         [Index(IsUnique = true)]
         [MaxLength(20)]
         public string SenderKey { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the device name.
+        /// </summary>
+        [MaxLength(40)]
+        public string Name { get; set; }
+
         public byte[] LastMessage { get; set; }
         public virtual DeviceGroup Group { get; set; }
     }
