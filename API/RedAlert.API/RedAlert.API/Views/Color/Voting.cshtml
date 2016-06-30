@@ -51,10 +51,7 @@
 
         </div>
 
-
-        <button type="button" id="resetButton" class="btn btn-default btn-lg" data-clipboard-target="#foo">
-            <span class="glyphicon glyphicon-send" aria-hidden="true"></span> Reset
-        </button>
+       
 
         <div class="col-md-10">
             @Html.Label("ThumbsUp", new { @class = "control-label col-md-2" })
@@ -62,9 +59,15 @@
         </div>
 
         <div class="col-md-10">
-            @Html.Label("ThumbsDown", new { @class = "control-label col-md-2" })
-            <img id="qr-Imagedown" alt="" />
+            @Html.Label("ThumbsDown", new {@class = "control-label col-md-2"})
+            <img id="qr-Imagedown" alt=""/>
         </div>
+        <div class="col-md-10">
+            <button type="button" id="resetButton" class="btn btn-default btn-lg" data-clipboard-target="#foo">
+                <span class="glyphicon glyphicon-send" aria-hidden="true"></span> Reset
+            </button>
+        </div>
+
     </div>
 
     <div id="messageBox">
