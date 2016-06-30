@@ -247,6 +247,7 @@
     <Compile Include="BL\RandomProvider.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ColorController.cs" />
+    <Compile Include="Controllers\DemoController.cs" />
     <Compile Include="Controllers\DeviceController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -450,6 +451,7 @@
     <Content Include="Views\Device\Details.cshtml" />
     <Content Include="Views\Device\Mood.cshtml" />
     <Content Include="Views\Voting\Reset.cshtml" />
+    <Content Include="Views\Demo\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
