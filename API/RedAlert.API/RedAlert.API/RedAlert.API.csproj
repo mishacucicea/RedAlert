@@ -449,6 +449,7 @@
     <Content Include="Views\Shared\Head.cshtml" />
     <Content Include="Views\Device\Details.cshtml" />
     <Content Include="Views\Device\Mood.cshtml" />
+    <Content Include="Views\Voting\Reset.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
