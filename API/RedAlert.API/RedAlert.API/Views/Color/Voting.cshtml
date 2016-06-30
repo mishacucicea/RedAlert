@@ -10,7 +10,7 @@
 
     <script>
         $(document).ready(function () {
-            var senderKey = localStorage.getItem("senderKey");
+            var  = localStorage.getItem("senderKey");
             var senderKeyBox;
 
             $("#qr-Imageup").attr("src", "/QrCode/GenerateVotingQr?answer=Up");
@@ -27,7 +27,7 @@
             $("#senderkeyidVotingQR").change(function () {
                  senderKeyBox = $('#senderkeyidVotingQR').val();
                 if (senderKeyBox != null) {
-                    $.post("/Color/Voting?senderKey=" + senderKey);
+                    $.post("/Color/Voting?senderKey=" + senderKeyBox);
                 }
             });
 
