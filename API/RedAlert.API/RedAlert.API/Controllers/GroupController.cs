@@ -24,7 +24,7 @@ namespace RedAlert.API.Controllers
         // GET: /Group/
         public ActionResult Create()
         {
-           
+
             return View();
         }
 
@@ -38,7 +38,7 @@ namespace RedAlert.API.Controllers
             }
             else
             {
-                _db.DeviceGroups.Add(new DeviceGroup() {Name = groupName });
+                _db.DeviceGroups.Add(new DeviceGroup() { Name = groupName });
                 await _db.SaveChangesAsync();
 
                 ViewBag.Result = $"Group {groupName} has been added";
@@ -47,7 +47,7 @@ namespace RedAlert.API.Controllers
         }
         public ActionResult Get(DeviceGroup model)
         {
-           
+
             return View();
         }
 
@@ -70,14 +70,14 @@ namespace RedAlert.API.Controllers
                 var devices = group.Devices.ToList();
                 try
                 {
-                    GroupHelper.SendGroupMessage(devices, color);
+                    await GroupHelper.SendGroupMessage(devices, color);
                     ViewBag.Result = $"The message was send to the group";
                 }
                 catch (Exception e)
                 {
                     ViewBag.Result = $"Something went wrong, the error is {e.Message}";
+                    Logger.Error(e);
                 }
- 
             }
             return View();
         }
@@ -85,47 +85,39 @@ namespace RedAlert.API.Controllers
         [HttpPost]
         public async Task<ActionResult> AddDeviceToGroup(string serialNumber, string groupName)
         {
-            try
+            var gn = await _db.DeviceGroups.Include(d => d.Devices).SingleOrDefaultAsync(x => x.Name == groupName);
+            if (gn == null)
             {
-                var gn = await _db.DeviceGroups.Include(d=>d.Devices).SingleOrDefaultAsync(x => x.Name == groupName);
-                if (gn == null)
-                {
-                    ModelState.AddModelError("groupName", "Invalid Group Name");
-                }
+                ModelState.AddModelError("groupName", "Invalid Group Name");
+            }
 
-                var device = await _db.Devices.SingleOrDefaultAsync(x=>x.SerialNumber== serialNumber);
-               // var sn = await _db.SerialNumbers.SingleOrDefaultAsync(x => x.Code == serialNumber);
-                if (device == null)
+            var device = await _db.Devices.SingleOrDefaultAsync(x => x.SerialNumber == serialNumber);
+            // var sn = await _db.SerialNumbers.SingleOrDefaultAsync(x => x.Code == serialNumber);
+            if (device == null)
+            {
+                ModelState.AddModelError("serialNumber", "Invalid Serial ");
+            }
+            if (ModelState.IsValid)
+            {
+                if (gn.Devices.Exists(x => x.SerialNumber == serialNumber))
                 {
-                    ModelState.AddModelError("serialNumber", "Invalid Serial ");
+                    ViewBag.Result = "This group has already this device added";
                 }
-                if (ModelState.IsValid)
+                else
                 {
-                    if (gn.Devices.Exists(x=>x.SerialNumber==serialNumber))
-                    {
-                        ViewBag.Result = "This group has already this device added";
-                    }
-                    else
-                    {
-                        gn.Devices.Add(device);
-                        TryUpdateModel(gn);
-                        await _db.SaveChangesAsync();
-                        ViewBag.Result = "Device has been added";
-                    }
-
-                    
+                    gn.Devices.Add(device);
+                    TryUpdateModel(gn);
+                    await _db.SaveChangesAsync();
+                    ViewBag.Result = "Device has been added";
                 }
             }
-            catch (Exception e)
-            {
-                
-            }
+
             return View();
         }
         [HttpGet]
         public async Task<ActionResult> AddDeviceToGroup()
         {
-           
+
             return View();
         }
 
