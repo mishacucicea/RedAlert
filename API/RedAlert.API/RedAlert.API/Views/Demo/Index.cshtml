@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewBag.Title = "Demo";
+}
+
+<h2>Demo - Scenarios</h2>
+<hr />
+<h4>#1 Build server</h4>
+<input id="btnBuilding" type="button" value="Building" />
+<input id="btnSuccess" type="button" value="Success" />
+<input id="btnFailed" type="button" value="Failed" />
+<hr />
+<h4>#2 Mood</h4>
+@Html.ActionLink("Mood", "Mood", "Device", new { id = 6}, null)
+<hr />
+<h4>#3 Group Brodcast</h4>
+<input id="btnBroadcast" type="button" value="Broadcast" />
+<hr />
+<h4>#4 Deployment pipeline</h4>
+
+<hr />
+
+<script>
+    function sendMessage(senderKey, color) {
+        $.get("/api/message/send", {
+            senderkey: senderKey,
+            color: color
+        });
+    }
+
+    function sendMessageToGroup(groupName, color) {
+        $.post("/Group/SendMessageToGroup", {
+            groupName: groupName,
+            color: color
+        });
+    }
+
+    // Build server aaaa.
+    $("#btnBuilding").click(function () { sendMessage("umtpjib5", "magenta") });
+    $("#btnSuccess").click(function () { sendMessage("umtpjib5", "green") });
+    $("#btnFailed").click(function () { sendMessage("umtpjib5", "red") });
+    $("#btnBroadcast").click(function () { sendMessageToGroup("Broadcast", "navy") });
+
+</script>
