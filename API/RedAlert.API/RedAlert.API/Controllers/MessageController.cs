@@ -42,53 +42,46 @@ namespace RedAlert.API.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> Send(string senderKey, string color, string pattern = null, uint? timeout = null)
         {
-            try
+            //we'll be building the message to be sent to the IoT Hub
+            MessageBuilder mb = new MessageBuilder();
+
+            if (!mb.TrySetColor(color))
             {
-                //we'll be building the message to be sent to the IoT Hub
-                MessageBuilder mb = new MessageBuilder();
-
-                if (!mb.TrySetColor(color))
-                {
-                    return BadRequest("Unknown color.");
-                }
-
-                if (!string.IsNullOrEmpty(pattern) && !mb.TrySetPattern(pattern))
-                {
-                    return BadRequest("Unknown pattern.");
-                }
-
-                if (timeout.HasValue)
-                {
-                    mb.SetTimeout(timeout.Value);
-                }
-
-                using (RedAlertContext context = new RedAlertContext())
-                {
-                    byte[] message = mb.GetBytes();
-
-                    Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.SenderKey == senderKey);
-
-                    if (device == null)
-                    {
-                        return BadRequest();
-                    }
-
-                    device.LastMessage = message;
-
-                    DeviceManagement dm = new DeviceManagement();
-
-                    Logger.Debug("Sending the message: " + ByteToHex(message));
-
-                    //TODO: figure out how to await in parallel
-                    await dm.SendCloudToDeviceMessageAsync(device.DeviceKey, message);
-                    await context.SaveChangesAsync();
-                }
-                return Ok();
+                return BadRequest("Unknown color.");
             }
-            catch
+
+            if (!string.IsNullOrEmpty(pattern) && !mb.TrySetPattern(pattern))
             {
-                return InternalServerError();
+                return BadRequest("Unknown pattern.");
             }
+
+            if (timeout.HasValue)
+            {
+                mb.SetTimeout(timeout.Value);
+            }
+
+            using (RedAlertContext context = new RedAlertContext())
+            {
+                byte[] message = mb.GetBytes();
+
+                Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.SenderKey == senderKey);
+
+                if (device == null)
+                {
+                    return BadRequest();
+                }
+
+                device.LastMessage = message;
+
+                DeviceManagement dm = new DeviceManagement();
+
+                Logger.Debug("Sending the message: " + ByteToHex(message));
+
+                //TODO: figure out how to await in parallel
+                await dm.SendCloudToDeviceMessageAsync(device.DeviceKey, message);
+                await context.SaveChangesAsync();
+            }
+            return Ok();
         }
 
         [HttpGet]
