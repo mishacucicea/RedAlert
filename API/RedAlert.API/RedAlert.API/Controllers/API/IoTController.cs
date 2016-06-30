@@ -82,23 +82,16 @@ namespace RedAlert.API.Controllers.API
 
                 HttpResponseMessage response;
 
-                try
-                {
-                    response = Request.CreateResponse(HttpStatusCode.OK);
-                    response.Content = new StringContent(responseMessage);
+                response = Request.CreateResponse(HttpStatusCode.OK);
+                response.Content = new StringContent(responseMessage);
 
-                    // if there was a previous message we have to resend it to make sure the device is always
-                    //showing the latest state
-                    if (device.LastMessage != null)
-                    {
-                        //TODO: it does not behave well with messages that have a timeout/expiry
-                        DeviceManagement dm = new DeviceManagement();
-                        await dm.SendCloudToDeviceMessageAsync(device.DeviceKey, device.LastMessage);
-                    }
-                }
-                catch (Exception e)
+                // if there was a previous message we have to resend it to make sure the device is always
+                //showing the latest state
+                if (device.LastMessage != null)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.InternalServerError);
+                    //TODO: it does not behave well with messages that have a timeout/expiry
+                    DeviceManagement dm = new DeviceManagement();
+                    await dm.SendCloudToDeviceMessageAsync(device.DeviceKey, device.LastMessage);
                 }
 
                 return response;
