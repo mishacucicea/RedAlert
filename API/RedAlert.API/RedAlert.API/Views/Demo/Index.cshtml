@@ -35,10 +35,12 @@
         });
     }
 
+    var senderKey = "2c96fa2g";
+
     // Build server aaaa.
-    $("#btnBuilding").click(function () { sendMessage("umtpjib5", "magenta") });
-    $("#btnSuccess").click(function () { sendMessage("umtpjib5", "green") });
-    $("#btnFailed").click(function () { sendMessage("umtpjib5", "red") });
+    $("#btnBuilding").click(function () { sendMessage(senderKey, "magenta") });
+    $("#btnSuccess").click(function () { sendMessage(senderKey, "green") });
+    $("#btnFailed").click(function () { sendMessage(senderKey, "red") });
     $("#btnBroadcast").click(function () { sendMessageToGroup("Broadcast", "navy") });
 
 </script>
