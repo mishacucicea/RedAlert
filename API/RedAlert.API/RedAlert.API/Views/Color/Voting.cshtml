@@ -30,6 +30,13 @@
                     $.post("/Color/Voting?senderKey=" + senderKey);
                 }
             });
+
+            $("#resetButton").click(function () {
+
+                // it's assumed that a sender key is already in the local storage.
+                $.get("Color/Voting/Reset", {
+                });
+            });
             setInterval(function () {
                 $.post("/Color/Voting?senderKey=" + senderKey);
             }, 2000);
@@ -43,6 +50,11 @@
             @Html.ValidationMessage("Senderkey")
 
         </div>
+
+
+        <button type="button" id="resetButton" class="btn btn-default btn-lg" data-clipboard-target="#foo">
+            <span class="glyphicon glyphicon-send" aria-hidden="true"></span> Reset
+        </button>
 
         <div class="col-md-10">
             @Html.Label("ThumbsUp", new { @class = "control-label col-md-2" })
