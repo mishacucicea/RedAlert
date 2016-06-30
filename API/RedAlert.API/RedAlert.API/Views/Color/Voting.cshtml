@@ -10,8 +10,8 @@
 
     <script>
         $(document).ready(function () {
-            var senderKey = localStorage.getItem("senderKey");
-
+            var  = localStorage.getItem("senderKey");
+            var senderKeyBox;
 
             $("#qr-Imageup").attr("src", "/QrCode/GenerateVotingQr?answer=Up");
 
@@ -25,16 +25,16 @@
 
             }
             $("#senderkeyidVotingQR").change(function () {
-                var senderKeyBox = $('#senderkeyidVotingQR').val();
+                 senderKeyBox = $('#senderkeyidVotingQR').val();
                 if (senderKeyBox != null) {
-                    $.post("/Color/Voting?senderKey=" + senderKey);
+                    $.post("/Color/Voting?senderKey=" + senderKeyBox);
                 }
             });
 
             $("#resetButton").click(function () {
 
                 // it's assumed that a sender key is already in the local storage.
-                $.get("Reset", {
+                $.get("/Voting/Reset", {
                 });
             });
             setInterval(function () {
