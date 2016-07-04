@@ -1,38 +1,68 @@
 ﻿@model RedAlert.API.Models.DeviceModel
-
+ 
 @{
     ViewBag.Title = "Register Device";
 }
+</br>
+        </br>
+</br>
+<div class="col-xs-4 classforborder">
 
-<div class="panel-heading">
-    <h3 class="panel-title">Register your device</h3>
+    <h4>Steps to reproduce</h4>
+    <hr>
+    <p>1 - Open the Box</p>
+    <p> 2 - Write the serial number on device to the right textbox</p>
+    <p> 3 - Use the device</p>
+
+
 </div>
-<div class="panel-body">
-    @if (Model.DeviceKey != null)
-    {
-        <script>
-            $(document).ready(function () {
-                localStorage.setItem("deviceKey", "@Model.DeviceKey");
-                localStorage.setItem("senderKey", "@Model.SenderKey");
-            });
-        </script>
-        <h2> Your Device key is: @Model.DeviceKey</h2>
-                                <h2> Your Sender Key is: @Model.SenderKey</h2>
-    }
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-        <div class="form-horizontal">
-            @Html.ValidationSummary(true)
-            <div class="form-group">
-                @Html.LabelFor(model => model.SerialNumber, "Serial Number", htmlAttributes: new { @class = "control-label col-md-3" })
-                @Html.EditorFor(model => model.SerialNumber)
-                @Html.ValidationMessageFor(model => model.SerialNumber)
-            </div>
-            <hr />
-            <div class="form-group">
-                <input type="submit" value="Register" class="btn btn-default" />
-            </div>
-        </div>
-    }
+<div class="col-xs-4">
+    <img src="~/Content/img/devicepsdxx.png" width="100%" />
+
+
 </div>
+
+
+    <div class="col-xs-4 classforborder">
+
+        <h4>Register your device</h4>
+        <hr>
+        </br>
+        @if (Model.DeviceKey != null)
+        {
+            <script>
+                $(document).ready(function () {
+                    localStorage.setItem("deviceKey", "@Model.DeviceKey");
+                    localStorage.setItem("senderKey", "@Model.SenderKey");
+                });
+            </script>
+            <h2> Your Device key is: @Model.DeviceKey</h2>
+            <h2> Your Sender Key is: @Model.SenderKey</h2>
+        }
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SerialNumber, "Serial Number", htmlAttributes: new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(model => model.SerialNumber, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SerialNumber)
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <input type="submit" value="Register" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+
+ 
