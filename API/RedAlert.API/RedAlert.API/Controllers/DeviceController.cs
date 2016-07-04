@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace RedAlert.API.Controllers
 {
+    [Authorize]
     public class DeviceController : BaseController
     {
 
