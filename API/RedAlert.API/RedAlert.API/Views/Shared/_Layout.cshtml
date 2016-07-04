@@ -6,20 +6,15 @@
     @Html.Partial("Header")
 
 
-    <div class="content-section-a">
-        <div class="jumbotron">
+       
             <div class="container">
                 <div class="row">
-                    <div class="col-md-8  col-md-offset-2">
-                        <div class="panel panel-default  device-panel">
+                   
+                    
                             @RenderBody()
-                        </div>
-
-                    </div>
                 </div>
             </div>
-        </div>
-    </div>
+      
 
     @Html.Partial("Footer")
     @RenderSection("scripts", required: false)
