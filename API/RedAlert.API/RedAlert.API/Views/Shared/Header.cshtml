@@ -39,7 +39,9 @@
                         <li>@Html.ActionLink("Send color to Group", "SendMessageToGroup", "Group")</li>
                     </ul>
                 </li>
-                <li>@Html.ActionLink("Recipes", "Index", "Recipe", new { area = "" }, null)</li>
+                <li>@Html.ActionLink("Recipes", "Index", "Recipe", new {area = ""}, null)</li>
+                @Html.Partial("_LoginPartial")
+                
             </ul>
         </div>
         <!-- /.navbar-collapse -->
