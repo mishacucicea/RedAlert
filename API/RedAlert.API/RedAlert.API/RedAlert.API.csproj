@@ -344,11 +344,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\agency.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\colorpicker.css" />
-    <Content Include="Content\custom.css" />
     <Content Include="Content\img\banner-bg.jpg" />
     <Content Include="Content\img\chooseaction.png" />
     <Content Include="Content\img\choosetrigger.png" />
