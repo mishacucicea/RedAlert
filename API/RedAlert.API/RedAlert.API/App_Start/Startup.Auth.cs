@@ -19,7 +19,7 @@ namespace RedAlert.API
             // Use a cookie to temporarily store information about a user logging in with a third party login provider
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
-            // Uncomment the following lines to enable logging in with third party login providers
+            //Uncomment the following lines to enable logging in with third party login providers
             //app.UseMicrosoftAccountAuthentication(
             // clientId: "",
             // clientSecret: "");
@@ -32,7 +32,7 @@ namespace RedAlert.API
             // appId: "",
             // appSecret: "");
 
-            //app.UseGoogleAuthentication();
+            app.UseGoogleAuthentication("320583182272-6nkt1lq6g1p8p6lmdeeroutspkdk2ojq.apps.googleusercontent.com", "Lsxc-Zh9kLzXtlWdkR3kvHcV");
         }
     }
 }
