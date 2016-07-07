@@ -518,6 +518,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Scripts\pages\generateurl.js" />
+    <Content Include="Scripts\pages\qrcode.js" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
     <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
