@@ -3,62 +3,54 @@
     ViewBag.Title = "GenerateUrl";
 }
 <script src="~/Scripts/clipboard.min.js"></script>
+<script src="~/Scripts/pages/generateurl.js"></script>
 
-<script>
-    var clipboard = new Clipboard('.btn');
-</script>
-
-
-<div class="panel-heading">
-    <h3 class="panel-title">Your Url is:</h3>
-</div>
-<div class="panel-body">
-    <script>
-        $(function () {
-            var apiUrl = window.location.protocol + "//" + window.location.host;
-            var senderKey = localStorage.getItem("senderKey");
-            var color = localStorage.getItem("color");
-
-            if (senderKey != null) {
-                $('#senderkeyid').val(senderKey);
-            }
-
-            if (senderKey != null) {
-                $('#textBoxUrl').val(apiUrl+'/api/message/send?senderkey=' + senderKey + '&color=' + color);
-            }
-
-
-            $("#senderkeyid").change(function () {
-                var senderKeyBox = $('#senderkeyid').val();
-                if (senderKeyBox != null) {
-                    $('#textBoxUrl').val(apiUrl+'/api/message/send?senderkey=' + senderKeyBox + '&color=' + color);
-                }
-            });
-        });
-    </script>
-
-
-    <div class="form-group">
-        @Html.Label("Senderkey", new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            <input id="senderkeyid" type="text" value="">
-            @Html.ValidationMessage("Senderkey")
-
+<div class="container">
+    <div class="row">
+        </br></br>
+        <div class="col-xs-12 classforborder">     
+                <h4>Url</h4>
+                <hr> </br>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Generate Url</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                @Html.Label("Senderkey", new {@class = "col-sm-4 control-label"})
+                                <div class="col-sm-6">
+                                    <input id="senderkeyid" class="form-control" type="text" value="">
+                                    @Html.ValidationMessage("Senderkey")
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("Color", new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-6">
+                                    <input id="colorboxId" class="form-control" type="text" value="">
+                                    @Html.ValidationMessage("Color")
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("GeneratedUrl", new {@class = "col-sm-4 control-label"})
+                                <div class="col-sm-6">
+                                    <input id="textBoxUrl" class="form-control" type="text" value="">
+                                    @Html.ValidationMessage("GeneratedUrl")
+                                </div>
+                            </div>
+                           
+                            <hr />
+                            <div class="form-group">
+                                <div class="col-md-4 col-md-offset-4">
+                                    <button type="button" class="btn btn-default btn-lg" data-clipboard-action="copy" data-clipboard-target="#textBoxUrl">
+                                        <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Copy to Clipboard
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                     </div>
+            </div>        
         </div>
     </div>
-    <div class="form-group">
-        @Html.Label("GeneratedUrl", new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            <input id="textBoxUrl" type="text" value="">
-            @Html.ValidationMessage("GeneratedUrl")
-
-        </div>
-    </div>
-
-
-    <button type="button" class="btn btn-default btn-lg" data-clipboard-action="copy" data-clipboard-target="#textBoxUrl">
-        <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Copy to Clipboard
-    </button>
-
-
 </div>
+
