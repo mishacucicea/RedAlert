@@ -8,6 +8,7 @@
 /// <reference path="layout.js" />
 /// <reference path="modernizr-2.6.2.js" />
 /// <reference path="pages/generateurl.js" />
+/// <reference path="pages/qrcode.js" />
 /// <reference path="respond.js" />
 /// <reference path="site.js" />
 /// <reference path="utils.js" />
