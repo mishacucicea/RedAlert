@@ -2,74 +2,64 @@
 @{
     ViewBag.Title = "Voting";
 }
+<script src="~/Scripts/pages/voting.js"></script>
 
-<div class="panel-heading">
-    <h3 class="panel-title">Your personal QR Code</h3>
-</div>
-<div class="panel-body">
 
-    <script>
-        $(document).ready(function () {
-            var senderKey = localStorage.getItem("senderKey");
-            var senderKeyBox;
 
-            $("#qr-Imageup").attr("src", "/QrCode/GenerateVotingQr?answer=Up");
+<div class="container">
+    <div class="row">
+        </br></br>
+        <div class="col-xs-12 classforborder">
+            <h4>Voting</h4>
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true)
 
-            $("#qr-Imagedown").attr("src", "/QrCode/GenerateVotingQr?answer=Down");
+                <div class="form-group">
 
-            if (senderKey == null) {
-                $('#messageBox').text('Have you registered you device ?');
-            } else {
-                $('#senderkeyidVotingQR').val(senderKey);
-                $.post("/Color/Voting?senderKey=" + senderKey);
-
-            }
-            $("#senderkeyidVotingQR").change(function () {
-                 senderKeyBox = $('#senderkeyidVotingQR').val();
-                if (senderKeyBox != null) {
-                    $.post("/Color/Voting?senderKey=" + senderKeyBox);
-                }
-            });
-
-            $("#resetButton").click(function () {
-
-                // it's assumed that a sender key is already in the local storage.
-                $.get("/Voting/Reset", {
-                });
-            });
-            setInterval(function () {
-                $.post("/Color/Voting?senderKey=" + senderKey);
-            }, 2000);
-        });
-    </script>
-
-    <div class="form-group">
-        @Html.Label("Senderkey", new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            <input id="senderkeyidVotingQR" type="text" value="">
-            @Html.ValidationMessage("Senderkey")
-
+                    @Html.Label("Senderkey", new {@class = "col-sm-4 control-label"})
+                    <div class="col-sm-6">
+                        <input id="senderkeyidVotingQR" type="text" value="" class="form-control">
+                        <div id="messageBox">
+                        </div>
+                        @Html.ValidationMessage("Senderkey")
+                    </div>
+                </div>             
+            </div>
         </div>
+    </div>
+   </br></br>
+    <div class="row">
+        <div class="col-xs-12  classforborder ">
+            </br>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-md-6">
+                        @Html.Label("ThumbsUp", new { @class = "control-label col-md-2" })
+                        <img id="qr-Imageup" alt="" />
+                    </div>
 
-       
-
-        <div class="col-md-10">
-            @Html.Label("ThumbsUp", new { @class = "control-label col-md-2" })
-            <img id="qr-Imageup" alt="" />
-        </div>
-
-        <div class="col-md-10">
-            @Html.Label("ThumbsDown", new {@class = "control-label col-md-2"})
-            <img id="qr-Imagedown" alt=""/>
-        </div>
-        <div class="col-md-10">
-            <button type="button" id="resetButton" class="btn btn-default btn-lg" data-clipboard-target="#foo">
-                <span class="glyphicon glyphicon-send" aria-hidden="true"></span> Reset
-            </button>
-        </div>
+                    <div class="col-md-6">
+                        @Html.Label("ThumbsDown", new { @class = "control-label col-md-2" })
+                        <img id="qr-Imagedown" alt="" />
+                    </div>
+                </div>
+                    <hr />
+                    <div class="form-group">
+                        <div class="col-md-4 col-md-offset-5">
+                            <button type="button" id="resetButton" class="btn btn-default btn-lg" data-clipboard-target="#foo">
+                                <span class="glyphicon glyphicon-send" aria-hidden="true"></span> Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+              
+            </div>
 
     </div>
-
-    <div id="messageBox">
-    </div>
 </div>
+
+
+
+
+
+ 
