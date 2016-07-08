@@ -16,31 +16,10 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>@Html.ActionLink("Home", "Index", "Home")</li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Device Management <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li>@Html.ActionLink("Register Device", "Register", "Device")</li>
-                        <li>@Html.ActionLink("My Devices", "List", "Device")</li>
-                        @*No idea what this is for... :*@
-                        @*
-                        <li>@Html.ActionLink("Set the Color", "Index", "Color", new { area = "" }, null)</li>*@
-                        <li>@Html.ActionLink("Generate Url", "GenerateUrl", "Device")</li>
-                        <li> @Html.ActionLink("Create QR Code", "Index", "QrCode")</li>                 
-                        <li>@Html.ActionLink("Voting", "Voting", "Color")</li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Group Management <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li>@Html.ActionLink("Create Group", "Create", "Group")</li>
-                        <li>@Html.ActionLink("Add Device to Group", "AddDeviceToGroup", "Group")</li>
-                        <li>@Html.ActionLink("Send color to Group", "SendMessageToGroup", "Group")</li>
-                    </ul>
-                </li>
-                <li>@Html.ActionLink("Recipes", "Index", "Recipe", new {area = ""}, null)</li>
                 @Html.Partial("_LoginPartial")
                 
+                <li>@Html.ActionLink("Recipes", "Index", "Recipe", new {area = ""}, null)</li>
+                         
             </ul>
         </div>
         <!-- /.navbar-collapse -->

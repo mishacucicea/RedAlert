@@ -10,8 +10,10 @@ using RedAlert.API.BL;
 
 namespace RedAlert.API.Controllers
 {
+    [Authorize]
     public class QrCodeController : BaseController
     {
+       
         private readonly string ApiUrl = ConfigurationManager.AppSettings["ApiUrl"];
         // GET: QrCode
         [HttpGet]
