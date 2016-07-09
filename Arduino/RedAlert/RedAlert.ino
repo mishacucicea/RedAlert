@@ -10,7 +10,7 @@
 #include "Logging.h"
 
 //don't forget to update!
-char VERSION[] = "dev-07";
+char VERSION[] = "dev-08";
 
 unsigned long lastTimeCheck = 0;
 
@@ -278,8 +278,10 @@ void loop() {
     client.setCallback(callback);
   }
 
+  //looks like making the checks so much more often, the MQTT library doesn't fail so much..
+  //looks like there might be a problem if there are 2 or more MQTT messages to read fro on a MQTT loop()
   //every second
-  if (last1000 == 0 || now - last1000 >= 1000 || now < last1000) {
+  //if (last1000 == 0 || now - last1000 >= 1000 || now < last1000) {
     last1000 = now;
     
     //Debug("Checking for wifi connected");
@@ -292,8 +294,8 @@ void loop() {
           Debug("MQTT connected.");
   
           //client.publish("outTopic", "test");
-          Debug("Subscribing to the MQTT topic");
-          client.subscribe(hubTopic);
+          Debug("Subscribing to the MQTT topic and QOS1");
+          client.subscribe(hubTopic, 1);
           Info("Ready to receive messages.");
         } else {
           Debug("Could not connect :(");
@@ -305,6 +307,7 @@ void loop() {
         //Debug("MQTT is connected!");
         if (!client.loop()) {
           Debug("MQTT failed to loop");
+          Debug2("MQTT state: ", client.state());
         }
       }
     } else {
@@ -312,7 +315,7 @@ void loop() {
 
       //TODO: wifi reconnect logic in here?
     }
-  }
+  //}
 
   //ideally will be executed every 10ms, but we don't really care about accuracy in here
   if (hasColor = true) {
