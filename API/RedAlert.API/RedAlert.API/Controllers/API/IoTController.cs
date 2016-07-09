@@ -101,7 +101,6 @@ namespace RedAlert.API.Controllers.API
         [HttpGet]
         public async Task<HttpResponseMessage> Update()
         {
-            Logger.Debug("Updating device.");
             IEnumerable<string> headerValues = Request.Headers.GetValues("x-ESP8266-free-space");
 
             //0 will also be considered as unknown
@@ -119,12 +118,14 @@ namespace RedAlert.API.Controllers.API
 
             //if version is already up to date then return 304
             string[] splitVersion = version.Split('-');
-            if (int.Parse(splitVersion[1]) >= 6)
+            if (int.Parse(splitVersion[1]) >= 8)
             {
                 return Request.CreateResponse(HttpStatusCode.NotModified);
             }
 
             string newVersion = "dev-08";
+
+            Logger.Debug($"Updating device from version {version} to {newVersion}.");
 
             HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
             var stream = new FileStream(System.Web.HttpContext.Current.Server.MapPath("~/Firmware/" + newVersion + ".bin"), FileMode.Open);
