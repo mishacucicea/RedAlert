@@ -408,6 +408,10 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\colorpicker.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\img\banner-bg.jpg" />
     <Content Include="Content\img\chooseaction.png" />
     <Content Include="Content\img\choosetrigger.png" />
@@ -472,20 +476,16 @@
     <Content Include="Content\layout.css" />
     <Content Include="Content\tinycolorpicker.css" />
     <Content Include="favicon.ico" />
-    <Content Include="fonts\font-awesome\css\font-awesome.css" />
-    <Content Include="fonts\font-awesome\css\font-awesome.min.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="fonts\font-awesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\ai.0.22.9-build00167.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="fonts\font-awesome\fonts\fontawesome-webfont.eot" />
-    <Content Include="fonts\font-awesome\fonts\fontawesome-webfont.ttf" />
-    <Content Include="fonts\font-awesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\font-awesome\fonts\FontAwesome.otf" />
     <Content Include="fonts\font-awesome\less\bordered-pulled.less" />
     <Content Include="fonts\font-awesome\less\core.less" />
