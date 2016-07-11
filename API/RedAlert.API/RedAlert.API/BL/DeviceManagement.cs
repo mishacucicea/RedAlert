@@ -9,11 +9,22 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Data.Entity;
+using NLog;
 
 namespace RedAlert.API.BL
 {
     public class DeviceManagement
     {
+        public ILogger Logger { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseController"/> class.
+        /// </summary>
+        public DeviceManagement()
+        {
+            Logger = LogManager.GetLogger("RedAlert");
+        }
+
         /// <summary>
         /// The connection string
         /// </summary>
@@ -133,19 +144,35 @@ namespace RedAlert.API.BL
         /// <returns></returns>
         public async Task SendCloudToDeviceMessageAsync(string deviceKey, byte[] message)
         {
+            Models.Device device;
             using (RedAlertContext context = new RedAlertContext())
             {
-                Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.DeviceKey == deviceKey);
-                
-                if (device == null)
-                {
-                    throw new ArgumentException("No such DeviceKey.");
-                }
+                device = await context.Devices.SingleOrDefaultAsync(x => x.DeviceKey == deviceKey);
+            }
 
-                ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
-                var messageToBytes = new Message(message);
-                await serviceClient.SendAsync(device.HubDeviceId, messageToBytes);
-            } 
+            if (device == null)
+            {
+                throw new ArgumentException("No such DeviceKey.");
+            }
+
+            ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
+            //var feedbackReceiver = serviceClient.GetFeedbackReceiver();
+
+            var messageToBytes = new Message(message);
+            messageToBytes.Ack = DeliveryAcknowledgement.Full;
+            await serviceClient.SendAsync(device.HubDeviceId, messageToBytes);
+
+            //var feedbackBatch = await feedbackReceiver.ReceiveAsync();
+            //if (feedbackBatch != null)
+            //{
+            //    Logger.Debug("Received feedback: {0}", string.Join(", ", feedbackBatch.Records.Select(f => f.StatusCode)));
+            //    await feedbackReceiver.CompleteAsync(feedbackBatch);
+            //}
+            //else
+            //{
+            //    Logger.Debug("Timed out waiting for feedback");
+            //}
+
         }
 
     }
