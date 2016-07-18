@@ -10,7 +10,7 @@
 #include "Logging.h"
 
 //don't forget to update!
-char VERSION[] = "dev-08";
+char VERSION[] = "dev-09";
 
 unsigned long lastTimeCheck = 0;
 
@@ -19,6 +19,10 @@ unsigned long lastTimeCheck = 0;
 //#define hubUser "arduhub.azure-devices.net/pocDevice"
 //#define hubPass "SharedAccessSignature sr=arduhub.azure-devices.net%2fdevices%2fpocDevice&sig=ksApO9qnlvs%2bERTKS3qqvO0T7cRG2D1xhI7PiE5C8uk%3d&se=1490896187"
 //#define hubTopic "devices/pocDevice/messages/devicebound/#"
+
+//#define SERIALSPEED 74880
+//for Mini D1:
+#define SERIALSPEED 57600
 
 //define pins
 #define RED_PIN 14
@@ -57,7 +61,6 @@ int expand10(byte value) {
 
 void setColor(int r, int g, int b)
 {
-  //not exact, there is some loss in values.
   analogWrite(RED_PIN, r);
   analogWrite(GREEN_PIN, g);
   analogWrite(BLUE_PIN, b);
@@ -182,7 +185,7 @@ void retrieveCredentials() {
 
 void setup() {
   //need for debugging and communication with the slave module
-  Serial.begin(74880);
+  Serial.begin(SERIALSPEED);
 
   //start the eeprom and wait 10 msecs for safety
   EEPROM.begin(512);
@@ -195,12 +198,14 @@ void setup() {
   //for pin testing
   //while(true)
   {
-    setColor(1023, 0, 0);
+    setColor(1023, 1023, 1023);
     delay(1000);
+    /*
     setColor(0, 1023, 0);
     delay(1000);
     setColor(0, 0, 1023);
     delay(1000);
+    */
     setColor(0, 0, 0);
   }
 
@@ -244,7 +249,6 @@ void setup() {
     }
   }
 
-  
   //TODO: do we need this line?
   configTime(3 * 3600, 0, "pool.ntp.org", "time.nist.gov");
 }
