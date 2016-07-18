@@ -61,7 +61,8 @@ void handleSetup(void) {
 
 void handleRoot(void) {
   String s;
-
+  //TODO: in next version of ESP8266 Aarduino core (probably 2.4.0) chunks will be supported, and should
+  //alow us to store less strings in the memory as we'll send the body in chunks
         s = "\
 <!doctype html>\
 <html xml:lang=\"en\">\
@@ -117,15 +118,42 @@ void handleRoot(void) {
               var contentId = document.getElementById(\"credentials\");\
               contentId.style.display = \"none\";\
             }\
+            function checkWiFi() {\
+              //TODO: show something\
+              var checkwifiId = document.getElementById(\"checkwifi\");\
+              checkwifiId.style.display=\"block\";\
+              var contentId = document.getElementById(\"credentials\");\
+              contentId.style.display = \"none\";\
+              var xmlhttp = new XMLHttpRequest();\
+              xmlhttp.onreadystatechange = function() {\
+                if (xmlhttp.readyState == 4) {\
+                  if (xmlhttp.status == 200) {\
+                    var r = JSON.parse(xmlhttp.responseText);\
+                    if (r.connected) {\
+                      //TODO: success\
+                    } else {\
+                      //TODO: could not connect to wifi\
+                    }\
+                  } else {\
+                    //TODO: something went wrong, is it even possible?\
+                  }\
+                }\
+              };\
+              xmlhttp.open(\"GET\", \"checkwifi\", true);\
+              xmlhttp.send();\
+            }\
         </script>\
     </head>\
     <body>\
         <div class=\"wrapper\">\
             <p style=\"display:none;\" id=\"buttonID\">  <input type=\"button\" value=\"Select network\" onclick=\"showList()\"/></p>\
-           <div ID=\"content\" style=\"display:block;\">\
-             <p><b>Please select your wireless network:</b></p>";
+            <div ID=\"content\" style=\"display:block;\">\
+              <p><b>Please select your wireless network:</b></p>";
         s += st;
         s += "\
+            </div>\
+            <div id=\"checkwifi\" style=\"display:none;\">\
+              <p><b>Checking WiFi..</b></p>\
             </div>\
             <form method='get' action='setup' id=\"credentials\"  style=\"display:none;\">\
               <input id=\"SSID\" type=\"hidden\" name=\"ssid\" />\
@@ -148,6 +176,37 @@ void handleRoot(void) {
 
 void handleNotFound(void) {
   server.send(404, "text/html", "Nope dude..");
+}
+
+void handleCheckWiFi(void) {
+  byte retries = 0;
+  String qsid = server.arg("ssid");
+  qsid.trim();
+  Debug2("New SSID: ", qsid);
+  
+  String qpass = server.arg("pass");
+  qpass.trim();
+  Debug2("New Password: ", qpass);
+
+  //testing WiFi
+  while ( retries < 20 ) {
+    if (WiFi.status() == WL_CONNECTED) { 
+      
+      Debug("Connected to wifi! Local IP:");
+      Debug(WiFi.localIP());
+      continue;
+    } 
+    delay(500);
+    Debug2("Wifi Status: ", WiFi.status());    
+    retries++;
+  }
+
+  if (WiFi.status() == WL_CONNECTED) {
+    server.send(200, "application/json", "{'connected':'true'}");
+  } else {
+    //TODO: in a later version try to figure out reasons and pass it to the client
+    server.send(200, "application/json", "{'connected':'false', 'reason':'unknown'}");
+  }
 }
 
 WiFiSetup::WiFiSetup(void) {
@@ -186,12 +245,24 @@ void WiFiSetup::scanNetworks(void) {
       //new template:
       //<a href="#" onclick="populate(this)">Dinamitescu <i> (strong)</i> </a>
       //TODO: add signal strength
+
+      //we'll skip networks with the same name (corporate networks have multiple APs with same name)
+      bool same = false;
+      for (int j = 0; j < i; j++) {
+        if (WiFi.SSID(i).equals(WiFi.SSID(j))) {
+          same = true;
+          break;
+        }
+      }
+      if (same) continue;
+      
       st += "<a href=\"#\" onclick=\"populate(this)\" ssid=\"" + WiFi.SSID(i) + "\">" + WiFi.SSID(i) + "</a>";
     }
 }
 
+//TODO: rename
 void WiFiSetup::setupAP(void) {
-  WiFi.mode(WIFI_AP);
+  WiFi.mode(WIFI_AP_STA);
   IPAddress apIP(192, 168, 1, 1);
   WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
   WiFi.softAP(deviceSSID);
@@ -279,6 +350,8 @@ void WiFiSetup::beginSetupMode(int seconds) {
 
   server.on("/", HTTP_GET, handleRoot);
   server.on("/setup", HTTP_GET, handleSetup);
+  server.on("/checkwifi", HTTP_GET, handleCheckWiFi);
+  
 
   server.onNotFound(handleNotFound);
 
@@ -296,6 +369,8 @@ void WiFiSetup::beginSetupMode(int seconds) {
       Debug("Client connected.");
       seconds = 0;
     }
+    //we don't need this while running very fast so try to do something else..
+    delay(100);
   }
 }
 
@@ -317,7 +392,7 @@ bool WiFiSetup::stationMode(void) {
   Debug("Trying to connect..");
   WiFi.begin(ssid.c_str(), pass.c_str());
   Debug("Checking for connected status..");
-  while ( retries < 20 ) {
+  while ( retries < 30 ) {
     if (WiFi.status() == WL_CONNECTED) { 
       
       Debug("Connected to wifi! Local IP:");
@@ -325,7 +400,7 @@ bool WiFiSetup::stationMode(void) {
       return(true); 
     } 
     delay(500);
-    Debug2("Wifi Status: " ,WiFi.status());    
+    Debug2("Wifi Status: ", WiFi.status());    
     retries++;
   }
 
