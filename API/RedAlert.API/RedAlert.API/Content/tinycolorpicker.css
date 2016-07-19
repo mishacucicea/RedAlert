@@ -7,7 +7,7 @@
 }
 
     #colorPicker .track {
-        background: #EFEFEF url(img/text-color.png) no-repeat 50% 50%;
+        background: #EFEFEF url(img/text-color.webp) no-repeat 50% 50%;
         height: 150px;
         width: 150px;
         padding: 10px;
@@ -35,7 +35,7 @@
     }
 
     #colorPicker .colorInner {
-        background-image: url(/Content/img/devicepsd.png);
+        background-image: url(/Content/img/devicepsdconv.webp);
         height: 400px;
         width: 500px;
         background-repeat: no-repeat;

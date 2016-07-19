@@ -11,6 +11,7 @@ using RedAlert.API.DAL;
 
 namespace RedAlert.API.Controllers
 {
+    [Authorize]
     public class GroupController : BaseController
     {
 

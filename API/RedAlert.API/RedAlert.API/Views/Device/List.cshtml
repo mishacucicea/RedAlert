@@ -4,30 +4,21 @@
     ViewBag.Title = "My Devices";
 }
 
-<h2>My Devices</h2>
+<div class="container">
+    <div class="row">
+        </br></br>
+        <div class="col-xs-12 classforborder">
+            <h4>List of your registered devices</h4>
+            <hr>
+                <div class="panel-body">                 
+                     <div class="list-group">
+                         @foreach (var item in Model)
+                         {
+                          @Html.ActionLink(item.Name +": "+ item.SerialNumber , "Details", new { id = item.DeviceId },new { @class = "list-group-item" })
+                         }                            
+                </div>          
+            </div>
+        </div>
+   </div>
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Serial Number
-            </th>
-            <th>
-                Device Name
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-            {
-            <tr>
-                <td>
-                    @Html.ActionLink(item.SerialNumber, "Details", new { id = item.DeviceId })
-                </td>
-                <td>
-                    @item.Name
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
