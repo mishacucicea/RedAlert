@@ -3,19 +3,7 @@
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div class="container">
-    <div class="row">
-        </br></br>
-        <div class="col-xs-12 classforborder">
-            @if (ViewBag.HasLocalPassword)
-            {
-                @Html.Partial("_ChangePasswordPartial")
-            }
-            else
-            {
-                @Html.Partial("_SetPasswordPartial")
-            }
-        </div>
-    </div>
+   
     <div class="row">
         </br></br>
         <div class="col-xs-12 classforborder">
