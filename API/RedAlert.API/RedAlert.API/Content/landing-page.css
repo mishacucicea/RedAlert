@@ -81,7 +81,7 @@ h6 {
     padding-bottom: 50px;
     text-align: center;
     color: #f8f8f8;
-    background: url(img/devicepsd.jpg) no-repeat center center;
+    background: url(img/devicepsd.webp) no-repeat center center;
     background-size: cover;
 opacity: 0.7;
 
@@ -219,19 +219,6 @@ p.copyright {
 .classforborder {
         border: 1px solid #e1e1e8;
         border-radius: 4px;
+        background-color: #FCFCFC;
     
-}
-.headerPage {
-    padding-top: 60px;
-    padding-bottom: 60px;
-    font-size: 24px;
-    text-align: left;
-    position: relative;
-    padding: 30px 0;
-    color: #e7e7e7;
-    text-align: center;
-    text-shadow: 0 1px 0 rgba(0,0,0,.1);
-    background-color: #444444;
-   
-    background-repeat: repeat-x;
 }
