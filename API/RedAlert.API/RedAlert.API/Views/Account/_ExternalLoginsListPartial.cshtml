@@ -2,7 +2,9 @@
     <div class="form-group">
         @using Microsoft.Owin.Security
 
-        <h4>Use another service to log in.</h4>
+        <h4>Choose a service to login with.
+
+</h4>
         <hr/>
         @{
             var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
@@ -24,15 +26,16 @@
                     @Html.AntiForgeryToken()
                     <div id="socialLoginList">
                         <p>
-                            <div class="col-md-4 col-md-offset-5">
+                            <div class="col-md-4 col-md-offset-4">
                                 @foreach (AuthenticationDescription p in loginProviders)
                                 {
-                                    <button type="submit" class="btn btn-default" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account">@p.AuthenticationType</button>
+                                    <button type="submit" class="btn btn-block btn-social btn-@p.AuthenticationType.ToLower()" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account"><span class="fa fa-@p.AuthenticationType.ToLower()"></span> Sign in with @p.AuthenticationType</button>
+                                   <br/>
                                 }
                             </div>
                         </p>
                     </div>
-                    <br><br/>
+                  
                 }
             }
         }

@@ -28,9 +28,9 @@ namespace RedAlert.API
             // consumerKey: "",
             // consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            // appId: "",
-            // appSecret: "");
+            app.UseFacebookAuthentication(
+             appId: "888396751264300",
+             appSecret: "1c71fa8e65465b9a90fad55cf91d4343");
 
             app.UseGoogleAuthentication("320583182272-6nkt1lq6g1p8p6lmdeeroutspkdk2ojq.apps.googleusercontent.com", "Lsxc-Zh9kLzXtlWdkR3kvHcV");
         }

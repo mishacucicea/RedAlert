@@ -405,6 +405,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-social.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\colorpicker.css" />
@@ -412,6 +413,7 @@
     <Content Include="Content\font-awesome.min.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\googlefonts.css" />
     <Content Include="Content\img\banner-bg.jpg" />
     <Content Include="Content\img\chooseaction.png" />
     <Content Include="Content\img\choosetrigger.png" />
@@ -445,6 +447,7 @@
     <Content Include="Content\img\colorbubble.png" />
     <Content Include="Content\img\Colorbubbles.jpg" />
     <Content Include="Content\img\devicecomponent.gif" />
+    <Content Include="Content\img\devicecomponent_converted.gif" />
     <Content Include="Content\img\devicepsd.jpg" />
     <Content Include="Content\img\devicepsd.png" />
     <Content Include="Content\img\devicepsdxx.png" />
@@ -464,6 +467,7 @@
     <Content Include="Content\img\makerurl.png" />
     <Content Include="Content\img\phones.png" />
     <Content Include="Content\img\qrcode.png" />
+    <Content Include="Content\img\RGB_circle.png" />
     <Content Include="Content\img\scanqr.png" />
     <Content Include="Content\img\scroll-down.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -524,12 +528,20 @@
     <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Manage.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
-    <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Content\img\colorbubble.webp" />
+    <Content Include="Content\img\Colorbubbles.webp" />
+    <Content Include="Content\img\devicepsd.webp" />
+    <Content Include="Content\img\devicepsdconv.webp" />
+    <Content Include="Content\img\devicepsdxx.webp" />
+    <Content Include="Content\img\iftttlight.webp" />
+    <Content Include="Content\img\jenkins-solution.webp" />
+    <Content Include="Content\img\logo.webp" />
+    <Content Include="Content\img\scanqr.webp" />
+    <Content Include="Content\img\text-color.webp" />
+    <Content Include="Content\img\devicepsd1.webp" />
     <None Include="debugconfig.json" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
