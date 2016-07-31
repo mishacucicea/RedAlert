@@ -7,7 +7,7 @@
 //this is a magic number used to for a TRUE value for EEPROM, as EEPROM after reset can have any random value.
 #define MAGIC_NUMBER B10101010
 
-char* deviceSSID = "RedAlert-123";
+char deviceSSID[] = "RedAlert-123";
 String st;
 bool hasSetup = false; 
 
@@ -64,113 +64,140 @@ void handleRoot(void) {
   //TODO: in next version of ESP8266 Aarduino core (probably 2.4.0) chunks will be supported, and should
   //alow us to store less strings in the memory as we'll send the body in chunks
         s = "\
-<!doctype html>\
-<html xml:lang=\"en\">\
-    <head>\
-      <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\
-        <title>Configure the LIGHT BOX</title>\
-        <style>\
-            body{text-align:center;font-family:Arial;color:#333333;font-size:16px;background:#f7f9f6}\
-            .wrapper {background:#ffffff;padding:20px;display:inline-block;border-radius:14px;width:290px;}\
-            input{border:1px solid #d2d2d2;padding:10px;}\
-            input[type=\"submit\"]{background:#9fd330;color:#333333;min-width:200px;font-size:16px;padding:10px;cursor:pointer;}\
-            #backButton{background:#f7f9f6;color:#333333;min-width:200px;font-size:16px;padding:10px;cursor:pointer;}\
-            ol {display:inline-block;text-align:left;}\
-            ol>li:nth-child(2n){background:#f7f9f6;}\
-            a{text-decoration:none;color:#333333;padding:10px;display: block;}\
-            a:hover{background:#9fd330;border-radius:8px;}\
-        </style>\
-        <script>\
-            function populate(elem){\
-              var contentId = document.getElementById(\"credentials\");\
-              contentId.style.display == \"none\" ? contentId.style.display = \"block\" :\
-              contentId.style.display = \"none\";\
-              document.getElementById(\"SSID\").value = elem.getAttribute(\"ssid\");\
-              document.getElementById(\"SSIDText\").innerHTML = elem.textContent + \" network:\";\
-              document.getElementById(\"PASSWORD\").focus();\
-              hideList();\
-              showButton();\
-              showCredential();\
-            }\
-            function showCredential(){\
-              var contentId = document.getElementById(\"credentials\");\
-              contentId.style.display = \"block\";\
-            }\
-            function showList(){\
-              hideButton();\
-              var contentId = document.getElementById(\"content\");\
-              contentId.style.display = \"block\";\
-              hideCredential();\
-            }\
-            function hideList(){\
-              var contentId = document.getElementById(\"content\");\
-              contentId.style.display = \"none\";\
-            }\
-            function hideButton() {\
-              var contentId = document.getElementById(\"buttonID\");\
-              contentId.style.display = \"none\";\
-            }\
-            function showButton() {\
-              var contentId = document.getElementById(\"buttonBackID\");\
-              contentId.style.display = \"block\";\
-            }\
-            function hideCredential() {\
-              var contentId = document.getElementById(\"credentials\");\
-              contentId.style.display = \"none\";\
-            }\
-            function checkWiFi() {\
-              /*TODO: show something*/\
-              var checkwifiId = document.getElementById(\"checkwifi\");\
-              checkwifiId.style.display=\"block\";\
-              var contentId = document.getElementById(\"credentials\");\
-              contentId.style.display = \"none\";\
-              var xmlhttp = new XMLHttpRequest();\
-              xmlhttp.onreadystatechange = function() {\
-                if (xmlhttp.readyState == 4) {\
-                  if (xmlhttp.status == 200) {\
-                    var r = JSON.parse(xmlhttp.responseText);\
-                    if (r.connected) {\
-                      /*TODO: success*/\
-                    } else {\
-                      /*TODO: could not connect to wifi*/\
-                    }\
-                  } else {\
-                    /*TODO: something went wrong, is it even possible?*/\
-                  }\
-                }\
-              };\
-              xmlhttp.open(\"GET\", \"checkwifi\", true);\
-              xmlhttp.send();\
-            }\
-        </script>\
-    </head>\
-    <body>\
-        <div class=\"wrapper\">\
-            <p style=\"display:none;\" id=\"buttonID\">  <input type=\"button\" value=\"Select network\" onclick=\"showList()\"/></p>\
-            <div ID=\"content\" style=\"display:block;\">\
-              <p><b>Please select your wireless network:</b></p>";
-        s += st;
-        s += "\
-            </div>\
-            <div id=\"checkwifi\" style=\"display:none;\">\
-              <p><b>Checking WiFi..</b></p>\
-            </div>\
-            <form method='get' action='setup' id=\"credentials\"  style=\"display:none;\">\
-              <input id=\"SSID\" type=\"hidden\" name=\"ssid\" />\
-                <div id=\"SSIDText\"></div></br>\
-                <div >\
-                  <input id=\"PASSWORD\" type=\"password\" placeholder=\"wireless password\" name=\"pass\"/>\
-                </div></br>\
-                <div>\
-                  <input type=\"text\" placeholder=\"API Key\" name=\"apikey\"/>\
-                </div></br>\
-                  <input type=\"submit\" value=\"Submit\" />\
-                    <p style=\"display:none;\" id=\"buttonBackID\">\
-                  <input type=\"button\" id=\"backButton\" value=\"Back\" onclick=\"showList()\"/></p>\
-            </form>\
-        </div>\
-    </body>\
-</html>";
+  <!doctype html>\n\
+  <html xml:lang=\"en\">\n\
+      <head>\n\
+        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n\
+          <title>Configure the LIGHT BOX</title>\n\
+          <style>\n\
+              body{text-align:center;font-family:Arial;color:#333333;font-size:16px;background:#f7f9f6}\n\
+              .wrapper {background:#ffffff;padding:20px;display:inline-block;border-radius:14px;width:290px;}\n\
+              input{border:1px solid #d2d2d2;padding:10px;}\n\
+              input.submit{background:#9fd330;color:#333333;min-width:200px;font-size:16px;padding:10px;cursor:pointer;}\n\
+              #backButton{background:#f7f9f6;color:#333333;min-width:200px;font-size:16px;padding:10px;cursor:pointer;}\n\
+              ol {display:inline-block;text-align:left;}\n\
+              ol>li:nth-child(2n){background:#f7f9f6;}\n\
+              a{text-decoration:none;color:#333333;padding:10px;display: block;}\n\
+              a:hover{background:#9fd330;border-radius:8px;}\n\
+          </style>\n\
+          <script>\n\
+              function populate(elem){\n\
+                var contentId = document.getElementById(\"credentials\");\n\
+                contentId.style.display == \"none\" ? contentId.style.display = \"block\" :\n\
+                contentId.style.display = \"none\";\n\
+                document.getElementById(\"SSID\").value = elem.getAttribute(\"ssid\");\n\
+                document.getElementById(\"SSIDText\").innerHTML = elem.textContent + \" network:\";\n\
+                document.getElementById(\"PASSWORD\").focus();\n\
+                hideList();\n\
+                showButton();\n\
+                showCredential();\n\
+              }\n\
+              function showCredential(){\n\
+                var contentId = document.getElementById(\"credentials\");\n\
+                contentId.style.display = \"block\";\n\
+              }\n\
+              function showList(){\n\
+                hideButton();\n\
+                var contentId = document.getElementById(\"content\");\n\
+                contentId.style.display = \"block\";\n\
+                hideCredential();\n\
+              }\n\
+              function hideList(){\n\
+                var contentId = document.getElementById(\"content\");\n\
+                contentId.style.display = \"none\";\n\
+              }\n\
+              function hideButton() {\n\
+                var contentId = document.getElementById(\"buttonID\");\n\
+                contentId.style.display = \"none\";\n\
+              }\n\
+              function showButton() {\n\
+                var contentId = document.getElementById(\"buttonBackID\");\n\
+                contentId.style.display = \"block\";\n\
+              }\n\
+              function hideCredential() {\n\
+                var contentId = document.getElementById(\"credentials\");\n\
+                contentId.style.display = \"none\";\n\
+              }\n\
+              function checkWiFi() {\n\
+                /*TODO: show something*/\n\
+                var checkwifiId = document.getElementById(\"checkwifi\");\n\
+                checkwifiId.style.display=\"block\";\n\
+                var contentId = document.getElementById(\"credentials\");\n\
+                contentId.style.display = \"none\";\n\
+                var xmlhttp = new XMLHttpRequest();\n\
+                var ssid = document.getElementById(\"SSID\").value\n\
+                var ssidPass = document.getElementById(\"PASSWORD\").value\n\
+                xmlhttp.onreadystatechange = function() {\n\
+                  if (xmlhttp.readyState == 4) {\n\
+                    if (xmlhttp.status == 200) {\n\
+                      var r = JSON.parse(xmlhttp.responseText);\n\
+                      if (r.connected) {\n\
+                        /*TODO: success*/\n\
+                        /*TODO: checking API key*/\n\
+                        var checkwifiId = document.getElementById(\"checkwifi\");\n\
+                        checkwifiId.style.display=\"none\";\n\
+                        var checkapikeyId = document.getElementById(\"checkapikey\");\n\
+                        checkapikeyId.style.display = \"block\";\n\
+                        xmlHttpHub = new XMLHttpRequest();\n\
+                        xmlHttpHub.onreadystatechange = function() {\n\
+                          if (xmlHttpHub.readyState == 4) {\n\
+                            if (xmlHttpHub.status == 200) {\n\
+                              r = JSON.parse(xmlHttpHub.responseText);\n\
+                              if (r.valid) {\n\
+                                /*TODO*/\n\
+                              } else {\n\
+                                /*TODO*/\n\
+                              }\n\
+                            }\n\
+                          }\n\
+                        }\n\
+                        var apikey = document.getElementById(\"APIKEY\").value\n\
+                        xmlHttpHub.open(\"GET\", \"checkapi?apikey=\"+apikey, true);\n\
+                        xmlHttpHub.send();\n\
+                      } else {\n\
+                        var contentId = document.getElementById(\"buttoncheckwifiBackID\");\n\
+                        contentId.style.display = \"block\";\n\
+                      }\n\
+                    } else {\n\
+                      /*TODO: something went wrong, is it even possible?*/\n\
+                    }\n\
+                  }\n\
+                };\n\
+                xmlhttp.open(\"GET\", \"checkwifi?ssid=\"+ssid+\"&pass=\"+ssidPass, true);\n\
+                xmlhttp.send();\n\
+              }\n\
+          </script>\n\
+      </head>\n\
+      <body>\n\
+          <div class=\"wrapper\">\n\
+              <p style=\"display:none;\" id=\"buttonID\">  <input type=\"button\" value=\"Select network\" onclick=\"showList()\"/></p>\n\
+              <div ID=\"content\" style=\"display:block;\">\n\
+                <p><b>Please select your wireless network:</b></p>\n";
+          s += st;
+          s += "\
+              </div>\n\
+              <div id=\"checkwifi\" style=\"display:none;\">\n\
+                <p><b>Checking WiFi..</b></p>\n\
+                <p style=\"display:none;\" id=\"buttoncheckwifiBackID\"><input type=\"button\" id=\"backButton\" value=\"Back\" onclick=\"showList()\"/></p>\n\
+              </div>\n\
+              <div id=\"checkapikey\" style=\"display:none;\">\n\
+                <p><b>Checking API Key..</b></p>\n\
+              </div>\n\
+              <form method='get' action='setup' id=\"credentials\"  style=\"display:none;\">\n\
+                <input id=\"SSID\" type=\"hidden\" name=\"ssid\" />\n\
+                  <div id=\"SSIDText\"></div></br>\n\
+                  <div >\n\
+                    <input id=\"PASSWORD\" type=\"password\" placeholder=\"wireless password\" name=\"pass\"/>\n\
+                  </div></br>\n\
+                  <div>\n\
+                    <input id=\"APIKEY\" type=\"text\" placeholder=\"API Key\" name=\"apikey\"/>\n\
+                  </div></br>\n\
+                  <input type=\"button\" id=\"checkWifiButton\" class=\"submit\" value=\"Submit\" onClick=\"checkWiFi()\"/>\
+                  <p style=\"display:none;\" id=\"buttonBackID\"><input type=\"button\" id=\"backButton\" value=\"Back\" onclick=\"showList()\"/></p>\n\
+              </form>\n\
+          </div>\n\
+      </body>\n\
+  </html>";
   server.send(200, "text/html", s);
 }
 
@@ -187,25 +214,43 @@ void handleCheckWiFi(void) {
   String qpass = server.arg("pass");
   qpass.trim();
   Debug2("New Password: ", qpass);
-
+  /*if (WiFi.isConnected()) {
+    Debug("Disconnecting from STA");
+    WiFi.disconnect();
+  }*/
+  WiFi.begin(qsid.c_str(), qpass.c_str());
   //testing WiFi
-  while ( retries < 20 ) {
-    if (WiFi.status() == WL_CONNECTED) { 
-      
-      Debug("Connected to wifi! Local IP:");
-      Debug(WiFi.localIP());
-      continue;
-    } 
-    delay(500);
+  while ( retries < 20 && WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+
     Debug2("Wifi Status: ", WiFi.status());    
     retries++;
   }
 
   if (WiFi.status() == WL_CONNECTED) {
-    server.send(200, "application/json", "{'connected':'true'}");
+    Debug("Sendign connected: true");
+    server.send(200, "application/json", "{\"connected\":true}");
   } else {
+    Debug("Sendign connected: false");
     //TODO: in a later version try to figure out reasons and pass it to the client
-    server.send(200, "application/json", "{'connected':'false', 'reason':'unknown'}");
+    server.send(200, "application/json", "{\"connected\":false, \"reason\":\"unknown\"}");
+  }
+  
+  
+}
+
+void handleCheckAPI(void) {
+  String apikey = server.arg("apikey");
+  apikey.trim();
+  Debug2("New API Key: ", apikey);
+  
+  bool result = apiClient.getCredentials(apikey);
+  
+  if (result) {
+    server.send(200, "application/json", "{ \"valid\":true}");
+  } else {
+    //TODO: this does not show anny connection problems
+    server.send(200, "application/json", "{ \"valid\":false}");
   }
 }
 
@@ -256,7 +301,7 @@ void WiFiSetup::scanNetworks(void) {
       }
       if (same) continue;
       
-      st += "<a href=\"#\" onclick=\"populate(this)\" ssid=\"" + WiFi.SSID(i) + "\">" + WiFi.SSID(i) + "</a>";
+      st += "<a href=\"#\" onclick=\"populate(this)\" ssid=\"" + WiFi.SSID(i) + "\">" + WiFi.SSID(i) + "</a>\n";
     }
 }
 
@@ -354,7 +399,7 @@ void WiFiSetup::beginSetupMode(int seconds) {
   server.on("/", HTTP_GET, handleRoot);
   server.on("/setup", HTTP_GET, handleSetup);
   server.on("/checkwifi", HTTP_GET, handleCheckWiFi);
-  
+  server.on("/checkapi", HTTP_GET, handleCheckAPI);
 
   server.onNotFound(handleNotFound);
 
