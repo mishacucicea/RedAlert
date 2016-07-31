@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
@@ -346,6 +348,7 @@ void loop() {
     }
   }
 
-  delay(10);
+  //TODO: don't forget to set back to 20
+  delay(1000);
 }
 

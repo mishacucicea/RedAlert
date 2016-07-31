@@ -119,7 +119,7 @@ void handleRoot(void) {
               contentId.style.display = \"none\";\
             }\
             function checkWiFi() {\
-              //TODO: show something\
+              /*TODO: show something*/\
               var checkwifiId = document.getElementById(\"checkwifi\");\
               checkwifiId.style.display=\"block\";\
               var contentId = document.getElementById(\"credentials\");\
@@ -130,12 +130,12 @@ void handleRoot(void) {
                   if (xmlhttp.status == 200) {\
                     var r = JSON.parse(xmlhttp.responseText);\
                     if (r.connected) {\
-                      //TODO: success\
+                      /*TODO: success*/\
                     } else {\
-                      //TODO: could not connect to wifi\
+                      /*TODO: could not connect to wifi*/\
                     }\
                   } else {\
-                    //TODO: something went wrong, is it even possible?\
+                    /*TODO: something went wrong, is it even possible?*/\
                   }\
                 }\
               };\
@@ -262,7 +262,9 @@ void WiFiSetup::scanNetworks(void) {
 
 //TODO: rename
 void WiFiSetup::setupAP(void) {
+  //TODO: figure out how to enter both modes
   WiFi.mode(WIFI_AP_STA);
+  //WiFi.mode(WIFI_AP);
   IPAddress apIP(192, 168, 1, 1);
   WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
   WiFi.softAP(deviceSSID);
@@ -346,6 +348,7 @@ void WiFiSetup::beginSetupMode(int seconds) {
       delay(1000);
     }
   }
+  //WiFi.mode(WIFI_AP_STA);
   Debug("mDNS responder started");
 
   server.on("/", HTTP_GET, handleRoot);
