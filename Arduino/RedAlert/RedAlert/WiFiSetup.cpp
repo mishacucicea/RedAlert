@@ -7,7 +7,7 @@
 //this is a magic number used to for a TRUE value for EEPROM, as EEPROM after reset can have any random value.
 #define MAGIC_NUMBER B10101010
 
-char* deviceSSID = "RedAlert-123";
+char deviceSSID[] = "RedAlert-123";
 String st;
 bool hasSetup = false; 
 
@@ -51,8 +51,31 @@ void handleSetup(void) {
   EEPROM.commit();
   wifiSetup.loadStationSettings();
   
-  String s = "<!DOCTYPE HTML>\r\n<html>Hello from ESP8266 \
-  New settings saved to eeprom... reset to boot into new wifi</html>";
+  String s = "<!doctype html>\
+  <html xml:lang=\"en\">\
+  <head>\
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\
+      <title>Configure the LightFeed</title>\
+      <style>\
+          body{text-align:center;font-family:Arial;color:#333333;font-size:16px;background:#f7f9f6}\
+          .wrapper {background:#ffffff;padding:20px;display:inline-block;border-radius:14px;width:290px;}\
+          input{border:1px solid #d2d2d2;padding:10px;}\
+          input[type=\"submit\"]{background:#9fd330;color:#333333;min-width:200px;font-size:16px;padding:10px;cursor:pointer;}\
+          #backButton{background:#f7f9f6;color:#333333;min-width:200px;font-size:16px;padding:10px;cursor:pointer;}\
+          ol {display:inline-block;text-align:left;}\
+          ol>li:nth-child(2n){background:#f7f9f6;}\
+          a{text-decoration:none;color:#333333;padding:10px;display: block;}\
+          a:hover{background:#9fd330;border-radius:8px;}\
+      </style>\
+  </head>\
+      <body>\
+          <div class=\"wrapper\">\
+            <div ID=\"content\" style=\"display:block;\">\
+              <p><b>Settings applied.</b></p>\
+            </div>\
+          </div>\
+      </body>\
+  </html>";
   
   server.send(200, "text/html", s);
 
@@ -68,7 +91,7 @@ void handleRoot(void) {
 <html xml:lang=\"en\">\
     <head>\
       <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\
-        <title>Configure the LIGHT BOX</title>\
+        <title>Configure the LightFeed</title>\
         <style>\
             body{text-align:center;font-family:Arial;color:#333333;font-size:16px;background:#f7f9f6}\
             .wrapper {background:#ffffff;padding:20px;display:inline-block;border-radius:14px;width:290px;}\
@@ -118,30 +141,6 @@ void handleRoot(void) {
               var contentId = document.getElementById(\"credentials\");\
               contentId.style.display = \"none\";\
             }\
-            function checkWiFi() {\
-              /*TODO: show something*/\
-              var checkwifiId = document.getElementById(\"checkwifi\");\
-              checkwifiId.style.display=\"block\";\
-              var contentId = document.getElementById(\"credentials\");\
-              contentId.style.display = \"none\";\
-              var xmlhttp = new XMLHttpRequest();\
-              xmlhttp.onreadystatechange = function() {\
-                if (xmlhttp.readyState == 4) {\
-                  if (xmlhttp.status == 200) {\
-                    var r = JSON.parse(xmlhttp.responseText);\
-                    if (r.connected) {\
-                      /*TODO: success*/\
-                    } else {\
-                      /*TODO: could not connect to wifi*/\
-                    }\
-                  } else {\
-                    /*TODO: something went wrong, is it even possible?*/\
-                  }\
-                }\
-              };\
-              xmlhttp.open(\"GET\", \"checkwifi\", true);\
-              xmlhttp.send();\
-            }\
         </script>\
     </head>\
     <body>\
@@ -151,9 +150,6 @@ void handleRoot(void) {
               <p><b>Please select your wireless network:</b></p>";
         s += st;
         s += "\
-            </div>\
-            <div id=\"checkwifi\" style=\"display:none;\">\
-              <p><b>Checking WiFi..</b></p>\
             </div>\
             <form method='get' action='setup' id=\"credentials\"  style=\"display:none;\">\
               <input id=\"SSID\" type=\"hidden\" name=\"ssid\" />\
@@ -176,37 +172,6 @@ void handleRoot(void) {
 
 void handleNotFound(void) {
   server.send(404, "text/html", "Nope dude..");
-}
-
-void handleCheckWiFi(void) {
-  byte retries = 0;
-  String qsid = server.arg("ssid");
-  qsid.trim();
-  Debug2("New SSID: ", qsid);
-  
-  String qpass = server.arg("pass");
-  qpass.trim();
-  Debug2("New Password: ", qpass);
-
-  //testing WiFi
-  while ( retries < 20 ) {
-    if (WiFi.status() == WL_CONNECTED) { 
-      
-      Debug("Connected to wifi! Local IP:");
-      Debug(WiFi.localIP());
-      continue;
-    } 
-    delay(500);
-    Debug2("Wifi Status: ", WiFi.status());    
-    retries++;
-  }
-
-  if (WiFi.status() == WL_CONNECTED) {
-    server.send(200, "application/json", "{'connected':'true'}");
-  } else {
-    //TODO: in a later version try to figure out reasons and pass it to the client
-    server.send(200, "application/json", "{'connected':'false', 'reason':'unknown'}");
-  }
 }
 
 WiFiSetup::WiFiSetup(void) {
@@ -263,7 +228,7 @@ void WiFiSetup::scanNetworks(void) {
 //TODO: rename
 void WiFiSetup::setupAP(void) {
   //TODO: figure out how to enter both modes
-  WiFi.mode(WIFI_AP_STA);
+  WiFi.mode(WIFI_AP);
   //WiFi.mode(WIFI_AP);
   IPAddress apIP(192, 168, 1, 1);
   WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
@@ -353,7 +318,6 @@ void WiFiSetup::beginSetupMode(int seconds) {
 
   server.on("/", HTTP_GET, handleRoot);
   server.on("/setup", HTTP_GET, handleSetup);
-  server.on("/checkwifi", HTTP_GET, handleCheckWiFi);
   
 
   server.onNotFound(handleNotFound);
