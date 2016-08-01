@@ -176,6 +176,11 @@ void setup() {
       break;
     }
     else {
+      //cycle through the RGB colours to denote there is a problem with WiFI
+      setColor(1023, 0, 0);
+      setColor(0, 1023, 0);
+      setColor(0, 0, 1023);
+      setColor(0, 0, 0);
       //if wifi connection failed, go back to setup mode
       setupModeTimeout = 60;
       continue;
@@ -199,7 +204,18 @@ void loop() {
     //first we have to check for the update, as the device will restart after update
     tryUpdate();
     
-    apiClient.getCredentials(wifiSetup.getApiKey());
+    if (!apiClient.getCredentials(wifiSetup.getApiKey())) {
+      //reset 
+      lastTimeCheck = 0;
+      
+      //cycle through the RGB colours to denote there is a problem with WiFI
+      setColor(1023, 0, 0);
+      setColor(0, 1023, 0);
+      setColor(0, 0, 1023);
+      setColor(0, 0, 0);
+      
+      return;
+    }
     
     //TODO: so what happens after 24H?...
     
@@ -275,7 +291,6 @@ void loop() {
     }
   }
 
-  //TODO: don't forget to set back to 20
   delay(20);
 }
 
