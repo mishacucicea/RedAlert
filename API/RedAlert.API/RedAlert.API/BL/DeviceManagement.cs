@@ -46,13 +46,20 @@ namespace RedAlert.API.BL
                 }
 
                 //create keys - will be used to updated if already registered.
-                Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.SerialNumber == serialNumber) ?? context.Devices.Create();
-                
+                Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.SerialNumber == serialNumber);
+
+                if (device != null)
+                {
+                    throw new ArgumentOutOfRangeException("Serial number already registered.");
+                }
+
+                device = context.Devices.Create();
+
                 do
                 {
                     device.DeviceKey = rand.GetAlphaNumeric(8);
                     device.SenderKey = rand.GetAlphaNumeric(8);
-                    
+
                     //check for collisions!
                 }
                 while (await context.Devices.AnyAsync(x => x.DeviceKey == device.DeviceKey || x.SenderKey == device.SenderKey));
@@ -107,7 +114,7 @@ namespace RedAlert.API.BL
         {
             using (RedAlertContext context = new RedAlertContext())
             {
-                var device = await context.Devices.FirstOrDefaultAsync(d=>d.DeviceId == deviceId);
+                var device = await context.Devices.FirstOrDefaultAsync(d => d.DeviceId == deviceId);
 
                 return device;
             }
@@ -136,7 +143,7 @@ namespace RedAlert.API.BL
             using (RedAlertContext context = new RedAlertContext())
             {
                 Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.DeviceKey == deviceKey);
-                
+
                 if (device == null)
                 {
                     throw new ArgumentException("No such DeviceKey.");
@@ -145,7 +152,7 @@ namespace RedAlert.API.BL
                 ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
                 var messageToBytes = new Message(message);
                 await serviceClient.SendAsync(device.HubDeviceId, messageToBytes);
-            } 
+            }
         }
 
     }

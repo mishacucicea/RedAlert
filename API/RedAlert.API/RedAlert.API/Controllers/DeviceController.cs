@@ -29,6 +29,10 @@ namespace RedAlert.API.Controllers
             {
                 model = await dm.AddDeviceAsync(model.SerialNumber);
             }
+            catch (ArgumentOutOfRangeException)
+            {
+                ModelState.AddModelError("SerialNumber", "Already registered.");
+            }
             catch (ArgumentException)
             {
                 ModelState.AddModelError("SerialNumber", "Invalid serial number.");
