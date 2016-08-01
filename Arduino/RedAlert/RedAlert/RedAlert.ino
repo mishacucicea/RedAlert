@@ -276,6 +276,6 @@ void loop() {
   }
 
   //TODO: don't forget to set back to 20
-  delay(1000);
+  delay(20);
 }
 
