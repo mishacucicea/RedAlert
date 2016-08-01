@@ -1,16 +1,5 @@
 #include "ApiClient.h"
 
-
-/*
-struct ApiCredentials {
-  String hubAddress;
-  String deviceId;
-  String hubUser;
-  String hubPass;
-  String hubTopic;
-};
-*/
-
 ApiClient::ApiClient(void) {
   //TOOD: figure out how to null the strings
 }
