@@ -13,7 +13,7 @@
 #include "ApiClient.h"
 
 //don't forget to update!
-char VERSION[] = "dev-09";
+char VERSION[] = "dev-10";
 
 unsigned long lastTimeCheck = 0;
 
