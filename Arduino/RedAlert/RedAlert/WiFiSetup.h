@@ -40,6 +40,7 @@ class WiFiSetup {
     String pass;
     String apiKey;
     bool hasSettings;
+    char apSSID[16];
 };
 
 extern WiFiSetup wifiSetup;
