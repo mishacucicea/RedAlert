@@ -244,7 +244,7 @@ bool WiFiSetup::anyConnections(void)  {
 }
 
 /*
- * Loads the SSID, pass and API Key number into wifi
+ * Loads the SSID, pass an API Key number into wifi
  */
 void WiFiSetup::loadStationSettings(void) {
   ssid = "";
