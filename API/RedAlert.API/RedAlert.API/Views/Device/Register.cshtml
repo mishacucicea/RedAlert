@@ -1,82 +1,58 @@
 ﻿@model RedAlert.API.Models.DeviceModel
- 
+
 @{
     ViewBag.Title = "Register Device";
 }
 <div class="headerPage">
-    <h1>Register your device in 2 steps</h1>
-    <p>Global CSS settings, fundamental HTML elements styled and enhanced with extensible classes, and an advanced grid system.</p>
+    <h1>Register your device</h1>
 </div>
 
 
 <div class="container">
     <div class="row">
-        </br></br>
+        <br />
         <div class="col-xs-12 classforborder">
             <div class="col-xs-6 ">
                 <h4>Steps to register</h4>
                 <hr>
                 <h4>1 - Open the Box</h4>
                 <h4> 2 - Write the serial number on device to the textbox</h4>
-                <h4> 3 - Use the device</h4>
+                <div>
 
-
-            </div>
-            <div class="col-xs-6 ">
-                <img src="~/Content/img/devicepsdxx.png" width="100%"/>
-
-            </div>
-        </div>
-    </div>
-   </br></br>
-    <div class="row">
-
-        <div class="col-xs-12  classforborder ">
-
-            <h4>Register your device</h4>
-            <hr>
-            </br>
-            @if (Model.DeviceKey != null)
+                    @if (Model.DeviceKey != null)
             {
-                <script>
-                $(document).ready(function () {
-                    localStorage.setItem("deviceKey", "@Model.DeviceKey");
-                    localStorage.setItem("senderKey", "@Model.SenderKey");
-                });
-                </script>
-                <h2> Your Device key is: @Model.DeviceKey</h2>
-                <h2> Your Sender Key is: @Model.SenderKey</h2>
-            }
-            @using (Html.BeginForm())
+                        <script>
+                                $(document).ready(function () {
+                                    localStorage.setItem("deviceKey", "@Model.DeviceKey");
+                                    localStorage.setItem("senderKey", "@Model.SenderKey");
+                                });
+                        </script>
+                        <h2> Your Device key is: @Model.DeviceKey</h2>
+                        <h2> Your Sender Key is: @Model.SenderKey</h2>
+                        }
+                    @using (Html.BeginForm())
             {
-                @Html.AntiForgeryToken()
+                        @Html.AntiForgeryToken()
 
+                        <div class="form-inline">
+                            @Html.ValidationSummary(true)
 
-                <div class="form-horizontal">
-                    @Html.ValidationSummary(true)
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.SerialNumber, "Serial Number", htmlAttributes: new { @class = "col-sm-4 control-label" })
-                        <div class="col-sm-6">
-                            @Html.TextBoxFor(model => model.SerialNumber, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.SerialNumber)
-                        </div>
-                    </div>
-                    <hr />
-                    <div class="form-group">
-                        <div class="col-md-4 col-md-offset-5">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.SerialNumber, "Serial Number")
+                                @Html.TextBoxFor(model => model.SerialNumber, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.SerialNumber)
+                            </div>
                             <input type="submit" value="Register" class="btn btn-default" />
                         </div>
-                    </div>
-                </div>
-            }
+                        }
 
+                </div>
+                <h4> 3 - Use the device</h4>
+            </div>
+            <div class="col-xs-6 ">
+                <img src="~/Content/img/devicepsdxx.png" width="100%" />
+
+            </div>
         </div>
     </div>
 </div>
-
-
-
-
-
- 
