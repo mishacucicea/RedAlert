@@ -7,7 +7,6 @@
 //this is a magic number used to for a TRUE value for EEPROM, as EEPROM after reset can have any random value.
 #define MAGIC_NUMBER B10101010
 
-char deviceSSID[] = "RedAlert-123";
 String st;
 bool hasSetup = false; 
 
@@ -177,6 +176,11 @@ void handleNotFound(void) {
 WiFiSetup::WiFiSetup(void) {
   eepromOffset = 0;
   hasSettings = false;
+  
+  unsigned char mac[6];
+  WiFi.macAddress(mac);
+  strcpy(apSSID, "LightFeed-");
+  sprintf(apSSID+10, "%02x%02x%02x", mac[3], mac[4], mac[5]);
 }
 
 void WiFiSetup::scanNetworks(void) {
@@ -232,7 +236,7 @@ void WiFiSetup::setupAP(void) {
   //WiFi.mode(WIFI_AP);
   IPAddress apIP(192, 168, 1, 1);
   WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
-  WiFi.softAP(deviceSSID);
+  WiFi.softAP(apSSID);
 }
 
 bool WiFiSetup::anyConnections(void)  {
@@ -244,7 +248,7 @@ bool WiFiSetup::anyConnections(void)  {
 }
 
 /*
- * Loads the SSID, pass and API Key number into wifi
+ * Loads the SSID, pass an API Key number into wifi
  */
 void WiFiSetup::loadStationSettings(void) {
   ssid = "";
