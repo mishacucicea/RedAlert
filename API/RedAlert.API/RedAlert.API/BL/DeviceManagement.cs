@@ -184,5 +184,23 @@ namespace RedAlert.API.BL
             }
         }
 
+        /// <summary>
+        /// Removes a device from both the DB and the IoT Hub entry.
+        /// </summary>
+        /// <param name="deviceId">The device id.</param>
+        public async Task RemoveDeviceAsync(int deviceId)
+        {
+            using (RedAlertContext context = new RedAlertContext())
+            {
+                var device = await context.Devices.FirstOrDefaultAsync(d => d.DeviceId == deviceId);
+                context.Devices.Remove(device);
+
+                await context.SaveChangesAsync();
+
+                RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+
+                await registryManager.RemoveDeviceAsync(device.HubDeviceId);
+            }
+        }
     }
 }

@@ -15,6 +15,7 @@
             <th>
                 Device Name
             </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -26,6 +27,9 @@
                 </td>
                 <td>
                     @item.Name
+                </td>
+                <td>
+                    @Html.ActionLink("Remove", "Remove", new { id = item.DeviceId })
                 </td>
             </tr>
         }
