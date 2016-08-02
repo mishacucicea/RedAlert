@@ -53,6 +53,13 @@ namespace RedAlert.API.Models
         public string Name { get; set; }
 
         public byte[] LastMessage { get; set; }
+
         public virtual DeviceGroup Group { get; set; }
+
+        /// <summary>
+        /// The device api url. Not present in database.
+        /// </summary>
+        [NotMapped]
+        public string ApiUrl { get; set; }
     }
 }

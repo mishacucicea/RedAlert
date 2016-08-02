@@ -49,8 +49,7 @@ namespace RedAlert.API.Controllers
         public async Task<ActionResult> Details(int id)
         {
             var model = await dm.GetDeviceAsync(id);
-
-            ViewBag.ApiUrl = $"{ApiUrl}/api/message/send?senderkey={model.SenderKey}&color=red";
+            SetDefaultApiUrl(model);
 
             return View(model);
         }
@@ -84,6 +83,19 @@ namespace RedAlert.API.Controllers
             ViewBag.SenderKey = senderKey;
 
             return View();
+        }
+
+        public async Task<ActionResult> ResetKeys(int id)
+        {
+            var device = await dm.ResetDeviceKeysAsync(id);
+            SetDefaultApiUrl(device);
+
+            return View("Details", device);
+        }
+
+        private void SetDefaultApiUrl(Device device)
+        {
+            device.ApiUrl = $"{ApiUrl}/api/message/send?senderkey={device.SenderKey}&color=red";
         }
     }
 }

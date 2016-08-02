@@ -34,8 +34,6 @@ namespace RedAlert.API.BL
         /// <exception cref="System.Exception">Device Alredy Exist</exception>
         public async Task<DeviceModel> AddDeviceAsync(string serialNumber)
         {
-            RandomProvider rand = new RandomProvider();
-
             using (RedAlertContext context = new RedAlertContext())
             {
                 SerialNumber sn = await context.SerialNumbers.SingleOrDefaultAsync(x => x.Code == serialNumber);
@@ -55,14 +53,7 @@ namespace RedAlert.API.BL
 
                 device = context.Devices.Create();
 
-                do
-                {
-                    device.DeviceKey = rand.GetAlphaNumeric(8);
-                    device.SenderKey = rand.GetAlphaNumeric(8);
-
-                    //check for collisions!
-                }
-                while (await context.Devices.AnyAsync(x => x.DeviceKey == device.DeviceKey || x.SenderKey == device.SenderKey));
+                await PopulateNewKeys(context, device);
 
                 //if it's the first registration
                 if (device.SerialNumber == null)
@@ -103,6 +94,44 @@ namespace RedAlert.API.BL
                     SenderKey = device.SenderKey
                 };
             }
+        }
+
+        /// <summary>
+        /// Resets the keys for a given device.
+        /// </summary>
+        /// <param name="id">The device id.</param>
+        /// <returns>The device.</returns>
+        public async Task<Models.Device> ResetDeviceKeysAsync(int id)
+        {
+            using (RedAlertContext context = new RedAlertContext())
+            {
+                Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.DeviceId == id);
+
+                await PopulateNewKeys(context, device);
+
+                await context.SaveChangesAsync();
+
+                return device;
+            }
+        }
+
+        /// <summary>
+        /// Populates the given device with new device and sender keys.
+        /// </summary>
+        /// <param name="context">The DB context.</param>
+        /// <param name="device">The device.</param>
+        private async Task PopulateNewKeys(RedAlertContext context, Models.Device device)
+        {
+            RandomProvider rand = new RandomProvider();
+
+            do
+            {
+                device.DeviceKey = rand.GetAlphaNumeric(8);
+                device.SenderKey = rand.GetAlphaNumeric(8);
+
+                //check for collisions!
+            }
+            while (await context.Devices.AnyAsync(x => x.DeviceKey == device.DeviceKey || x.SenderKey == device.SenderKey));
         }
 
         /// <summary>
