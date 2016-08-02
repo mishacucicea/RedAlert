@@ -9,37 +9,37 @@
 
 char deviceSSID[] = "RedAlert-123";
 String st;
-bool hasSetup = false; 
+bool hasSetup = false;
 
 ESP8266WebServer server(80);
 
 void handleSetup(void) {
   Debug("clearing eeprom");
   for (int i = 0; i < SSID_MAX + PASS_MAX + APIKEY_MAX; ++i) { EEPROM.write(i, 0); }
-  
+
   String qsid = server.arg("ssid");
   qsid.trim();
   Debug2("New SSID: ", qsid);
-  
+
   String qpass = server.arg("pass");
   qpass.trim();
   Debug2("New Password: ", qpass);
-  
-  
+
+
   String qsn = server.arg("apikey");
   qsn.trim();
   Debug2("New API Key: ", qsn);
-  
+
   Debug("writing eeprom ssid");
   for (int i = 0; i < qsid.length(); ++i) {
     EEPROM.write(wifiSetup.eepromOffset + i, qsid[i]);
   }
-  
-  Debug("writing eeprom pass"); 
+
+  Debug("writing eeprom pass");
   for (int i = 0; i < qpass.length(); ++i) {
     EEPROM.write(wifiSetup.eepromOffset + SSID_MAX + i, qpass[i]);
-  }    
-  
+  }
+
   Debug("wrigin eeprom API Key");
   for (int i = 0; i < qsn.length(); ++i) {
     EEPROM.write(wifiSetup.eepromOffset + SSID_MAX + PASS_MAX + i, qsn[i]);
@@ -47,13 +47,13 @@ void handleSetup(void) {
 
   //write the magic number so we know that the EEPROM values are valid
   EEPROM.write(wifiSetup.eepromOffset + SSID_MAX + PASS_MAX + APIKEY_MAX, MAGIC_NUMBER);
-  
+
   EEPROM.commit();
   wifiSetup.loadStationSettings();
-  
+
   String s = "<!DOCTYPE HTML>\r\n<html>Hello from ESP8266 \
   New settings saved to eeprom... reset to boot into new wifi</html>";
-  
+
   server.send(200, "text/html", s);
 
   hasSetup = true;
@@ -63,7 +63,7 @@ void handleRoot(void) {
   String s;
   //TODO: in next version of ESP8266 Aarduino core (probably 2.4.0) chunks will be supported, and should
   //alow us to store less strings in the memory as we'll send the body in chunks
-        s = "\
+  s = "\
   <!doctype html>\n\
   <html xml:lang=\"en\">\n\
       <head>\n\
@@ -131,7 +131,10 @@ void handleRoot(void) {
                   if (xmlhttp.readyState == 4) {\n\
                     if (xmlhttp.status == 200) {\n\
                       var r = JSON.parse(xmlhttp.responseText);\n\
-                      if (r.connected) {\n\
+                      if (r.retry == true) {\n\
+                        xmlhttp.open(\"GET\", \"checkwifi?ssid=\"+ssid+\"&pass=\"+ssidPass, true);\n\
+                        xmlhttp.send();\n\
+                      } else if (r.connected) {\n\
                         /*TODO: success*/\n\
                         /*TODO: checking API key*/\n\
                         var checkwifiId = document.getElementById(\"checkwifi\");\n\
@@ -210,20 +213,26 @@ void handleCheckWiFi(void) {
   String qsid = server.arg("ssid");
   qsid.trim();
   Debug2("New SSID: ", qsid);
-  
+
   String qpass = server.arg("pass");
   qpass.trim();
   Debug2("New Password: ", qpass);
-  /*if (WiFi.isConnected()) {
+
+  //we need to disconnect from the STA settings if connected
+  //that will disrupt the current HTTP and we need to inform the client
+  //to attempt another call
+  if (WiFi.isConnected()) {
     Debug("Disconnecting from STA");
+    server.send(200, "application/json", "{\"retry\":true, \"reason\":\"Disconnecting WiFi\"}");
     WiFi.disconnect();
-  }*/
+  }
+
   WiFi.begin(qsid.c_str(), qpass.c_str());
   //testing WiFi
   while ( retries < 20 && WiFi.status() != WL_CONNECTED) {
     delay(1000);
 
-    Debug2("Wifi Status: ", WiFi.status());    
+    Debug2("Wifi Status: ", WiFi.status());
     retries++;
   }
 
@@ -235,17 +244,15 @@ void handleCheckWiFi(void) {
     //TODO: in a later version try to figure out reasons and pass it to the client
     server.send(200, "application/json", "{\"connected\":false, \"reason\":\"unknown\"}");
   }
-  
-  
 }
 
 void handleCheckAPI(void) {
   String apikey = server.arg("apikey");
   apikey.trim();
   Debug2("New API Key: ", apikey);
-  
+
   bool result = apiClient.getCredentials(apikey);
-  
+
   if (result) {
     server.send(200, "application/json", "{ \"valid\":true}");
   } else {
@@ -262,15 +269,15 @@ WiFiSetup::WiFiSetup(void) {
 void WiFiSetup::scanNetworks(void) {
   Debug("Switching STA mode (Station)");
   WiFi.mode(WIFI_STA);
-  
+
   //Debug("Disconnecting");
   //WiFi.disconnect();
   delay(100);
-  
+
   Debug("Scanning networks");
   int n = WiFi.scanNetworks();
   Debug("scan done");
-  
+
   if (n == 0) {
     Debug("no networks found");
   }
@@ -278,7 +285,7 @@ void WiFiSetup::scanNetworks(void) {
     Debug("Networks found:");
     for (int i = 0; i < n; ++i)
      {
-      Debug(String(WiFi.SSID(i)) + " (" + WiFi.RSSI(i) + ")" + 
+      Debug(String(WiFi.SSID(i)) + " (" + WiFi.RSSI(i) + ")" +
           ((WiFi.encryptionType(i) == ENC_TYPE_NONE)?" ":"*"));
       delay(10);
      }
@@ -300,7 +307,7 @@ void WiFiSetup::scanNetworks(void) {
         }
       }
       if (same) continue;
-      
+
       st += "<a href=\"#\" onclick=\"populate(this)\" ssid=\"" + WiFi.SSID(i) + "\">" + WiFi.SSID(i) + "</a>\n";
     }
 }
@@ -344,7 +351,7 @@ void WiFiSetup::loadStationSettings(void) {
       ssid += readChar;
     }
     Debug2("SSID: ", ssid);
-    
+
     Debug("Reading EEPROM pass");
     for (int i = SSID_MAX; i < SSID_MAX + PASS_MAX; ++i) {
       char readChar = char(EEPROM.read(eepromOffset + i));
@@ -352,7 +359,7 @@ void WiFiSetup::loadStationSettings(void) {
       pass += readChar;
     }
     Debug2("Password: ", pass);
-  
+
     Debug("Reading EEPROM API Key");
     for (int i = SSID_MAX + PASS_MAX; i < SSID_MAX + PASS_MAX + APIKEY_MAX; ++i) {
       char readChar = char(EEPROM.read(eepromOffset + i));
@@ -389,7 +396,7 @@ void WiFiSetup::beginSetupMode(int seconds) {
 
     //TODO: figure out what to do, otherwise it will just hang..
     //TODO: set some visual code
-    while(1) { 
+    while(1) {
       delay(1000);
     }
   }
@@ -404,13 +411,13 @@ void WiFiSetup::beginSetupMode(int seconds) {
   server.onNotFound(handleNotFound);
 
   server.begin();
-  
+
   // Start the server
   server.begin();
-  Debug("Server started");   
+  Debug("Server started");
 
   unsigned long now = millis();
-  
+
   while (!hasSetup && (seconds == 0 || (millis() - now < (seconds * 1000)) )) {
     server.handleClient();
     if (server.client()) {
@@ -441,14 +448,14 @@ bool WiFiSetup::stationMode(void) {
   WiFi.begin(ssid.c_str(), pass.c_str());
   Debug("Checking for connected status..");
   while ( retries < 30 ) {
-    if (WiFi.status() == WL_CONNECTED) { 
-      
+    if (WiFi.status() == WL_CONNECTED) {
+
       Debug("Connected to wifi! Local IP:");
       Debug(WiFi.localIP());
-      return(true); 
-    } 
+      return(true);
+    }
     delay(500);
-    Debug2("Wifi Status: ", WiFi.status());    
+    Debug2("Wifi Status: ", WiFi.status());
     retries++;
   }
 
