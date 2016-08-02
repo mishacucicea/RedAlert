@@ -348,6 +348,8 @@ void WiFiSetup::scanNetworks(void) {
 void WiFiSetup::setupAP(void) {
   //TODO: figure out how to enter both modes
   WiFi.mode(WIFI_AP);
+  //WiFi.mode(WIFI_AP);
+  //IPAddress apIP(192, 168, 1, 1);
   //we set the ip to this super weird number because the standard 192.168.1.1 
   //can conflict with the AP to which the device is connecting and that will
   //create a problem for the HTTPClient
@@ -426,7 +428,7 @@ void WiFiSetup::beginSetupMode(int seconds) {
   Debug("Entered setupMode");
 
   Debug2("Assigned IP: ", WiFi.softAPIP());
-  if (!MDNS.begin("redalert", WiFi.softAPIP())) {
+  if (!MDNS.begin("lightfeed", WiFi.softAPIP())) {
     Debug("Error setting up MDNS responder!");
 
     //TODO: figure out what to do, otherwise it will just hang..
