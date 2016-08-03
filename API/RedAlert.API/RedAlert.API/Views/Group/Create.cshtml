@@ -5,34 +5,44 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="panel-heading">
-    <h3 class="panel-title">Create new group</h3>
-</div>
-<div class="panel-body">
 
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
+<div class="container">
+    <div class="row">
+        </br></br>
+        <div class="col-xs-12 classforborder">
+            <h4>Create new Group</h4>
+            <hr> </br>
 
-        <div class="form-horizontal">
-            <div class="succesResult">@ViewBag.Result</div>
 
-            @Html.ValidationSummary(true)
 
-            <div class="form-group">
-                @Html.Label("GroupName", new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.Editor("groupName")
-                    @Html.ValidationMessage("groupName")
 
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    <div class="succesResult">@ViewBag.Result</div>
+
+                    @Html.ValidationSummary(true)
+
+                    <div class="form-group">
+                        @Html.Label("GroupName", new { @class = "col-sm-4 control-label" })
+                        <div class="col-sm-6">
+                            <input id="groupName" class="form-control" type="text" value="">                      
+                            @Html.ValidationMessage("groupName")
+
+                        </div>
+                    </div>
+                  <hr>
+                    <div class="form-group">
+                        <div class="col-md-4 col-md-offset-5">
+                            <input type="submit" value="Create" class="btn btn-default" />
+                        </div>
+                    </div>
                 </div>
+            }
             </div>
-
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Create" class="btn btn-default" />
-                </div>
+           
             </div>
         </div>
-    }
-</div>
+

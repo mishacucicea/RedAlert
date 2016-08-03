@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace RedAlert.API.Controllers
 {
-
+    [System.Web.Mvc.Authorize]
     public class VotingController : BaseController
     {
         
