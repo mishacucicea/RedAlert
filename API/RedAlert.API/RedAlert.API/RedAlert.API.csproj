@@ -384,7 +384,6 @@
     <Compile Include="Controllers\QrCodeController.cs" />
     <Compile Include="Controllers\Recipe.cs" />
     <Compile Include="Controllers\VotingController.cs" />
-    <Compile Include="DAL\IRepository.cs" />
     <Compile Include="DAL\RedAlertContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
