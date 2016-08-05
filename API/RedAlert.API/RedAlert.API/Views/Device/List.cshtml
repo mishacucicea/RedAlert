@@ -1,24 +1,19 @@
 ﻿@model IList<Device>
 
-@{
-    ViewBag.Title = "My Devices";
-}
+<h3>List of your registered devices</h3>
+<hr />
+<div class="row">
 
-<div class="container">
-    <div class="row">
-        </br></br>
-        <div class="col-xs-12 classforborder">
-            <h4>List of your registered devices</h4>
-            <hr>
-                <div class="panel-body">                 
-                     <div class="list-group">
-                         @foreach (var item in Model)
-                         {
-                          @Html.ActionLink(item.Name +": "+ item.SerialNumber , "Details", new { id = item.DeviceId },new { @class = "list-group-item" })
-                         }                            
-                </div>          
+
+    <div class="col-xs-offset-4 col-xs-4">
+
+        <div class="panel-body">
+            <div class="list-group">
+                @foreach (var item in Model)
+                {
+                    @Html.ActionLink(item.Name + ": " + item.SerialNumber, "Details", new { id = item.DeviceId }, new { @class = "list-group-item" })
+                }
             </div>
         </div>
-   </div>
+    </div>
 </div>
-
