@@ -9,22 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Data.Entity;
-using NLog;
 
 namespace RedAlert.API.BL
 {
     public class DeviceManagement
     {
-        public ILogger Logger { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BaseController"/> class.
-        /// </summary>
-        public DeviceManagement()
-        {
-            Logger = LogManager.GetLogger("RedAlert");
-        }
-
         /// <summary>
         /// The connection string
         /// </summary>
@@ -45,8 +34,6 @@ namespace RedAlert.API.BL
         /// <exception cref="System.Exception">Device Alredy Exist</exception>
         public async Task<DeviceModel> AddDeviceAsync(string serialNumber)
         {
-            RandomProvider rand = new RandomProvider();
-
             using (RedAlertContext context = new RedAlertContext())
             {
                 SerialNumber sn = await context.SerialNumbers.SingleOrDefaultAsync(x => x.Code == serialNumber);
@@ -57,16 +44,16 @@ namespace RedAlert.API.BL
                 }
 
                 //create keys - will be used to updated if already registered.
-                Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.SerialNumber == serialNumber) ?? context.Devices.Create();
-                
-                do
+                Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.SerialNumber == serialNumber);
+
+                if (device != null)
                 {
-                    device.DeviceKey = rand.GetAlphaNumeric(8);
-                    device.SenderKey = rand.GetAlphaNumeric(8);
-                    
-                    //check for collisions!
+                    throw new ArgumentOutOfRangeException("Serial number already registered.");
                 }
-                while (await context.Devices.AnyAsync(x => x.DeviceKey == device.DeviceKey || x.SenderKey == device.SenderKey));
+
+                device = context.Devices.Create();
+
+                await PopulateNewKeys(context, device);
 
                 //if it's the first registration
                 if (device.SerialNumber == null)
@@ -110,6 +97,56 @@ namespace RedAlert.API.BL
         }
 
         /// <summary>
+        /// Retrieves a cloud device by its hub id.
+        /// </summary>
+        /// <param name="hubDeviceId">The hub device id.</param>
+        /// <returns>The cloud device details.</returns>
+        public async Task<Microsoft.Azure.Devices.Device> GetCloudDeviceAsync(string hubDeviceId)
+        {
+            RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+
+            return await registryManager.GetDeviceAsync(hubDeviceId);
+        }
+
+        /// <summary>
+        /// Resets the keys for a given device.
+        /// </summary>
+        /// <param name="id">The device id.</param>
+        /// <returns>The device.</returns>
+        public async Task<Models.Device> ResetDeviceKeysAsync(int id)
+        {
+            using (RedAlertContext context = new RedAlertContext())
+            {
+                Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.DeviceId == id);
+
+                await PopulateNewKeys(context, device);
+
+                await context.SaveChangesAsync();
+
+                return device;
+            }
+        }
+
+        /// <summary>
+        /// Populates the given device with new device and sender keys.
+        /// </summary>
+        /// <param name="context">The DB context.</param>
+        /// <param name="device">The device.</param>
+        private async Task PopulateNewKeys(RedAlertContext context, Models.Device device)
+        {
+            RandomProvider rand = new RandomProvider();
+
+            do
+            {
+                device.DeviceKey = rand.GetAlphaNumeric(8);
+                device.SenderKey = rand.GetAlphaNumeric(8);
+
+                //check for collisions!
+            }
+            while (await context.Devices.AnyAsync(x => x.DeviceKey == device.DeviceKey || x.SenderKey == device.SenderKey));
+        }
+
+        /// <summary>
         /// Gets the device asynchronous.
         /// </summary>
         /// <param name="deviceId">The device identifier.</param>
@@ -118,7 +155,7 @@ namespace RedAlert.API.BL
         {
             using (RedAlertContext context = new RedAlertContext())
             {
-                var device = await context.Devices.FirstOrDefaultAsync(d=>d.DeviceId == deviceId);
+                var device = await context.Devices.FirstOrDefaultAsync(d => d.DeviceId == deviceId);
 
                 return device;
             }
@@ -144,36 +181,38 @@ namespace RedAlert.API.BL
         /// <returns></returns>
         public async Task SendCloudToDeviceMessageAsync(string deviceKey, byte[] message)
         {
-            Models.Device device;
             using (RedAlertContext context = new RedAlertContext())
             {
-                device = await context.Devices.SingleOrDefaultAsync(x => x.DeviceKey == deviceKey);
+                Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.DeviceKey == deviceKey);
+
+                if (device == null)
+                {
+                    throw new ArgumentException("No such DeviceKey.");
+                }
+
+                ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
+                var messageToBytes = new Message(message);
+                await serviceClient.SendAsync(device.HubDeviceId, messageToBytes);
             }
-
-            if (device == null)
-            {
-                throw new ArgumentException("No such DeviceKey.");
-            }
-
-            ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
-            //var feedbackReceiver = serviceClient.GetFeedbackReceiver();
-
-            var messageToBytes = new Message(message);
-            messageToBytes.Ack = DeliveryAcknowledgement.Full;
-            await serviceClient.SendAsync(device.HubDeviceId, messageToBytes);
-
-            //var feedbackBatch = await feedbackReceiver.ReceiveAsync();
-            //if (feedbackBatch != null)
-            //{
-            //    Logger.Debug("Received feedback: {0}", string.Join(", ", feedbackBatch.Records.Select(f => f.StatusCode)));
-            //    await feedbackReceiver.CompleteAsync(feedbackBatch);
-            //}
-            //else
-            //{
-            //    Logger.Debug("Timed out waiting for feedback");
-            //}
-
         }
 
+        /// <summary>
+        /// Removes a device from both the DB and the IoT Hub entry.
+        /// </summary>
+        /// <param name="deviceId">The device id.</param>
+        public async Task RemoveDeviceAsync(int deviceId)
+        {
+            using (RedAlertContext context = new RedAlertContext())
+            {
+                var device = await context.Devices.FirstOrDefaultAsync(d => d.DeviceId == deviceId);
+                context.Devices.Remove(device);
+
+                await context.SaveChangesAsync();
+
+                RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+
+                await registryManager.RemoveDeviceAsync(device.HubDeviceId);
+            }
+        }
     }
 }

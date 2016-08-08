@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
@@ -8,9 +10,10 @@
 #include "WiFiSetup.h"
 #include "PubSubClient.h"
 #include "Logging.h"
+#include "ApiClient.h"
 
 //don't forget to update!
-char VERSION[] = "dev-08";
+char VERSION[] = "dev-10";
 
 unsigned long lastTimeCheck = 0;
 
@@ -19,6 +22,10 @@ unsigned long lastTimeCheck = 0;
 //#define hubUser "arduhub.azure-devices.net/pocDevice"
 //#define hubPass "SharedAccessSignature sr=arduhub.azure-devices.net%2fdevices%2fpocDevice&sig=ksApO9qnlvs%2bERTKS3qqvO0T7cRG2D1xhI7PiE5C8uk%3d&se=1490896187"
 //#define hubTopic "devices/pocDevice/messages/devicebound/#"
+
+//#define SERIALSPEED 74880
+//for Mini D1:
+#define SERIALSPEED 57600
 
 //define pins
 #define RED_PIN 14
@@ -34,12 +41,6 @@ unsigned long lastTimeCheck = 0;
 
 WiFiClientSecure wclient;
 PubSubClient client(wclient);
-
-char hubAddress[100];
-char deviceId[100];
-char hubUser[100];
-char hubPass[256];
-char hubTopic[100];
 
 bool hasColor = false;
 byte pattern;
@@ -57,7 +58,6 @@ int expand10(byte value) {
 
 void setColor(int r, int g, int b)
 {
-  //not exact, there is some loss in values.
   analogWrite(RED_PIN, r);
   analogWrite(GREEN_PIN, g);
   analogWrite(BLUE_PIN, b);
@@ -116,73 +116,9 @@ void tryUpdate() {
   }
 }
 
-void retrieveCredentials() {
-  //TODO: check for time agains google
-  //do the wifi client and shit
-  String s = "http://redalertxfd.azurewebsites.net/api/iot/authentication?devicekey=";
-  s += wifiSetup.getApiKey();
-  
-  Debug2("Making HTTP request to:", s);
-  
-  HTTPClient http;
-  http.begin(s);
-  http.setTimeout(30000);
-  int httpCode = http.GET();
-
-  if (httpCode > 0) {
-    if (httpCode == HTTP_CODE_OK) {
-      Debug("Getting authetnication data");
-      String payload = http.getString();
-      //now we have to split the payload
-      int index = payload.indexOf('\n');
-      String hubAddress_ = payload.substring(0, index);
-      hubAddress_.trim();
-      hubAddress_.toCharArray(hubAddress, hubAddress_.length() + 1);
-      payload.remove(0, index+1);
-
-      index = payload.indexOf('\n');
-      String deviceId_ = payload.substring(0, index);
-      deviceId_.trim();
-      deviceId_.toCharArray(deviceId, deviceId_.length() + 1);
-      payload.remove(0, index+1);
-
-      index = payload.indexOf('\n');
-      String hubUser_ = payload.substring(0, index);
-      hubUser_.trim();
-      hubUser_.toCharArray(hubUser, hubUser_.length() + 1);
-      payload.remove(0, index+1);
-
-      index = payload.indexOf('\n');
-      String hubPass_ = payload.substring(0, index);
-      hubPass_.trim();
-      hubPass_.toCharArray(hubPass, hubPass_.length() + 1);
-      payload.remove(0, index+1);
-
-      //what's left is the hubTopic
-      payload.trim();
-      payload.toCharArray(hubTopic, payload.length() + 1);
-
-      //just for testing:
-      Debug2("hubAddress: ", hubAddress);
-      Debug2("deviceId: ", deviceId);
-      Debug2("hubUser: ", hubUser);
-      Debug2("hubPass: ", hubPass);
-      Debug2("hubTopic: ", hubTopic);
-    }
-    else {
-      //TODO: what do we do?
-      Debug2("Error status code", httpCode); 
-    }
-  }
-  else {
-    //TODO: an error occurred, what do we do?
-    Debug2("Failed to GET: ", httpCode);
-  }
-}
-
 void setup() {
   //need for debugging and communication with the slave module
-  Serial.begin(74880);
+  Serial.begin(SERIALSPEED);
 
   //start the eeprom and wait 10 msecs for safety
   EEPROM.begin(512);
@@ -195,12 +131,14 @@ void setup() {
   //for pin testing
   //while(true)
   {
-    setColor(1023, 0, 0);
+    setColor(1023, 1023, 1023);
     delay(1000);
+    /*
     setColor(0, 1023, 0);
     delay(1000);
     setColor(0, 0, 1023);
     delay(1000);
+    */
     setColor(0, 0, 0);
   }
 
@@ -238,13 +176,17 @@ void setup() {
       break;
     }
     else {
+      //cycle through the RGB colours to denote there is a problem with WiFI
+      setColor(1023, 0, 0);
+      setColor(0, 1023, 0);
+      setColor(0, 0, 1023);
+      setColor(0, 0, 0);
       //if wifi connection failed, go back to setup mode
       setupModeTimeout = 60;
       continue;
     }
   }
 
-  
   //TODO: do we need this line?
   configTime(3 * 3600, 0, "pool.ntp.org", "time.nist.gov");
 }
@@ -252,11 +194,7 @@ void setup() {
 unsigned long last1000;
 
 void loop() {
-
   unsigned long now = millis();
-
-
-
   //TODO: fix bug: after 47 days the now will reset to 0
   
   //at start, or once each day
@@ -266,13 +204,24 @@ void loop() {
     //first we have to check for the update, as the device will restart after update
     tryUpdate();
     
-    retrieveCredentials();
+    if (!apiClient.getCredentials(wifiSetup.getApiKey())) {
+      //reset 
+      lastTimeCheck = 0;
+      
+      //cycle through the RGB colours to denote there is a problem with WiFI
+      setColor(1023, 0, 0);
+      setColor(0, 1023, 0);
+      setColor(0, 0, 1023);
+      setColor(0, 0, 0);
+      
+      return;
+    }
     
     //TODO: so what happens after 24H?...
     
     Debug("Setting server for MQTT");
     //this will set the address of the hub and port on which it communicates
-    client.setServer(hubAddress, 8883);
+    client.setServer(apiClient.getHubAddress(), 8883);
   
     Debug("Setting callback for MQTT");
     client.setCallback(callback);
@@ -289,13 +238,13 @@ void loop() {
       //Debug("WiFi is connected");
       if (!client.connected()) {
         Debug("MQTT connecting..");
-        if (client.connect(deviceId, hubUser, hubPass)) {
+        if (client.connect(apiClient.getDeviceId(), apiClient.getHubUser(), apiClient.getHubPass())) {
           //TODO: log connected status
           Debug("MQTT connected.");
   
           //client.publish("outTopic", "test");
           Debug("Subscribing to the MQTT topic and QOS1");
-          client.subscribe(hubTopic, 1);
+          client.subscribe(apiClient.getHubTopic(), 1);
           Info("Ready to receive messages.");
         } else {
           Debug("Could not connect :(");
@@ -342,6 +291,6 @@ void loop() {
     }
   }
 
-  delay(10);
+  delay(20);
 }
 
