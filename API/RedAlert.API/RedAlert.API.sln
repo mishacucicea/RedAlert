@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedAlert.API", "RedAlert.API\RedAlert.API.csproj", "{718F7AA7-287A-4067-8623-7FB2BDA67F67}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedAlert.Client", "RedAlert.Client\RedAlert.Client.csproj", "{BFA4EEE1-9025-438A-B67E-FE3B5A9775A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +15,6 @@ Global
 		{718F7AA7-287A-4067-8623-7FB2BDA67F67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{718F7AA7-287A-4067-8623-7FB2BDA67F67}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{718F7AA7-287A-4067-8623-7FB2BDA67F67}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{BFA4EEE1-9025-438A-B67E-FE3B5A9775A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BFA4EEE1-9025-438A-B67E-FE3B5A9775A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BFA4EEE1-9025-438A-B67E-FE3B5A9775A5}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{BFA4EEE1-9025-438A-B67E-FE3B5A9775A5}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
