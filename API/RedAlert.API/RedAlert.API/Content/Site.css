@@ -42,7 +42,7 @@ input[type="checkbox"].input-validation-error {
 }
 
 .device-panel td {
-text-align:left;
+    text-align: left;
 }
 
 .navbar-nav .dropdown-menu > li > a {
@@ -50,13 +50,27 @@ text-align:left;
 }
 
 li.dropdown.selected {
-   font-style: italic;
-}
-    
-li.dropdown.selected.open {
-   font-style: inherit;
+    font-style: italic;
 }
 
+    li.dropdown.selected.open {
+        font-style: inherit;
+    }
+
 footer {
-    text-align:center;
+    text-align: center;
+}
+
+/* centered columns styles */
+.row-centered {
+    text-align: center;
+}
+
+.col-centered {
+    display: inline-block;
+    float: none;
+    /* reset the text-align */
+    text-align: left;
+    /* inline-block space fix */
+    margin-right: -4px;
 }

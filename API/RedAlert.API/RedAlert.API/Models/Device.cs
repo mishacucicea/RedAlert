@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RedAlert.API.Models
@@ -61,5 +62,19 @@ namespace RedAlert.API.Models
         /// </summary>
         [NotMapped]
         public string ApiUrl { get; set; }
+
+        /// <summary>
+        /// The last cloud device activity time.
+        /// </summary>
+        [NotMapped]
+        public DateTime LastActivityTime { get; set; }
+
+        /// <summary>
+        /// Determines if the device was active during the last X seconds.
+        /// </summary>
+        [NotMapped]
+        public bool IsActive {
+            get { return (DateTime.UtcNow - LastActivityTime.ToUniversalTime()) < TimeSpan.FromSeconds(60); }
+        }
     }
 }
