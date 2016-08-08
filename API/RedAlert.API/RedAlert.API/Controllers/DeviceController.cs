@@ -77,6 +77,12 @@ namespace RedAlert.API.Controllers
         {
             var devices = await dm.GetDevices();
 
+            foreach (var device in devices)
+            {
+                var cloudDevice = await dm.GetCloudDeviceAsync(device.HubDeviceId);
+                device.LastActivityTime = cloudDevice.LastActivityTime;
+            }
+
             return View(devices);
         }
 

@@ -97,6 +97,18 @@ namespace RedAlert.API.BL
         }
 
         /// <summary>
+        /// Retrieves a cloud device by its hub id.
+        /// </summary>
+        /// <param name="hubDeviceId">The hub device id.</param>
+        /// <returns>The cloud device details.</returns>
+        public async Task<Microsoft.Azure.Devices.Device> GetCloudDeviceAsync(string hubDeviceId)
+        {
+            RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+
+            return await registryManager.GetDeviceAsync(hubDeviceId);
+        }
+
+        /// <summary>
         /// Resets the keys for a given device.
         /// </summary>
         /// <param name="id">The device id.</param>
