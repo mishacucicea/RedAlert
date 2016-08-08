@@ -1,11 +1,6 @@
 ﻿
     <div class="form-group">
         @using Microsoft.Owin.Security
-
-        <h4>Choose a service to login with.
-
-</h4>
-        <hr/>
         @{
             var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
             if (loginProviders.Count() == 0)

@@ -1,78 +1,72 @@
-﻿
-@{
-    ViewBag.Title = "Recipes";
-}
-
-
-<div class="panel-heading">
-    <h3 class="panel-title">Recipes</h3>
-</div>
-<div class="panel-body">
-
-    <div id="accordion" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingOne">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        Step 1: Choose a Trigger Channel
-                    </a>
-                </h4>
+﻿<h3>Recipes</h3>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <div id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Step 1: Choose a Trigger Channel
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    Now choose one trigger, if you are using it for the first time, then you’ve to authorize in order to let ifttt access your data from the trigger channel chosen. So please activate, grant access and authorize the channel you’ve chosen.
+                    <br>
+                    <img src='~/Content/img/choosetriggerchanel.png' alt="" />
+                </div>
             </div>
-            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                Now choose one trigger, if you are using it for the first time, then you’ve to authorize in order to let ifttt access your data from the trigger channel chosen. So please activate, grant access and authorize the channel you’ve chosen.
-                <br>
-                <img src='~/Content/img/choosetriggerchanel.png' alt="" />
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingTwo">
-                <h4 class="panel-title">
-                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        Step 2: Choose a Trigger
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingTwo">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Step 2: Choose a Trigger
 
-                    </a>
-                </h4>
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                    Through Gmail Pages as a trigger channel, you can automate few tasks which are listed below.
+                    <img src='~/Content/img/choosetrigger.png' alt="" />
+                    <br>
+                    Now, we’ve to create trigger fields. By trigger fields we mean, what other web application you want to use for the automation of task. We are actually looking for another application required here to connect with Gmail Pages(Trigger Channel chosen in Step 1).
+                </div>
             </div>
-            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                Through Gmail Pages as a trigger channel, you can automate few tasks which are listed below.
-                <img src='~/Content/img/choosetrigger.png' alt="" />
-                <br>
-                Now, we’ve to create trigger fields. By trigger fields we mean, what other web application you want to use for the automation of task. We are actually looking for another application required here to connect with Gmail Pages(Trigger Channel chosen in Step 1).
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingThree">
-                <h4 class="panel-title">
-                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                        Step 4: Choose Action Channel
-                    </a>
-                </h4>
-            </div>
-            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-                <img src='~/Content/img/chooseaction.png' alt="" />
-                <br>
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingThree">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Step 4: Choose Action Channel
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                    <img src='~/Content/img/chooseaction.png' alt="" />
+                    <br>
 
-                In order to turn on the light on your LightFeed Device, use Maker channel
-                <img src='~/Content/img/maker.png' alt="" />
-                <br>
+                    In order to turn on the light on your LightFeed Device, use Maker channel
+                    <img src='~/Content/img/maker.png' alt="" />
+                    <br>
+                </div>
             </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingFour">
-                <h4 class="panel-title">
-                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                        Step 5: Create trigger
-                    </a>
-                </h4>
-            </div>
-            <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingFour">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            Step 5: Create trigger
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
 
 
-                <h2> This is your generated url:</h2>
-                @Html.TextArea("myTextArea", Request.Url.Host + "/api/?message=djfsfds&token=sdasdasdasdsdfd", new { @class = "form-control" })
+                    <h2> This is your generated url:</h2>
+                    @Html.TextArea("myTextArea", Request.Url.Host + "/api/?message=djfsfds&token=sdasdasdasdsdfd", new { @class = "form-control" })
 
-                <br>
-                <img src='~/Content/img/makerurl.png' alt="" />
+                    <br>
+                    <img src='~/Content/img/makerurl.png' alt="" />
+                </div>
             </div>
         </div>
     </div>

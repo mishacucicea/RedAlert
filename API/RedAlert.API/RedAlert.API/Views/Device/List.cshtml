@@ -1,24 +1,26 @@
 ﻿@model IList<Device>
 
-@{
-    ViewBag.Title = "My Devices";
-}
-
-<div class="container">
-    <div class="row">
-        </br></br>
-        <div class="col-xs-12 classforborder">
-            <h4>List of your registered devices</h4>
-            <hr>
-                <div class="panel-body">                 
-                     <div class="list-group">
-                         @foreach (var item in Model)
-                         {
-                          @Html.ActionLink(item.Name +": "+ item.SerialNumber , "Details", new { id = item.DeviceId },new { @class = "list-group-item" })
-                         }                            
-                </div>          
+<h3>List of your registered devices</h3>
+<hr />
+<div class="row row-centered">
+    <div class="col-md-4 col-sm-6 col-xs-12 col-centered">
+        <div class="panel-body">
+            <div class="list-group">
+                @foreach (var item in Model)
+                {
+                    <a class="list-group-item" href='@Url.Action("Details", new { id = item.DeviceId })'>
+                        @if (item.IsActive)
+                        {
+                            <i class="fa fa-circle" aria-hidden="true" style="color:green" title="Online"></i>
+                        }
+                        else
+                        {
+                            <i class="fa fa-circle-o" aria-hidden="true" style="color:green" title="Offline"></i>
+                        }
+                        @(item.Name + ": " + item.SerialNumber)
+                    </a>
+                }
             </div>
         </div>
-   </div>
+    </div>
 </div>
-

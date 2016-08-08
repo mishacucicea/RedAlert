@@ -242,8 +242,12 @@ uint16_t PubSubClient::readPacket(uint8_t* lengthLength) {
     uint16_t skip = 0;
     uint8_t start = 0;
 
+    Debug("Begin reading packet");
     do {
-        if(!readByte(&digit)) return 0;
+        if(!readByte(&digit)) {
+          Debug("End reading packet returning 0");
+          return 0;
+        }
         buffer[len++] = digit;
         length += (digit & 127) * multiplier;
         multiplier *= 128;
@@ -278,6 +282,8 @@ uint16_t PubSubClient::readPacket(uint8_t* lengthLength) {
     if (!this->stream && len > MQTT_MAX_PACKET_SIZE) {
         len = 0; // This will cause the packet to be ignored.
     }
+
+    Debug2("End reading packet with len ", len);
 
     return len;
 }
