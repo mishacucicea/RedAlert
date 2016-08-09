@@ -12,41 +12,40 @@
     localStorage.setItem("senderKey", "@Model.SenderKey");
 </script>
 
-<div>
-    <h4>@Html.DisplayFor(model => model.Name)</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.DeviceKey)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.DeviceKey)
-        </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.SenderKey)
-        </dt>
+<h3>Details of @Html.DisplayFor(model => model.Name) </h3>
+<hr />
+<div class="row row-centered">
+    <div class="col-md-4 col-sm-6 col-xs-12 col-centered">
+        <div class="panel-body">
+          
+                <h4>
+                    @Html.DisplayNameFor(model => model.DeviceKey)  : @Html.DisplayFor(model => model.DeviceKey)
+                </h4>
 
-        <dd>
-            @Html.DisplayFor(model => model.SenderKey)
-        </dd>
 
-        <dt>
-            Example Url
-        </dt>
+                <h4>
+                    @Html.DisplayNameFor(model => model.SenderKey)  : @Html.DisplayFor(model => model.SenderKey)
+                </h4>
 
-        <dd>
-            <input type="text" id="deviceUrl" readonly value="@Model.ApiUrl" />
-            <button type="button" class="btn" data-clipboard-target="#deviceUrl" title="Copy to clipboard">
-                <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
-            </button>
-        </dd>
-    </dl>
-</div>
-<p>
+                
 
-    @Html.ActionLink("Mood", "Mood", new { id = Model.DeviceId}) |
-    @Html.ActionLink("Reset Keys", "ResetKeys", new { id = Model.DeviceId }) |
-    @Html.ActionLink("Back to List", "List")
+                <h4>
+                   Url is :</br> <input type="text" id="deviceUrl" readonly value="@Model.ApiUrl" />
+<button type="button" class="btn" data-clipboard-target="#deviceUrl" title="Copy to clipboard">
+    <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+</button>
+                </h4>
+
+                    @Html.ActionLink("Mood", "Mood", new { id = Model.DeviceId }) |
+                    @Html.ActionLink("Reset Keys", "ResetKeys", new { id = Model.DeviceId }) |
+                    @Html.ActionLink("Back to List", "List")
+                
+                <p>
+
+  
 </p>
+        </div>
+    </div>
+</div>

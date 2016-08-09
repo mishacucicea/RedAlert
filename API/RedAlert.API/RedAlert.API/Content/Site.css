@@ -16,6 +16,13 @@ textarea {
     max-width: 280px;
 }*/
 
+#footer {
+    clear: both;
+    position: relative;
+    z-index: 10;
+    height: 3em;
+    margin-top: -3em;
+}
 /* styles for validation helpers */
 .field-validation-error {
     color: #b94a48;
