@@ -7,7 +7,6 @@ namespace RedAlert.API.Controllers
     /// Base class for all controllers.
     /// </summary>
     /// <seealso cref="System.Web.Mvc.Controller" />
-    [AllowAnonymous]
     public class BaseController : Controller
     {
         /// <summary>

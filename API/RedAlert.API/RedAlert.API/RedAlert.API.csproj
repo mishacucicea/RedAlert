@@ -541,7 +541,6 @@
     <Content Include="Content\img\scanqr.webp" />
     <Content Include="Content\img\text-color.webp" />
     <Content Include="Content\img\devicepsd1.webp" />
-    <None Include="debugconfig.json" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -554,6 +553,7 @@
     <Content Include="Firmware\dev-08.bin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="debugconfig.json" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
