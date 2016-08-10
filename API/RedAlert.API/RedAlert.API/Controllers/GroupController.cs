@@ -93,7 +93,7 @@ namespace RedAlert.API.Controllers
             }
 
             var device = await _db.Devices.SingleOrDefaultAsync(x => x.SerialNumber == serialNumber);
-            // var sn = await _db.SerialNumbers.SingleOrDefaultAsync(x => x.Code == serialNumber);
+            
             if (device == null)
             {
                 ModelState.AddModelError("serialNumber", "Invalid Serial ");
@@ -118,7 +118,6 @@ namespace RedAlert.API.Controllers
         [HttpGet]
         public async Task<ActionResult> AddDeviceToGroup()
         {
-
             return View();
         }
 
