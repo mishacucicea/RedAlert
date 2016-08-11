@@ -1,4 +1,5 @@
 ﻿using NLog;
+using System.Diagnostics;
 using System.Web.Http.ExceptionHandling;
 using System.Web.Http.Results;
 
@@ -18,7 +19,7 @@ namespace RedAlert.API.Handlers
         {
             var logger = LogManager.GetLogger("RedAlert");
             logger.Error(context.Exception);
-
+            Trace.TraceError(ex.ToString());
 
             context.Result = new InternalServerErrorResult(context.Request);
         }
