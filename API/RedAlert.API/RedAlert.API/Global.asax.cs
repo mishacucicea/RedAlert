@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -55,6 +56,7 @@ namespace RedAlert.API
             Exception ex = Server.GetLastError();
 
             var logger = LogManager.GetLogger("RedAlert");
+            Trace.TraceError(ex.ToString());
             logger.Error(ex);
 
             // Redirect to the error page.
