@@ -1,6 +1,7 @@
 ﻿using RedAlert.API.BL;
 using RedAlert.API.Models;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -76,11 +77,18 @@ namespace RedAlert.API.Controllers
         public async Task<ActionResult> List()
         {
             var devices = await dm.GetDevices();
+            List<Task<Microsoft.Azure.Devices.Device>> list = new List<Task<Microsoft.Azure.Devices.Device>>();
 
             foreach (var device in devices)
             {
-                var cloudDevice = await dm.GetCloudDeviceAsync(device.HubDeviceId);
-                device.LastActivityTime = cloudDevice.LastActivityTime;
+                list.Add(dm.GetCloudDeviceAsync(device.HubDeviceId));
+            }
+
+            await Task.WhenAll(list.ToArray());
+
+            for (int i = 0; i < devices.Count; i++)
+            {
+                devices[i].LastActivityTime = list[i].Result.LastActivityTime;
             }
 
             return View(devices);
