@@ -19,7 +19,7 @@ namespace RedAlert.API.Handlers
         {
             var logger = LogManager.GetLogger("RedAlert");
             logger.Error(context.Exception);
-            Trace.TraceError(ex.ToString());
+            Trace.TraceError(context.Exception.ToString());
 
             context.Result = new InternalServerErrorResult(context.Request);
         }
