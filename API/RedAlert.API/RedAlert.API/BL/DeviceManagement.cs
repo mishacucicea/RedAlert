@@ -51,6 +51,13 @@ namespace RedAlert.API.BL
             {
                 RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
                 Microsoft.Azure.Devices.Device IoTdevice = await registryManager.GetDeviceAsync(deviceId);
+
+                //register the device if it's missing on this IoT Hub
+                if (IoTdevice == null)
+                {
+                    IoTdevice = await registryManager.AddDeviceAsync(new Microsoft.Azure.Devices.Device(deviceId));
+                }
+
                 key1 = IoTdevice.Authentication.SymmetricKey.PrimaryKey;
             }
             catch (Exception e)
@@ -62,6 +69,13 @@ namespace RedAlert.API.BL
             {
                 RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString2);
                 Microsoft.Azure.Devices.Device IoTdevice = await registryManager.GetDeviceAsync(deviceId);
+
+                //register the device if it's missing on this IoT Hub
+                if (IoTdevice == null)
+                {
+                    IoTdevice = await registryManager.AddDeviceAsync(new Microsoft.Azure.Devices.Device(deviceId));
+                }
+
                 key2 = IoTdevice.Authentication.SymmetricKey.PrimaryKey;
             }
             catch (Exception e)
