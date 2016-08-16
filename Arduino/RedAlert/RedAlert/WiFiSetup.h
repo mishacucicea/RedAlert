@@ -2,7 +2,6 @@
 #ifndef WiFiSetup_h
 #define WiFiSetup_H
 
-
 #include <ESP8266mDNS.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
@@ -10,6 +9,7 @@
 #include "PubSubClient.h"
 #include "Arduino.h"
 #include "Logging.h"
+#include "ApiClient.h"
 
 class WiFiSetup {
   public:
@@ -40,6 +40,7 @@ class WiFiSetup {
     String pass;
     String apiKey;
     bool hasSettings;
+    char apSSID[16];
 };
 
 extern WiFiSetup wifiSetup;

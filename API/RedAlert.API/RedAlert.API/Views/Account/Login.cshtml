@@ -1,21 +1,16 @@
 ﻿@model RedAlert.API.Models.LoginViewModel
 
-
-<div class="container">
-   
-    <div class="row">
-        </br></br>
-        <div class="col-xs-12 classforborder">
-            <section id="socialLoginForm">
-                @Html.Partial("_ExternalLoginsListPartial", new { Action = "ExternalLogin", ReturnUrl = ViewBag.ReturnUrl })
-            </section>
-        </div>
+<h3>Choose a service to login with.</h3>
+<hr />
+<div class="row">
+    </br></br>
+    <div class="col-xs-12">
+        <section id="socialLoginForm">
+            @Html.Partial("_ExternalLoginsListPartial", new { Action = "ExternalLogin", ReturnUrl = ViewBag.ReturnUrl })
+        </section>
     </div>
-
-
 </div>
 
-
-        @section Scripts {
-            @Scripts.Render("~/bundles/jqueryval")
-        }
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -16,25 +16,80 @@ namespace RedAlert.API.BL
     public class DeviceManagement
     {
         public ILogger Logger { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BaseController"/> class.
-        /// </summary>
+        
         public DeviceManagement()
         {
             Logger = LogManager.GetLogger("RedAlert");
         }
 
         /// <summary>
-        /// The connection string
+        /// Primary IoT Hub connection string
         /// </summary>
-        private string connectionString = ConfigurationManager.ConnectionStrings["IotHubConnectionString"].ConnectionString;
+        private string connectionString = ConfigurationManager.ConnectionStrings["PrimaryIotHub"].ConnectionString;
 
-        public async Task<String> GetDeviceSASKey(string deviceId)
+        /// <summary>
+        /// Secondary IoT Hub connection string
+        /// </summary>
+        private string connectionString2 = ConfigurationManager.ConnectionStrings["SecondaryIotHub"].ConnectionString;
+
+        [Obsolete]
+        public async Task<string> GetDeviceSASKey(string deviceId)
         {
             RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
             Microsoft.Azure.Devices.Device IoTdevice = await registryManager.GetDeviceAsync(deviceId);
             return IoTdevice.Authentication.SymmetricKey.PrimaryKey;
+        }
+
+        /// <summary>
+        /// Retrieves the Primary and Secondary IoT Hub SAS Keys.
+        /// </summary>
+        public async Task<Tuple<string, string>> GetDeviceSASKeys(string deviceId)
+        {
+            string key1 = string.Empty;
+            string key2 = string.Empty;
+            try
+            {
+                RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+                Microsoft.Azure.Devices.Device IoTdevice = await registryManager.GetDeviceAsync(deviceId);
+
+                //register the device if it's missing on this IoT Hub
+                if (IoTdevice == null)
+                {
+                    IoTdevice = await registryManager.AddDeviceAsync(new Microsoft.Azure.Devices.Device(deviceId));
+                }
+
+                key1 = IoTdevice.Authentication.SymmetricKey.PrimaryKey;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "Could not retrieve the Primary IoT Hub SAS Key.");
+            }
+
+            try
+            {
+                RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString2);
+                Microsoft.Azure.Devices.Device IoTdevice = await registryManager.GetDeviceAsync(deviceId);
+
+                //register the device if it's missing on this IoT Hub
+                if (IoTdevice == null)
+                {
+                    IoTdevice = await registryManager.AddDeviceAsync(new Microsoft.Azure.Devices.Device(deviceId));
+                }
+
+                key2 = IoTdevice.Authentication.SymmetricKey.PrimaryKey;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "Could not retrieve the Secondary IoT Hub SAS Key.");
+            }
+
+            //if both IoT Hubs are down we can't continue with the execution
+            if (string.IsNullOrEmpty(key1) && string.IsNullOrEmpty(key2))
+            {
+                throw new ApplicationException("Could not retrieve SAS Keys for none of the IoT Hubs. Can not continue execution.");
+            }
+
+            return new Tuple<string, string>(key1, key2);
         }
 
         /// <summary>
@@ -45,8 +100,6 @@ namespace RedAlert.API.BL
         /// <exception cref="System.Exception">Device Alredy Exist</exception>
         public async Task<DeviceModel> AddDeviceAsync(string serialNumber)
         {
-            RandomProvider rand = new RandomProvider();
-
             using (RedAlertContext context = new RedAlertContext())
             {
                 SerialNumber sn = await context.SerialNumbers.SingleOrDefaultAsync(x => x.Code == serialNumber);
@@ -57,16 +110,16 @@ namespace RedAlert.API.BL
                 }
 
                 //create keys - will be used to updated if already registered.
-                Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.SerialNumber == serialNumber) ?? context.Devices.Create();
-                
-                do
+                Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.SerialNumber == serialNumber);
+
+                if (device != null)
                 {
-                    device.DeviceKey = rand.GetAlphaNumeric(8);
-                    device.SenderKey = rand.GetAlphaNumeric(8);
-                    
-                    //check for collisions!
+                    throw new ArgumentOutOfRangeException("Serial number already registered.");
                 }
-                while (await context.Devices.AnyAsync(x => x.DeviceKey == device.DeviceKey || x.SenderKey == device.SenderKey));
+
+                device = context.Devices.Create();
+
+                await PopulateNewKeys(context, device);
 
                 //if it's the first registration
                 if (device.SerialNumber == null)
@@ -83,15 +136,46 @@ namespace RedAlert.API.BL
                     //this is the name that will be used by the Azure IoT Hub
                     device.HubDeviceId = "device" + device.DeviceId;
 
-                    RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+                    
                     Microsoft.Azure.Devices.Device IoTdevice;
+                    bool primaryHasError = false;
+                    bool secondaryHasError = false;
+
+                    //tyr add the device in the Primary IoT Hub
                     try
                     {
+                        RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
                         IoTdevice = await registryManager.AddDeviceAsync(new Microsoft.Azure.Devices.Device(device.HubDeviceId));
                     }
                     catch (DeviceAlreadyExistsException)
                     {
-                        IoTdevice = await registryManager.GetDeviceAsync(device.HubDeviceId);
+                        //IoTdevice = await registryManager.GetDeviceAsync(device.HubDeviceId);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(e, "Could not add the Device {0} to the Primary IoT Hub registry", device.HubDeviceId);
+                        primaryHasError = true;
+                    }
+
+                    //try add the device in the Secondary IoT Hub
+                    try
+                    {
+                        RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString2);
+                        IoTdevice = await registryManager.AddDeviceAsync(new Microsoft.Azure.Devices.Device(device.HubDeviceId));
+                    }
+                    catch (DeviceAlreadyExistsException)
+                    {
+                        //IoTdevice = await registryManager.GetDeviceAsync(device.HubDeviceId);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(e, "Could not add the Device {0} to the Secondary IoT Hub registry", device.HubDeviceId);
+                        secondaryHasError = true;
+                    }
+
+                    if (primaryHasError && secondaryHasError)
+                    {
+                        throw new ApplicationException("Could not add the device to any of the IoT Hubs.");
                     }
 
                     //and don't forget to update the SerialNumber as used
@@ -110,6 +194,56 @@ namespace RedAlert.API.BL
         }
 
         /// <summary>
+        /// Retrieves a cloud device by its hub id.
+        /// </summary>
+        /// <param name="hubDeviceId">The hub device id.</param>
+        /// <returns>The cloud device details.</returns>
+        public async Task<Microsoft.Azure.Devices.Device> GetCloudDeviceAsync(string hubDeviceId)
+        {
+            RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+
+            return await registryManager.GetDeviceAsync(hubDeviceId);
+        }
+
+        /// <summary>
+        /// Resets the keys for a given device.
+        /// </summary>
+        /// <param name="id">The device id.</param>
+        /// <returns>The device.</returns>
+        public async Task<Models.Device> ResetDeviceKeysAsync(int id)
+        {
+            using (RedAlertContext context = new RedAlertContext())
+            {
+                Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.DeviceId == id);
+
+                await PopulateNewKeys(context, device);
+
+                await context.SaveChangesAsync();
+
+                return device;
+            }
+        }
+
+        /// <summary>
+        /// Populates the given device with new device and sender keys.
+        /// </summary>
+        /// <param name="context">The DB context.</param>
+        /// <param name="device">The device.</param>
+        private async Task PopulateNewKeys(RedAlertContext context, Models.Device device)
+        {
+            RandomProvider rand = new RandomProvider();
+
+            do
+            {
+                device.DeviceKey = rand.GetAlphaNumeric(8);
+                device.SenderKey = rand.GetAlphaNumeric(8);
+
+                //check for collisions!
+            }
+            while (await context.Devices.AnyAsync(x => x.DeviceKey == device.DeviceKey || x.SenderKey == device.SenderKey));
+        }
+
+        /// <summary>
         /// Gets the device asynchronous.
         /// </summary>
         /// <param name="deviceId">The device identifier.</param>
@@ -118,7 +252,7 @@ namespace RedAlert.API.BL
         {
             using (RedAlertContext context = new RedAlertContext())
             {
-                var device = await context.Devices.FirstOrDefaultAsync(d=>d.DeviceId == deviceId);
+                var device = await context.Devices.FirstOrDefaultAsync(d => d.DeviceId == deviceId);
 
                 return device;
             }
@@ -144,36 +278,84 @@ namespace RedAlert.API.BL
         /// <returns></returns>
         public async Task SendCloudToDeviceMessageAsync(string deviceKey, byte[] message)
         {
-            Models.Device device;
             using (RedAlertContext context = new RedAlertContext())
             {
-                device = await context.Devices.SingleOrDefaultAsync(x => x.DeviceKey == deviceKey);
+                Models.Device device = await context.Devices.SingleOrDefaultAsync(x => x.DeviceKey == deviceKey);
+
+                if (device == null)
+                {
+                    throw new ArgumentException("No such DeviceKey.");
+                }
+
+                bool primaryHasError = false;
+                bool secondaryHasError = false;
+                try
+                {
+                    ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
+                    var messageBytes = new Message(message);
+                    await serviceClient.SendAsync(device.HubDeviceId, messageBytes);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, "Could not send message to the device {0} on the Primary IoT Hub", device.HubDeviceId);
+                    primaryHasError = true;
+                }
+
+                try
+                {
+                    ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(connectionString2);
+                    var messageBytes = new Message(message);
+                    await serviceClient.SendAsync(device.HubDeviceId, messageBytes);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, "Could not send message to the device {0} on the Secondary IoT Hub", device.HubDeviceId);
+                    secondaryHasError = true;
+                }
+
+                if (primaryHasError && secondaryHasError)
+                {
+                    throw new ApplicationException("Could not send message to device on any IoT Hub");
+                }
             }
-
-            if (device == null)
-            {
-                throw new ArgumentException("No such DeviceKey.");
-            }
-
-            ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
-            //var feedbackReceiver = serviceClient.GetFeedbackReceiver();
-
-            var messageToBytes = new Message(message);
-            messageToBytes.Ack = DeliveryAcknowledgement.Full;
-            await serviceClient.SendAsync(device.HubDeviceId, messageToBytes);
-
-            //var feedbackBatch = await feedbackReceiver.ReceiveAsync();
-            //if (feedbackBatch != null)
-            //{
-            //    Logger.Debug("Received feedback: {0}", string.Join(", ", feedbackBatch.Records.Select(f => f.StatusCode)));
-            //    await feedbackReceiver.CompleteAsync(feedbackBatch);
-            //}
-            //else
-            //{
-            //    Logger.Debug("Timed out waiting for feedback");
-            //}
-
         }
 
+        /// <summary>
+        /// Removes a device from both the DB and the IoT Hub entry.
+        /// </summary>
+        /// <param name="deviceId">The device id.</param>
+        public async Task RemoveDeviceAsync(int deviceId)
+        {
+            using (RedAlertContext context = new RedAlertContext())
+            {
+                var device = await context.Devices.FirstOrDefaultAsync(d => d.DeviceId == deviceId);
+                context.Devices.Remove(device);
+
+                await context.SaveChangesAsync();
+                
+                try
+                {
+                    RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+                    await registryManager.RemoveDeviceAsync(device.HubDeviceId);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, "Could not remote device {0} from the Primary IoT Hub", deviceId);
+                }
+
+                try
+                {
+                    RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString2);
+                    await registryManager.RemoveDeviceAsync(device.HubDeviceId);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, "Could not remove device {0} from the Primary IoT Hub", deviceId);
+                }
+
+                //for removing devices we will not fail the whole process even if the device could not be 
+                //removed from any of the IoT Hubs
+            }
+        }
     }
 }
