@@ -26,7 +26,7 @@ namespace RedAlert.Client
         static void ReceiveMessage()
         {
             var client = EventHubClient.CreateFromConnectionString(
-                ConfigurationManager.ConnectionStrings["IotHubConnectionString"].ConnectionString,
+                ConfigurationManager.ConnectionStrings["PrimaryIotHubConnectionString"].ConnectionString,
                 "messages/events");
 
             var d2cPartitions = client.GetRuntimeInformation().PartitionIds;

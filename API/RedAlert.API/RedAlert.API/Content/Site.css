@@ -10,11 +10,11 @@
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
-input,
+/*input,
 select,
 textarea {
     max-width: 280px;
-}
+}*/
 
 /* styles for validation helpers */
 .field-validation-error {
@@ -42,7 +42,7 @@ input[type="checkbox"].input-validation-error {
 }
 
 .device-panel td {
-text-align:left;
+    text-align: left;
 }
 
 .navbar-nav .dropdown-menu > li > a {
@@ -50,9 +50,27 @@ text-align:left;
 }
 
 li.dropdown.selected {
-   font-style: italic;
+    font-style: italic;
 }
-    
-li.dropdown.selected.open {
-   font-style: inherit;
+
+    li.dropdown.selected.open {
+        font-style: inherit;
+    }
+
+footer {
+    text-align: center;
+}
+
+/* centered columns styles */
+.row-centered {
+    text-align: center;
+}
+
+.col-centered {
+    display: inline-block;
+    float: none;
+    /* reset the text-align */
+    text-align: left;
+    /* inline-block space fix */
+    margin-right: -4px;
 }

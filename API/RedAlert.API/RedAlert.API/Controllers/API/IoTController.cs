@@ -71,15 +71,37 @@ namespace RedAlert.API.Controllers.API
 
                 //should get from the config
 
-                string hubAddress = ConfigurationManager.AppSettings["IotHubUri"];
+                Tuple<string, string> deviceConnString = await GenerateDeviceConnectionStrings(deviceId);
+                string responseMessage = string.Empty;
 
-                string hubName = deviceId;
-                string hubUser = $"{hubAddress}/{deviceId}";
-                string hubConn = await GenerateDeviceConnectionString(deviceId);
-                string hubTopic = $"devices/{deviceId}/messages/devicebound/#";
+                if (!string.IsNullOrEmpty(deviceConnString.Item1))
+                {
+                    string hubAddress = ConfigurationManager.AppSettings["PrimaryIotHubUri"];
 
-                string responseMessage = $"{hubAddress}\n{hubName}\n{hubUser}\n{hubConn}\n{hubTopic}";
+                    string hubName = deviceId;
+                    string hubUser = $"{hubAddress}/{deviceId}";
+                    string hubConn = deviceConnString.Item1;
+                    string hubTopic = $"devices/{deviceId}/messages/devicebound/#";
 
+                    responseMessage += $"{hubAddress}\n{hubName}\n{hubUser}\n{hubConn}\n{hubTopic}";
+                }
+
+                if (!string.IsNullOrEmpty(deviceConnString.Item2))
+                {
+                    string hubAddress2 = ConfigurationManager.AppSettings["SecondaryIotHubUri"];
+
+                    string hubName2 = deviceId;
+                    string hubUser2 = $"{hubAddress2}/{deviceId}";
+                    string hubConn2 = deviceConnString.Item2;
+                    string hubTopic2 = $"devices/{deviceId}/messages/devicebound/#";
+
+                    if (!string.IsNullOrEmpty(responseMessage))
+                    {
+                        responseMessage += '\n';
+                    }
+
+                    responseMessage += $"{hubAddress2}\n{hubName2}\n{hubUser2}\n{hubConn2}\n{hubTopic2}";
+                }
                 HttpResponseMessage response;
 
                 response = Request.CreateResponse(HttpStatusCode.OK);
@@ -158,27 +180,41 @@ namespace RedAlert.API.Controllers.API
 
         #region private methods
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="deviceId">IoT Hub DeviceId</param>
-        /// <returns></returns>
-        private async Task<string> GenerateDeviceConnectionString(string deviceId)
+        private async Task<Tuple<string, string>> GenerateDeviceConnectionStrings(string deviceId)
         {
             DeviceManagement dm = new DeviceManagement();
-            string deviceSasKey = await dm.GetDeviceSASKey(deviceId);
+            Tuple<string, string> deviceSasKeys = await dm.GetDeviceSASKeys(deviceId);
 
-            var sasBuilder = new SharedAccessSignatureBuilder()
+            string sasKeyPrimary = string.Empty;
+            string sasKeySecondary = string.Empty;
+
+            if (!string.IsNullOrEmpty(deviceSasKeys.Item1))
             {
-                Key = deviceSasKey,
-                Target = String.Format("{0}/devices/{1}", ConfigurationManager.AppSettings["IotHubUri"], WebUtility.UrlEncode(deviceId)),
+                var sasBuilderPrimary = new SharedAccessSignatureBuilder()
+                {
+                    Key = deviceSasKeys.Item1,
+                    Target = String.Format("{0}/devices/{1}", ConfigurationManager.AppSettings["PrimaryIotHubUri"], WebUtility.UrlEncode(deviceId)),
 
-                TimeToLive = TimeSpan.FromHours(25)
-            };
+                    TimeToLive = TimeSpan.FromHours(25)
+                };
 
-            string sasKey = sasBuilder.ToSignature();
+                sasKeyPrimary = sasBuilderPrimary.ToSignature();
+            }
 
-            return sasKey;
+            if (!string.IsNullOrEmpty(deviceSasKeys.Item2))
+            {
+                var sasBuilderSecondary = new SharedAccessSignatureBuilder()
+                {
+                    Key = deviceSasKeys.Item2,
+                    Target = String.Format("{0}/devices/{1}", ConfigurationManager.AppSettings["SecondaryIotHubUri"], WebUtility.UrlEncode(deviceId)),
+
+                    TimeToLive = TimeSpan.FromHours(25)
+                };
+
+                sasKeySecondary = sasBuilderSecondary.ToSignature();
+            }
+
+            return new Tuple<string, string>(sasKeyPrimary, sasKeySecondary);
         }
 
         private long DateTimeToUnixTimestamp(DateTime dateTime)

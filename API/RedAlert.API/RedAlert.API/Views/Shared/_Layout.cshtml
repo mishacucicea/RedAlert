@@ -6,10 +6,13 @@
     @Html.Partial("Header")
 
 
-   
-      @RenderBody()
+    <div class="container body-content">
+        @RenderBody()
 
-    @Html.Partial("Footer")
+        @*<hr />*@
+        @Html.Partial("Footer")
+    </div>
+    
     @RenderSection("scripts", required: false)
 </body>
 </html>
