@@ -9,21 +9,87 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Data.Entity;
+using NLog;
 
 namespace RedAlert.API.BL
 {
     public class DeviceManagement
     {
-        /// <summary>
-        /// The connection string
-        /// </summary>
-        private string connectionString = ConfigurationManager.ConnectionStrings["IotHubConnectionString"].ConnectionString;
+        public ILogger Logger { get; set; }
+        
+        public DeviceManagement()
+        {
+            Logger = LogManager.GetLogger("RedAlert");
+        }
 
-        public async Task<String> GetDeviceSASKey(string deviceId)
+        /// <summary>
+        /// Primary IoT Hub connection string
+        /// </summary>
+        private string connectionString = ConfigurationManager.ConnectionStrings["PrimaryIotHub"].ConnectionString;
+
+        /// <summary>
+        /// Secondary IoT Hub connection string
+        /// </summary>
+        private string connectionString2 = ConfigurationManager.ConnectionStrings["SecondaryIotHub"].ConnectionString;
+
+        [Obsolete]
+        public async Task<string> GetDeviceSASKey(string deviceId)
         {
             RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
             Microsoft.Azure.Devices.Device IoTdevice = await registryManager.GetDeviceAsync(deviceId);
             return IoTdevice.Authentication.SymmetricKey.PrimaryKey;
+        }
+
+        /// <summary>
+        /// Retrieves the Primary and Secondary IoT Hub SAS Keys.
+        /// </summary>
+        public async Task<Tuple<string, string>> GetDeviceSASKeys(string deviceId)
+        {
+            string key1 = string.Empty;
+            string key2 = string.Empty;
+            try
+            {
+                RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+                Microsoft.Azure.Devices.Device IoTdevice = await registryManager.GetDeviceAsync(deviceId);
+
+                //register the device if it's missing on this IoT Hub
+                if (IoTdevice == null)
+                {
+                    IoTdevice = await registryManager.AddDeviceAsync(new Microsoft.Azure.Devices.Device(deviceId));
+                }
+
+                key1 = IoTdevice.Authentication.SymmetricKey.PrimaryKey;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "Could not retrieve the Primary IoT Hub SAS Key.");
+            }
+
+            try
+            {
+                RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString2);
+                Microsoft.Azure.Devices.Device IoTdevice = await registryManager.GetDeviceAsync(deviceId);
+
+                //register the device if it's missing on this IoT Hub
+                if (IoTdevice == null)
+                {
+                    IoTdevice = await registryManager.AddDeviceAsync(new Microsoft.Azure.Devices.Device(deviceId));
+                }
+
+                key2 = IoTdevice.Authentication.SymmetricKey.PrimaryKey;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "Could not retrieve the Secondary IoT Hub SAS Key.");
+            }
+
+            //if both IoT Hubs are down we can't continue with the execution
+            if (string.IsNullOrEmpty(key1) && string.IsNullOrEmpty(key2))
+            {
+                throw new ApplicationException("Could not retrieve SAS Keys for none of the IoT Hubs. Can not continue execution.");
+            }
+
+            return new Tuple<string, string>(key1, key2);
         }
 
         /// <summary>
@@ -70,15 +136,46 @@ namespace RedAlert.API.BL
                     //this is the name that will be used by the Azure IoT Hub
                     device.HubDeviceId = "device" + device.DeviceId;
 
-                    RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+                    
                     Microsoft.Azure.Devices.Device IoTdevice;
+                    bool primaryHasError = false;
+                    bool secondaryHasError = false;
+
+                    //tyr add the device in the Primary IoT Hub
                     try
                     {
+                        RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
                         IoTdevice = await registryManager.AddDeviceAsync(new Microsoft.Azure.Devices.Device(device.HubDeviceId));
                     }
                     catch (DeviceAlreadyExistsException)
                     {
-                        IoTdevice = await registryManager.GetDeviceAsync(device.HubDeviceId);
+                        //IoTdevice = await registryManager.GetDeviceAsync(device.HubDeviceId);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(e, "Could not add the Device {0} to the Primary IoT Hub registry", device.HubDeviceId);
+                        primaryHasError = true;
+                    }
+
+                    //try add the device in the Secondary IoT Hub
+                    try
+                    {
+                        RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString2);
+                        IoTdevice = await registryManager.AddDeviceAsync(new Microsoft.Azure.Devices.Device(device.HubDeviceId));
+                    }
+                    catch (DeviceAlreadyExistsException)
+                    {
+                        //IoTdevice = await registryManager.GetDeviceAsync(device.HubDeviceId);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(e, "Could not add the Device {0} to the Secondary IoT Hub registry", device.HubDeviceId);
+                        secondaryHasError = true;
+                    }
+
+                    if (primaryHasError && secondaryHasError)
+                    {
+                        throw new ApplicationException("Could not add the device to any of the IoT Hubs.");
                     }
 
                     //and don't forget to update the SerialNumber as used
@@ -190,9 +287,36 @@ namespace RedAlert.API.BL
                     throw new ArgumentException("No such DeviceKey.");
                 }
 
-                ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
-                var messageToBytes = new Message(message);
-                await serviceClient.SendAsync(device.HubDeviceId, messageToBytes);
+                bool primaryHasError = false;
+                bool secondaryHasError = false;
+                try
+                {
+                    ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
+                    var messageBytes = new Message(message);
+                    await serviceClient.SendAsync(device.HubDeviceId, messageBytes);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, "Could not send message to the device {0} on the Primary IoT Hub", device.HubDeviceId);
+                    primaryHasError = true;
+                }
+
+                try
+                {
+                    ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(connectionString2);
+                    var messageBytes = new Message(message);
+                    await serviceClient.SendAsync(device.HubDeviceId, messageBytes);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, "Could not send message to the device {0} on the Secondary IoT Hub", device.HubDeviceId);
+                    secondaryHasError = true;
+                }
+
+                if (primaryHasError && secondaryHasError)
+                {
+                    throw new ApplicationException("Could not send message to device on any IoT Hub");
+                }
             }
         }
 
@@ -208,10 +332,29 @@ namespace RedAlert.API.BL
                 context.Devices.Remove(device);
 
                 await context.SaveChangesAsync();
+                
+                try
+                {
+                    RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+                    await registryManager.RemoveDeviceAsync(device.HubDeviceId);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, "Could not remote device {0} from the Primary IoT Hub", deviceId);
+                }
 
-                RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+                try
+                {
+                    RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString2);
+                    await registryManager.RemoveDeviceAsync(device.HubDeviceId);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, "Could not remove device {0} from the Primary IoT Hub", deviceId);
+                }
 
-                await registryManager.RemoveDeviceAsync(device.HubDeviceId);
+                //for removing devices we will not fail the whole process even if the device could not be 
+                //removed from any of the IoT Hubs
             }
         }
     }
