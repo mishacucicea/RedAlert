@@ -1,55 +1,46 @@
 ﻿@model RedAlert.API.Models.DeviceModel
+<div class="container-fluid">
 
-<h3>Register Device</h3>
-<hr />
 
-<div class="row">
-    <div class="col-xs-12">
-        @if (Model.DeviceKey != null)
+    <h3>Register Device</h3>
+    <hr />
+    <div class="row row-centered">
+        <div class="col-md-4 col-sm-6 col-xs-12 col-centered">
+
+            @if (Model.DeviceKey != null)
             {
-            <script>
-                $(document).ready(function () {
-                    localStorage.setItem("deviceKey", "@Model.DeviceKey");
-                    localStorage.setItem("senderKey", "@Model.SenderKey");
-                });
-            </script>
-            <h5> Your Device key is:   <i> @Model.DeviceKey</i></h5>    
-            <h5> Your Sender Key is:   <i> @Model.SenderKey</i></h5>
-        }
-        @using (Html.BeginForm())
+                <script>
+                    $(document).ready(function () {
+                        localStorage.setItem("deviceKey", "@Model.DeviceKey");
+                        localStorage.setItem("senderKey", "@Model.SenderKey");
+                    });
+                </script>
+                <h5> Your Device key is:   <i> @Model.DeviceKey</i></h5>
+                        <h5> Your Sender Key is:   <i> @Model.SenderKey</i></h5>
+            }
+            @using (Html.BeginForm())
             {
-            @Html.AntiForgeryToken()
-            <div class="form-horizontal">
-                @Html.ValidationSummary(true)
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true)
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.SerialNumber, "Serial Number", htmlAttributes: new { @class = "col-sm-4 control-label" })
-                    <div class="col-md-4 col-sm-6 col-xs-12">
-                        @Html.TextBoxFor(model => model.SerialNumber, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.SerialNumber)
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.SerialNumber, "Serial Number", htmlAttributes: new { @class = "col-md-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.SerialNumber, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.SerialNumber)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-4">
+                            <input type="submit" value="Register" class="btn btn-default" />
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-4 col-sm-offset-4">
-                        <input type="submit" value="Register" class="btn btn-default" />
-                    </div>
-                </div>
-            </div>
-        }
+            }
+
+        </div>
     </div>
+
 </div>
 
-<div class="row">
-    <div class="col-md-6 ">
-        <h4>Instructions</h4>
-        <br />
-        <ul class="list-group">
-            <li class="list-group-item">1 - Open the Box.</li>
-            <li class="list-group-item">2 - Enter in the texbox the serial number found on the device.</li>
-            <li class="list-group-item">3 - Enjoy !</li>
-        </ul>
-    </div>
-    <div class="col-md-6 ">
-        <img src="~/Content/img/devicepsdxx.png" width="100%" />
-    </div>
-</div>
