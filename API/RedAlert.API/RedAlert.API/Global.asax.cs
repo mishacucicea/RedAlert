@@ -62,5 +62,17 @@ namespace RedAlert.API
             // Redirect to the error page.
             Response.Redirect("/Home/Error");
         }
+
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+            if (Request.Url.Host.StartsWith("www") && !Request.Url.IsLoopback)
+            {
+                UriBuilder builder = new UriBuilder(Request.Url);
+                builder.Host = Request.Url.Host.Substring(4);
+                Response.StatusCode = 301;
+                Response.AddHeader("Location", builder.ToString());
+                Response.End();
+            }
+        }
     }
 }
