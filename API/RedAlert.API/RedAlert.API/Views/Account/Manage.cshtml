@@ -2,11 +2,11 @@
 @using Microsoft.AspNet.Identity;
 
 <p class="text-success">@ViewBag.StatusMessage</p>
-<div class="container">
-   
-    <div class="row">
-        </br></br>
-        <div class="col-xs-12 classforborder">
+<h3>Registered Logins</h3>
+<hr />
+<div class="row row-centered">
+    <div class="col-md-4 col-sm-6 col-xs-12 col-centered">
+        <div class="panel-body">
             <section id="externalLogins">
                 @Html.Action("RemoveAccountList")
                 @Html.Partial("_ExternalLoginsListPartial", new { Action = "LinkLogin", ReturnUrl = ViewBag.ReturnUrl })
@@ -16,5 +16,5 @@
 </div>
 
 @*@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}*@
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@

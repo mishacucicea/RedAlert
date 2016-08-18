@@ -5,47 +5,45 @@
 <script src="~/Scripts/clipboard.min.js"></script>
 <script src="~/Scripts/pages/generateurl.js"></script>
 
-<div class="container">
-    <div class="row">
-        </br></br>
-        <div class="col-xs-12 classforborder">     
-                <h4>Url</h4>
-                <hr> </br>
-                
-                        <div class="form-horizontal">
-                            <div class="form-group">
-                                @Html.Label("Senderkey", new {@class = "col-sm-4 control-label"})
-                                <div class="col-sm-6">
-                                    <input id="senderkeyid" class="form-control" type="text" value="">
-                                    @Html.ValidationMessage("Senderkey")
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                @Html.Label("Color", new { @class = "col-sm-4 control-label" })
-                                <div class="col-sm-6">
-                                    <input id="colorboxId" class="form-control" placeholder="e.g red, green etc. or hex color" type="text" value="">
-                                    @Html.ValidationMessage("Color")
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                @Html.Label("GeneratedUrl", new {@class = "col-sm-4 control-label"})
-                                <div class="col-sm-6">
-                                    <input id="textBoxUrl" class="form-control" type="text" value="">
-                                    @Html.ValidationMessage("GeneratedUrl")
-                                </div>
-                            </div>
-                           
-                            <hr />
-                            <div class="form-group">
-                                <div class="col-md-4 col-md-offset-4">
-                                    <button type="button" class="btn btn-default btn-lg" data-clipboard-action="copy" data-clipboard-target="#textBoxUrl">
-                                        <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Copy to Clipboard
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                     </div>
-            </div>        
-        </div>
-  
+<h3>Generate Url</h3>
+<hr />
+<div class="row row-centered">
+    <div class="col-md-4 col-sm-6 col-xs-12 col-centered">
+        <div class="panel-body">
 
+            <div class="form-horizontal">
+                <div class="form-group">
+                    @Html.Label("Senderkey", new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-6">
+                        <input id="senderkeyid" class="form-control" type="text" value="">
+                        @Html.ValidationMessage("Senderkey")
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("Color", new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-6">
+                        <input id="colorboxId" class="form-control" placeholder="e.g red, green etc. or hex color" type="text" value="">
+                        @Html.ValidationMessage("Color")
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("GeneratedUrl", new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-6">
+                        <input id="textBoxUrl" class="form-control" type="text" value="">
+                        @Html.ValidationMessage("GeneratedUrl")
+                    </div>
+                </div>
+
+                <hr />
+                <div class="form-group">
+                    <div class="col-sm-3 col-sm-offset-2 ">
+                        <button type="button" class="btn btn-default btn-lg" data-clipboard-action="copy" data-clipboard-target="#textBoxUrl">
+                            <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Copy to Clipboard
+                        </button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -2,15 +2,15 @@
 
 <h3>Choose a service to login with.</h3>
 <hr />
-<div class="row">
-    </br></br>
-    <div class="col-xs-12">
-        <section id="socialLoginForm">
-            @Html.Partial("_ExternalLoginsListPartial", new { Action = "ExternalLogin", ReturnUrl = ViewBag.ReturnUrl })
-        </section>
+<div class="row row-centered">
+    <div class="col-md-4 col-sm-6 col-xs-12 col-centered">
+        <div class="panel-body">
+            <section id="socialLoginForm">
+                @Html.Partial("_ExternalLoginsListPartial", new { Action = "ExternalLogin", ReturnUrl = ViewBag.ReturnUrl })
+            </section>
+        </div>
     </div>
-</div>
 
-@*@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}*@
+    @*@section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+        }*@
