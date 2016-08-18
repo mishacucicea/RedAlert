@@ -17,14 +17,19 @@
                 @Html.AntiForgeryToken()
 
                 <div class="form-horizontal">
-                    <div class="succesResult">@ViewBag.Result</div>
 
                     @Html.ValidationSummary(true)
 
                     <div class="form-group">
+                        <div class="col-sm-9 control-label">
+                            <div class="succesResult">@ViewBag.Result</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         @Html.Label("Name", new { @class = "col-sm-4 control-label" })
                         <div class="col-sm-6">
-                            <input id="groupName" class="form-control" type="text" value="">
+                            <input id="groupName" name="groupName" class="form-control" type="text" value="">
                             @Html.ValidationMessage("groupName")
 
                         </div>
