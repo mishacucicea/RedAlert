@@ -104,7 +104,7 @@ namespace RedAlert.API.Controllers
         /// </summary>
         /// <param name="id">The device id.</param>
         /// <param name="senderKey">The device sender key.</param>
-        public async Task<ActionResult> Mood(int id, string senderKey)
+        public async Task<ActionResult> TestDevice(int id, string senderKey)
         {
             if (string.IsNullOrEmpty(senderKey))
             {

@@ -17,7 +17,12 @@
                         {
                             <i class="fa fa-circle-o" aria-hidden="true" style="color:red" title="Offline"></i>
                         }
-                        @( item.Name + " : " + item.SerialNumber)
+                        @( item.Name + " : " + item.SerialNumber  )
+
+                        @if (item.Group != null)
+                        {
+                            @(" is in " + item.Group.Name + " group")
+                        }
                     </a>
                 }
             </div>

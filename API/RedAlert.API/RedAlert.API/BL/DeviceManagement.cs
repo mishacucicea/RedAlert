@@ -266,7 +266,7 @@ namespace RedAlert.API.BL
         {
             using (RedAlertContext context = new RedAlertContext())
             {
-                return await context.Devices.ToListAsync();
+                return await context.Devices.Include(x =>x.Group).ToListAsync();
             }
         }
 

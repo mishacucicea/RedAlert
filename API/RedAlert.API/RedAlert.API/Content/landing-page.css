@@ -31,12 +31,15 @@ h6 {
     font-weight: 700;
 }
 
+.list-items {
+    padding-left:55px;
+}
 .topnav {
     font-size: 14px;
 }
 #qr-Image
 {
-  width: 50%;
+  width: 100%;
 }
 #qr-Imageup {
    width: 50%; 
