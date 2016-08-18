@@ -15,21 +15,21 @@
                 <div class="form-group">
                     @Html.Label("Senderkey", new { @class = "col-sm-4 control-label" })
                     <div class="col-sm-6">
-                        <input id="senderkeyid" class="form-control" type="text" value="">
+                        <input id="senderkeyid" class="form-control" type="text" readonly value="">
                         @Html.ValidationMessage("Senderkey")
                     </div>
                 </div>
                 <div class="form-group">
                     @Html.Label("Color", new { @class = "col-sm-4 control-label" })
                     <div class="col-sm-6">
-                        <input id="colorboxId" class="form-control" placeholder="e.g red, green etc. or hex color" type="text" value="">
+                        <input id="colorboxId" class="form-control" placeholder="e.g red, green etc. or hex color" type="text"  value="">
                         @Html.ValidationMessage("Color")
                     </div>
                 </div>
                 <div class="form-group">
                     @Html.Label("GeneratedUrl", new { @class = "col-sm-4 control-label" })
                     <div class="col-sm-6">
-                        <input id="textBoxUrl" class="form-control" type="text" value="">
+                        <input id="textBoxUrl" class="form-control" type="text" readonly value="">
                         @Html.ValidationMessage("GeneratedUrl")
                     </div>
                 </div>
