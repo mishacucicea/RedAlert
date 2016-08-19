@@ -19,10 +19,10 @@ namespace RedAlert.API
             // Use a cookie to temporarily store information about a user logging in with a third party login provider
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
-            //Uncomment the following lines to enable logging in with third party login providers
-            //app.UseMicrosoftAccountAuthentication(
-            // clientId: "",
-            // clientSecret: "");
+            
+            app.UseMicrosoftAccountAuthentication(
+             clientId: "9175cab7-24b8-4e2e-b89e-08fde0fcd270",
+             clientSecret: "ZPjkMpkcoyvSWP4fDtrkvkv");
 
             //app.UseTwitterAuthentication(
             // consumerKey: "",

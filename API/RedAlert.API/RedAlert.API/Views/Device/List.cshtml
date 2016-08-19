@@ -3,9 +3,49 @@
 <h3>List of your registered devices</h3>
 <hr />
 <div class="row row-centered">
-    <div class="col-md-4 col-sm-6 col-xs-12 col-centered">
+    <div class="col-md-10 col-sm-6 col-xs-12 col-centered">
         <div class="panel-body">
-            <div class="list-group">
+            <table class="table ">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Device Name</th>
+                        <th>Serial Number</th>
+                        <th>Group</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                       <tr>
+                          <td>
+                               @if (item.IsActive)
+                                {
+                                 <i class="fa fa-circle" aria-hidden="true" style="color:green" title="Online"></i>
+                                }
+                                else
+                                {
+                                  <i class="fa fa-circle-o" aria-hidden="true" style="color:red" title="Offline"></i>
+                                }
+                           </td>
+                            <td>@item.Name</td>
+                            <td>@item.SerialNumber</td>
+                            @if (item.Group != null)
+                            {
+                              <td>@item.Group.Name</td>
+                            }
+                            else
+                            {
+                              <td></td>
+                            }
+                              <td><a class="btn btn-default glyphicon glyphicon-menu-hamburger" href='@Url.Action("Details", new { id = item.DeviceId })'></td>
+                        </tr>                                       
+                      }                  
+                </tbody>
+            </table>
+
+            @*<div class="list-group">
                 @foreach (var item in Model)
                 {
                     <a class="list-group-item" href='@Url.Action("Details", new { id = item.DeviceId })'>
@@ -25,7 +65,7 @@
                         }
                     </a>
                 }
-            </div>
+            </div>*@
         </div>
     </div>
 </div>
