@@ -1,4 +1,5 @@
-﻿
+﻿@model IList<Device>
+
 @{
     ViewBag.Title = "AddDeviceToGroup";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -9,7 +10,6 @@
 <div class="row row-centered">
     <div class="col-md-4 col-sm-6 col-xs-12 col-centered">
         <div class="panel-body">
-
 
             @using (Html.BeginForm())
             {
@@ -38,14 +38,30 @@
 
                     <div class="form-group">
                         @Html.Label("Serial number", new { @class = "col-sm-4 control-label" })
+                        <div class="col-sm-6">
+                            <select class="form-control" name="serialNumber">
+                            @foreach (var item in Model)
+                            {
+
+                                <option value="@item.SerialNumber">@item.SerialNumber</option>
+                                
+                            }
+                            </select>
+                        </div>
+                    </div>
+
+                   
+
+                    @*<div class="form-group">
+                        @Html.Label("Serial number", new { @class = "col-sm-4 control-label" })
 
                         <div class="col-sm-6">
                             <input id="serialNumber" name="serialNumber" class="form-control" type="text" value="">
                             @Html.ValidationMessage("serialNumber")
 
                         </div>
-                    </div>
-                    <hr>
+                    </div>*@
+                    <br/>
                     <div class="form-group">
                         <div class="col-sm-3 col-sm-offset-4">
                             <input type="submit" value="Create" class="btn btn-default" />

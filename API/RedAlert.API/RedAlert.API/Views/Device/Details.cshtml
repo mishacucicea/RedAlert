@@ -12,54 +12,45 @@
     localStorage.setItem("senderKey", "@Model.SenderKey");
 </script>
 
-
-
 <h3>Details of @Html.DisplayFor(model => model.Name) </h3>
 <hr />
 <div class="row row-centered">
     <div class="col-md-4 col-sm-6 col-xs-12 col-centered">
         <div class="panel-body">
-            <div class="form-horizontal">
-               
+            <div class="form-horizontal">              
                 <div class="form-group">
-                   @Html.Label("Device Key", new { @class = "col-sm-4 control-label" })  <div class="col-sm-6">
+                   @Html.Label("Device Key", new { @class = "col-sm-4 control-label" })  
+                    <div class="col-sm-6">
                         <input type="text" id="deviceKey" class="form-control" readonly value="@Model.DeviceKey" />
                     </div>
                 </div>
-
                 <div class="form-group">
-                    @Html.Label("Sender Key", new { @class = "col-sm-4 control-label" }) <div class="col-sm-6">
+                    @Html.Label("Sender Key", new { @class = "col-sm-4 control-label" }) 
+                    <div class="col-sm-6">
                         <input type="text" id="senderKey" class="form-control" readonly value="@Model.SenderKey" />
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.Label("Url", new { @class = "col-sm-4 control-label" }) <div class="col-sm-6">
-
-                            <input type="text" id="deviceUrl" class="form-control" readonly value="@Model.ApiUrl" />
-                        </div>
-                    </div>    
+                    @Html.Label("Url", new { @class = "col-sm-4 control-label" }) 
+                    <div class="col-sm-6">
+                        <input type="text" id="deviceUrl" class="form-control" readonly value="@Model.ApiUrl" />
+                    </div>
+                </div>    
                 <div class="form-group">
                     <div class="col-xs-12 list-items ">
                         @Html.ActionLink("Test Device", "TestDevice", new { id = Model.DeviceId }) |
                         @Html.ActionLink("Reset Keys", "ResetKeys", new { id = Model.DeviceId }) |
                         @Html.ActionLink("Back to List", "List")
                     </div>
-
-                </div>
-                <hr>
+                </div><br/>            
                 <div class="form-group">
                     <div class="col-sm-3 col-sm-offset-2 ">
                         <button type="button" class="btn btn-default btn-lg" data-clipboard-action="copy" data-clipboard-target="#deviceUrl">
                             <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Copy to Clipboard
                         </button>
                     </div>
-
                 </div>
-               
-                    
-
-
-                </div>
-                    </div>
+              </div>
+          </div>
     </div>
 </div>

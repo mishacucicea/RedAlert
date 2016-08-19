@@ -9,9 +9,9 @@ namespace RedAlert.API.Controllers
     public class RecipeController : BaseController
     {
         // GET: Recipe
-        public ActionResult Index()
-        {
-            return View();
-        }
+        //public ActionResult Index()
+        //{
+        //    return View();
+        //}
     }
 }

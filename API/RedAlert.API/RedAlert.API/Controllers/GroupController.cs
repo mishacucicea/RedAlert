@@ -14,7 +14,7 @@ namespace RedAlert.API.Controllers
     [Authorize]
     public class GroupController : BaseController
     {
-
+        DeviceManagement dm = new DeviceManagement();
         private RedAlertContext _db;
         public GroupController()
         {
@@ -23,9 +23,8 @@ namespace RedAlert.API.Controllers
 
         //
         // GET: /Group/
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-
             return View();
         }
 
@@ -102,7 +101,7 @@ namespace RedAlert.API.Controllers
             {
                 if (gn.Devices.Exists(x => x.SerialNumber == serialNumber))
                 {
-                    ViewBag.Result = "This group has already this device added";
+                    ViewBag.Result = "This group has already this added device ";
                 }
                 else
                 {
@@ -112,13 +111,29 @@ namespace RedAlert.API.Controllers
                     ViewBag.Result = "Device has been added";
                 }
             }
+            //move to BL
+            var devices = await dm.GetDevices();
+            List<Task<Microsoft.Azure.Devices.Device>> list = new List<Task<Microsoft.Azure.Devices.Device>>();
 
-            return View();
+            foreach (var dev in devices)
+            {
+                list.Add(dm.GetCloudDeviceAsync(dev.HubDeviceId));
+            }
+            return View(devices);
+            
         }
         [HttpGet]
         public async Task<ActionResult> AddDeviceToGroup()
         {
-            return View();
+            //move to BL
+            var devices = await dm.GetDevices();
+            List<Task<Microsoft.Azure.Devices.Device>> list = new List<Task<Microsoft.Azure.Devices.Device>>();
+
+            foreach (var device in devices)
+            {
+                list.Add(dm.GetCloudDeviceAsync(device.HubDeviceId));
+            }
+            return View(devices);
         }
 
     }
