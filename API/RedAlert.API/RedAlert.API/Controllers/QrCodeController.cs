@@ -29,25 +29,12 @@ namespace RedAlert.API.Controllers
             return File(bitmapBytes, "image/jpeg");
           
         }
-       [HttpGet]
-        public ActionResult GenerateVotingQr(string answer)
-        {
-            
-            var apiUrl = ApiUrl + "/Voting/"+ answer;
-                    
-            var generator = new QrCoderGenerator();
-
-            var image = generator.GetQrCodeFromString(apiUrl);
-
-            var bitmapBytes = BitmapToBytes(image); //Convert bitmap into a byte array
-            return File(bitmapBytes, "image/jpeg");
-
-        }
         public ActionResult Index()
         {
             return View();
         }
 
+        #region private Helpers
         private static byte[] BitmapToBytes(Bitmap img)
         {
             using (MemoryStream stream = new MemoryStream())
@@ -56,5 +43,7 @@ namespace RedAlert.API.Controllers
                 return stream.ToArray();
             }
         }
+
+        #endregion
     }
 }

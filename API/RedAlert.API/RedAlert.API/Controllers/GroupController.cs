@@ -111,29 +111,14 @@ namespace RedAlert.API.Controllers
                     ViewBag.Result = "Device has been added";
                 }
             }
-            //move to BL
-            var devices = await dm.GetDevices();
-            List<Task<Microsoft.Azure.Devices.Device>> list = new List<Task<Microsoft.Azure.Devices.Device>>();
-
-            foreach (var dev in devices)
-            {
-                list.Add(dm.GetCloudDeviceAsync(dev.HubDeviceId));
-            }
-            return View(devices);
+           
+            return View(GroupHelper.GetDevices());
             
         }
         [HttpGet]
-        public async Task<ActionResult> AddDeviceToGroup()
+        public ActionResult AddDeviceToGroup()
         {
-            //move to BL
-            var devices = await dm.GetDevices();
-            List<Task<Microsoft.Azure.Devices.Device>> list = new List<Task<Microsoft.Azure.Devices.Device>>();
-
-            foreach (var device in devices)
-            {
-                list.Add(dm.GetCloudDeviceAsync(device.HubDeviceId));
-            }
-            return View(devices);
+            return View(GroupHelper.GetDevices());
         }
 
     }

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.Ajax.Utilities;
 using NLog;
+using RedAlert.API.Helpers;
 
 namespace RedAlert.API.Controllers
 {
@@ -75,7 +76,7 @@ namespace RedAlert.API.Controllers
 
                 DeviceManagement dm = new DeviceManagement();
 
-                Logger.Debug("Sending the message: " + ByteToHex(message));
+                Logger.Debug("Sending the message: " + message.ByteToHex());
 
                 //TODO: figure out how to await in parallel
                 await dm.SendCloudToDeviceMessageAsync(device.DeviceKey, message);
@@ -87,34 +88,7 @@ namespace RedAlert.API.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> SendToGroup(string groupName, string message)
         {
-
-
-
             throw new NotImplementedException();
-
-
-        }
-
-        private static byte[] StringToByteArray(string hex)
-        {
-            if (hex.Length % 2 != 0) throw new FormatException("Not a hex string.");
-
-            return Enumerable.Range(0, hex.Length)
-                             .Where(x => x % 2 == 0)
-                             .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
-                             .ToArray();
-        }
-
-        private string ByteToHex(byte[] array)
-        {
-            string output = string.Empty;
-
-            foreach (byte b in array)
-            {
-                output += b.ToString("x2");
-            }
-
-            return output;
         }
     }
 }
