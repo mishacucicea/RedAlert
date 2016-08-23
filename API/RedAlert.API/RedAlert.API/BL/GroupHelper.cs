@@ -19,5 +19,12 @@ namespace RedAlert.API.BL
             }
             
         }
+        public static async Task<List<Device>> GetDevices()
+        {
+            DeviceManagement dm = new DeviceManagement();
+            var devices = await dm.GetDevices();
+            return devices;
+        }
+
     }
 }

@@ -3,38 +3,34 @@
 }
 <link rel="stylesheet" media="screen" type="text/css" href="~/Content/tinycolorpicker.css" />
 <script type="text/javascript" src="~/Scripts/jquery.tinycolorpicker.min.js"></script>
+<script src="~/Scripts/pages/testpage.js"></script>
 
-<div class="panel-body">
-    <h2>Test Device</h2>
-        <div id="colorPicker">
-            <a class="color">
-                <div class="colorInner"></div>
-            </a>
-        <div class="track"></div>
-            <ul class="dropdown">
-                <li></li>
-            </ul>
-        <input type="hidden" class="colorInput" />
-        </div>
-    <hr>   
-    <button type="button" id="sendMessageButton" class="btn btn-default btn-lg" data-clipboard-target="#foo">
-        <span class="glyphicon glyphicon-send" aria-hidden="true"></span> Test
-    </button>
-    <script>
-        $(function () {
-            $("#colorPicker").tinycolorpicker();
-            $("#sendMessageButton").click(function () {
-                var senderKey = "@ViewBag.SenderKey";
-                if (!senderKey) {
-                    senderKey = localStorage.getItem("senderKey")
-                }
-                var picker = $("#colorPicker").data("plugin_tinycolorpicker");
-                // it's assumed that a sender key is already in the local storage.
-                $.get("/api/message/send", {
-                    senderkey: senderKey,
-                    color: picker.colorHex.substring(1)
-                });
-            });
-        });
-    </script>
+<h3>Test Device</h3>
+<hr />
+<div class="row row-centered">
+    <div class="col-md-12 col-sm-6 col-xs-12 col-centered">
+        <div class="panel-body">
+            <div class="form-group">
+                <div id="colorPicker">
+                    <a class="color">
+                        <div class="colorInner"></div>
+                    </a>
+                    <div class="track"></div>
+                    <ul class="dropdown">
+                        <li></li>
+                    </ul>
+                    <input type="hidden" class="colorInput" />
+                </div>
+            </div>
+             <hr>
+            <div class="form-group">
+                    <div class="col-sm-3 col-sm-offset-2 ">
+                        <button type="button" id="sendMessageButton" class="btn btn-default btn-lg" data-clipboard-target="#foo">
+                            <span class="glyphicon glyphicon-send" aria-hidden="true"></span> Test
+                        </button>
+                    </div>
+                </div>
+            </div>
+    </div>
+
 </div>

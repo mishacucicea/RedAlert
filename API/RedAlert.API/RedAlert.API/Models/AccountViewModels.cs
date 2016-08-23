@@ -27,7 +27,6 @@ namespace RedAlert.API.Models
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
-
     public class LoginViewModel
     {
         [Required]

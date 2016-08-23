@@ -32,14 +32,6 @@ namespace RedAlert.API.BL
         /// </summary>
         private string connectionString2 = ConfigurationManager.ConnectionStrings["SecondaryIotHub"].ConnectionString;
 
-        [Obsolete]
-        public async Task<string> GetDeviceSASKey(string deviceId)
-        {
-            RegistryManager registryManager = RegistryManager.CreateFromConnectionString(connectionString);
-            Microsoft.Azure.Devices.Device IoTdevice = await registryManager.GetDeviceAsync(deviceId);
-            return IoTdevice.Authentication.SymmetricKey.PrimaryKey;
-        }
-
         /// <summary>
         /// Retrieves the Primary and Secondary IoT Hub SAS Keys.
         /// </summary>
