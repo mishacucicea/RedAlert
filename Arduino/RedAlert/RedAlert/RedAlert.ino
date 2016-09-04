@@ -30,6 +30,12 @@ unsigned long lastTimeCheck = 0;
 //for Mini D1:
 #define SERIALSPEED 57600
 
+//switch to enable support for secondary IoT Hub
+#define USE_SECONDARY_HUB false
+
+//switch to enable light dimming based on environment light
+#define USE_LIGHT_LEVEL false
+
 //define pins
 #define RED_PIN 14
 #define BLUE_PIN 13
@@ -37,9 +43,6 @@ unsigned long lastTimeCheck = 0;
 
 #define PATTERN_CONTINUOUS 0
 #define PATTERN_WAVES 1
-
-//switch to enable support for secondary IoT Hub
-#define USE_SECONDARY_HUB false
 
 //ref: https://github.com/oh1ko/ESP82666_OLED_clock/blob/master/ESP8266_OLED_clock.ino
 
@@ -71,53 +74,59 @@ void setColor(float r, float g, float b) {
   lastSetValue[0] = g;
   lastSetValue[0] = b;
 
-  float red = r;
-  float green = g;
-  float blue = b;
+  if (USE_LIGHT_LEVEL) {
+    float red = r;
+    float green = g;
+    float blue = b;
 
-  if (lastLight > 1024 / 10 * 9) {
-    //do nothing
-  } else if (lastLight > 1024 / 10 * 8) {
-    red = red / 10 * 9;
-    green = green / 10 * 9;
-    blue = blue / 10 * 9;
-  } else if (lastLight > 1024 / 10 * 7) {
-    red = red / 10 * 8;
-    green = green / 10 * 8;
-    blue = blue / 10 * 8;
-  } else if (lastLight > 1024 / 10 * 6) {
-    red = red / 10 * 7;
-    green = green / 10 * 7;
-    blue = blue / 10 * 7;
-  } else if (lastLight > 1024 / 10 * 5) {
-    red = red / 10 * 6;
-    green = green / 10 * 6;
-    blue = blue / 10 * 6;
-  } else if (lastLight > 1024 / 10 * 4) {
-    red = red / 10 * 5;
-    green = green / 10 * 5;
-    blue = blue / 10 * 5;
-  } else if (lastLight > 1024 / 10 * 3) {
-    red = red / 10 * 4;
-    green = green / 10 * 4;
-    blue = blue / 10 * 4;
-  } else if (lastLight > 1024 / 10 * 2) {
-    red = red / 10 * 3;
-    green = green / 10 * 3;
-    blue = blue / 10 * 3;
-  } else if (lastLight > 1024 / 10) {
-    red = red / 10 * 2;
-    green = green / 10 * 2;
-    blue = blue / 10 * 2;
+    if (lastLight > 1024 / 10 * 9) {
+      //do nothing
+    } else if (lastLight > 1024 / 10 * 8) {
+      red = red / 10 * 9;
+      green = green / 10 * 9;
+      blue = blue / 10 * 9;
+    } else if (lastLight > 1024 / 10 * 7) {
+      red = red / 10 * 8;
+      green = green / 10 * 8;
+      blue = blue / 10 * 8;
+    } else if (lastLight > 1024 / 10 * 6) {
+      red = red / 10 * 7;
+      green = green / 10 * 7;
+      blue = blue / 10 * 7;
+    } else if (lastLight > 1024 / 10 * 5) {
+      red = red / 10 * 6;
+      green = green / 10 * 6;
+      blue = blue / 10 * 6;
+    } else if (lastLight > 1024 / 10 * 4) {
+      red = red / 10 * 5;
+      green = green / 10 * 5;
+      blue = blue / 10 * 5;
+    } else if (lastLight > 1024 / 10 * 3) {
+      red = red / 10 * 4;
+      green = green / 10 * 4;
+      blue = blue / 10 * 4;
+    } else if (lastLight > 1024 / 10 * 2) {
+      red = red / 10 * 3;
+      green = green / 10 * 3;
+      blue = blue / 10 * 3;
+    } else if (lastLight > 1024 / 10) {
+      red = red / 10 * 2;
+      green = green / 10 * 2;
+      blue = blue / 10 * 2;
+    } else {
+      red = red / 10;
+      green = green / 10;
+      blue = blue / 10;
+    }
+
+    analogWrite(RED_PIN, (int)red);
+    analogWrite(GREEN_PIN, (int)green);
+    analogWrite(BLUE_PIN, (int)blue);
   } else {
-    red = red / 10;
-    green = green / 10;
-    blue = blue / 10;
+    analogWrite(RED_PIN, (int)r);
+    analogWrite(GREEN_PIN, (int)g);
+    analogWrite(BLUE_PIN, (int)b);
   }
-
-  analogWrite(RED_PIN, (int)red);
-  analogWrite(GREEN_PIN, (int)green);
-  analogWrite(BLUE_PIN, (int)blue);
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
@@ -380,6 +389,27 @@ void loop() {
       //TODO: wifi reconnect logic in here?
     }
   //}
+  
+  if (USE_LIGHT_LEVEL) {
+    //every ~10 seconds or so
+    if (ticksTo10sCounter % 500 == 0) {
+      //shut down the leds to be able to do a light reading
+      analogWrite(RED_PIN, 0);
+      analogWrite(GREEN_PIN, 0);
+      analogWrite(BLUE_PIN, 0);
+      
+      lastLight = analogRead(A0);
+      
+      //set the leds back:
+      if (hasColor) {
+        setColor(lastSetValue[0], lastSetValue[1], lastSetValue[2]);
+      }
+      
+      //reset the ticks coutner
+      ticksTo10sCounter = 0;
+    }
+    ticksTo10sCounter++;
+  }
 
   //ideally will be executed every 20ms, but we don't really care about accuracy in here
   if (hasColor = true) {
@@ -408,23 +438,6 @@ void loop() {
 
       setColor(redF, greenF, blueF);
     }
-  }
-  ticksTo10sCounter++;
-  
-  //every ~10 seconds or so
-  if (ticksTo10sCounter == 500) {
-    //shut down the leds to be able to do a light reading
-    analogWrite(RED_PIN, 0);
-    analogWrite(GREEN_PIN, 0);
-    analogWrite(BLUE_PIN, 0);
-    
-    lastLight = analogRead(A0);
-    
-    //set the leds back:
-    setColor(lastSetValue[0], lastSetValue[1], lastSetValue[2]);
-    
-    //reset the ticks coutner
-    ticksTo10sCounter = 0;
   }
   
   delay(20);
