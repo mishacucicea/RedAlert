@@ -377,7 +377,7 @@
     <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\API\IoTController.cs" />
-    <Compile Include="Controllers\MessageController.cs" />
+    <Compile Include="Controllers\API\MessageController.cs" />
     <Compile Include="Controllers\QrCodeController.cs" />
     <Compile Include="Controllers\Recipe.cs" />
     <Compile Include="DAL\RedAlertContext.cs" />

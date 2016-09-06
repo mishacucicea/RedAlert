@@ -140,42 +140,59 @@ namespace RedAlert.API.Controllers.API
 
             //if version is already up to date then return 304
             string[] splitVersion = version.Split('-');
-            if (int.Parse(splitVersion[1]) >= 8)
+            int deviceVersionNumber = int.MaxValue;
+            string deviceVersion = "dev";
+            if (splitVersion.Count() == 2)
             {
-                return Request.CreateResponse(HttpStatusCode.NotModified);
+                deviceVersionNumber = int.Parse(splitVersion[1]);
+            }
+            else if (splitVersion.Count() == 3)
+            {
+                deviceVersion = splitVersion[1];
+                deviceVersionNumber = int.Parse(splitVersion[2]);
             }
 
-            string newVersion = "dev-08";
-
-            Logger.Debug($"Updating device from version {version} to {newVersion}.");
-
-            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
-            var stream = new FileStream(System.Web.HttpContext.Current.Server.MapPath("~/Firmware/" + newVersion + ".bin"), FileMode.Open);
-
-            //have to calculate md5
-            MD5 md5 = System.Security.Cryptography.MD5.Create();
-            byte[] hash = md5.ComputeHash(stream);
-            //initialize with 32 to avoid buffer resizing
-            StringBuilder sb = new StringBuilder(32);
-            for (int i = 0; i < hash.Length; i++)
+            if (deviceVersion == "dev")
             {
-                sb.Append(hash[i].ToString("x2"));
+                if (deviceVersionNumber >= 12)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotModified);
+                }
+
+                string newVersion = "v2-dev-12";
+
+                Logger.Debug($"Updating device from version {version} to {newVersion}.");
+
+                HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+                var stream = new FileStream(System.Web.HttpContext.Current.Server.MapPath("~/Firmware/" + newVersion + ".bin"), FileMode.Open);
+
+                //have to calculate md5
+                MD5 md5 = System.Security.Cryptography.MD5.Create();
+                byte[] hash = md5.ComputeHash(stream);
+                //initialize with 32 to avoid buffer resizing
+                StringBuilder sb = new StringBuilder(32);
+                for (int i = 0; i < hash.Length; i++)
+                {
+                    sb.Append(hash[i].ToString("x2"));
+                }
+
+                string md5hash = sb.ToString();
+
+                //Don't forget to rest the stream!
+                stream.Position = 0;
+                result.Content = new StreamContent(stream);
+                result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = newVersion + ".bin"
+                };
+                result.Content.Headers.Add("x-MD5", md5hash);
+
+
+                return result;
             }
 
-            string md5hash = sb.ToString();
-
-            //Don't forget to rest the stream!
-            stream.Position = 0;
-            result.Content = new StreamContent(stream);
-            result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-            result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-            {
-                FileName = newVersion + ".bin"
-            };
-            result.Content.Headers.Add("x-MD5", md5hash);
-
-
-            return result;
+            return Request.CreateResponse(HttpStatusCode.NotModified);
         }
 
         #region private methods
