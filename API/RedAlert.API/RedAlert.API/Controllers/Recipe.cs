@@ -8,7 +8,7 @@ namespace RedAlert.API.Controllers
 {
     public class RecipeController : BaseController
     {
-        // GET: Recipe
+        ////GET: Recipe
         //public ActionResult Index()
         //{
         //    return View();

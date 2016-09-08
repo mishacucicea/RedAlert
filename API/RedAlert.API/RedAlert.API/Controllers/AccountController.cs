@@ -262,6 +262,11 @@ namespace RedAlert.API.Controllers
             }
             base.Dispose(disposing);
         }
+        [AllowAnonymous]
+        public ActionResult Register()
+        {
+            return View();
+        }
 
         #region Helpers
         // Used for XSRF protection when adding external logins
