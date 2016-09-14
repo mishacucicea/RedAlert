@@ -146,10 +146,10 @@ namespace RedAlert.API.Controllers
             var user = await UserManager.FindAsync(loginInfo.Login);
             if (user != null)
             {
-                if (loginInfo.Email == null)
-                {
-                    return View("EmailMissingError");
-                }
+                //if (loginInfo.Email == null)
+                //{
+                //    return View("EmailMissingError");
+                //}
                 await SignInAsync(user, isPersistent: false);
                 return RedirectToLocal(returnUrl);
             }
