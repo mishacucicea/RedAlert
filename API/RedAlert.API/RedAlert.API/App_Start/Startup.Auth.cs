@@ -2,6 +2,7 @@
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
+using RedAlert.API.BL;
 
 namespace RedAlert.API
 {
@@ -10,6 +11,7 @@ namespace RedAlert.API
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
+            
             // Enable the application to use a cookie to store information for the signed in user
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
@@ -21,18 +23,20 @@ namespace RedAlert.API
 
             
             app.UseMicrosoftAccountAuthentication(
-             clientId: "9175cab7-24b8-4e2e-b89e-08fde0fcd270",
-             clientSecret: "ZPjkMpkcoyvSWP4fDtrkvkv");
+             clientId: ConfigManager.MicrosoftClientId,
+             clientSecret: ConfigManager.MicrosoftSecretKey);
 
             //app.UseTwitterAuthentication(
             // consumerKey: "",
             // consumerSecret: "");
 
             app.UseFacebookAuthentication(
-             appId: "888396751264300",
-             appSecret: "1c71fa8e65465b9a90fad55cf91d4343");
+             appId: ConfigManager.FacebookClientId,
+             appSecret: ConfigManager.FacebookSecretKey);
 
-            app.UseGoogleAuthentication("320583182272-6nkt1lq6g1p8p6lmdeeroutspkdk2ojq.apps.googleusercontent.com", "Lsxc-Zh9kLzXtlWdkR3kvHcV");
+            app.UseGoogleAuthentication(
+                ConfigManager.GoogleClientId,
+                ConfigManager.GoogleSecretKey);
         }
     }
 }

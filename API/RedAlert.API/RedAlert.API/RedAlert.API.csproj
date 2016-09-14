@@ -366,6 +366,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="BL\ConfigManager.cs" />
     <Compile Include="BL\DeviceManagement.cs" />
     <Compile Include="BL\GroupHelper.cs" />
     <Compile Include="BL\MessageBuilder.cs" />
@@ -540,6 +541,7 @@
     <Content Include="Firmware\dev-08.bin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="debugconfig.json" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
