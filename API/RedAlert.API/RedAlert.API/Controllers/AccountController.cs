@@ -146,10 +146,10 @@ namespace RedAlert.API.Controllers
             var user = await UserManager.FindAsync(loginInfo.Login);
             if (user != null)
             {
-                //if (loginInfo.Email == null)
-                //{
-                //    return View("EmailMissingError");
-                //}
+                if (user.Email == null)
+                {
+                    return View("EmailMissingError");
+                }
                 await SignInAsync(user, isPersistent: false);
                 return RedirectToLocal(returnUrl);
             }
@@ -209,7 +209,7 @@ namespace RedAlert.API.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser() { UserName = model.UserName };
+                var user = new ApplicationUser() { UserName = model.UserName, Email = model.Email};
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
