@@ -1,8 +1,10 @@
 ﻿@model RedAlert.API.Models.ExternalLoginConfirmationViewModel
+@{
+    ViewBag.Title = "Register";
+}
+<h2>@ViewBag.Title.</h2>
 
-<h2>Associate your @ViewBag.LoginProvider account.</h2>
-
-
+<h3>Associate your @ViewBag.LoginProvider account.</h3>
 <hr />
 <div class="row row-centered">
     <div class="col-md-4 col-sm-6 col-xs-12 col-centered">
@@ -11,6 +13,8 @@
             {
                 @Html.AntiForgeryToken()
 
+                <h4>Association Form</h4>
+                <hr />
                 @Html.ValidationSummary(true)
                 <p class="text-info">
                     You've successfully authenticated with <strong>@ViewBag.LoginProvider</strong>.
@@ -22,13 +26,6 @@
                     <div class="col-sm-6">
                         @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.UserName)
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Email, new { @class = "col-sm-4 control-label" })
-                    <div class="col-sm-6">
-                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Email)
                     </div>
                 </div>
                 <div class="form-group">

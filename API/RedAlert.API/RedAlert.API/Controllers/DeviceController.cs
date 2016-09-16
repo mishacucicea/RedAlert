@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNet.Identity;
-using RedAlert.API.BL;
-using RedAlert.API.DAL;
+﻿using RedAlert.API.BL;
 using RedAlert.API.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Data.Entity;
 
 namespace RedAlert.API.Controllers
 {
@@ -68,41 +65,7 @@ namespace RedAlert.API.Controllers
 
             return View(model);
         }
-        [HttpGet]
-        public  ActionResult AddDeviceToUser()
-        {
-            return View();
-        }
-        [HttpPost]
-        public async Task<ActionResult> AddDeviceToUser(string serialNumber)
-        {
-            if (await dm.DoesDeviceExist(serialNumber))
-            {
-                using (RedAlertContext context = new RedAlertContext())
-                {
-                    var userID = User.Identity.GetUserId();
-                    var device = await context.Devices.FirstOrDefaultAsync(x => x.SerialNumber == serialNumber);
-                    if (device != null)
-                    {
-                        device.UserID = userID;
-                        context.Entry(device).State = EntityState.Modified;
 
-                        await context.SaveChangesAsync();
-                        ViewBag.Result = "Success! The device has been added";
-                    }
-                    else
-                    {
-                        ViewBag.Result = "Couldn't find Device by Serial Number";
-                    }                
-                }
-                
-            }
-            else
-            {
-                ViewBag.Result = "Incorect Serial Number";
-            }
-            return View();
-        }
         public ActionResult Get()
         {
             return View();
@@ -113,8 +76,7 @@ namespace RedAlert.API.Controllers
         /// </summary>
         public async Task<ActionResult> List()
         {
-            var devices = await dm.GetDevicesByUserID(User.Identity.GetUserId());
-            
+            var devices = await dm.GetDevices();
             List<Task<Microsoft.Azure.Devices.Device>> list = new List<Task<Microsoft.Azure.Devices.Device>>();
 
             foreach (var device in devices)

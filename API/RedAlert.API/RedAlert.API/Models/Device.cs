@@ -76,7 +76,5 @@ namespace RedAlert.API.Models
         public bool IsActive {
             get { return (DateTime.UtcNow - LastActivityTime.ToUniversalTime()) < TimeSpan.FromSeconds(60); }
         }
-
-        public string UserID { get; set; }
-    }   
+    }
 }

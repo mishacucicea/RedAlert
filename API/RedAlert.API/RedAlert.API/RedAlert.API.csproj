@@ -391,14 +391,6 @@
     <Compile Include="Migrations\201606071756594_Initial.Designer.cs">
       <DependentUpon>201606071756594_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201609161347490_Initial1.cs" />
-    <Compile Include="Migrations\201609161347490_Initial1.Designer.cs">
-      <DependentUpon>201609161347490_Initial1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609161354361_addeduserid.cs" />
-    <Compile Include="Migrations\201609161354361_addeduserid.Designer.cs">
-      <DependentUpon>201609161354361_addeduserid.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\DeviceGroup.cs" />
@@ -549,7 +541,6 @@
     <Content Include="Firmware\dev-08.bin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="debugconfig.json" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -592,7 +583,6 @@
     <Content Include="Views\Device\TestDevice.cshtml" />
     <Content Include="Service References\Application Insights\ConnectedService.json" />
     <Content Include="Views\Account\EmailMissingError.cshtml" />
-    <Content Include="Views\Device\AddDeviceToUser.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
@@ -614,12 +604,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201606071756594_Initial.resx">
       <DependentUpon>201606071756594_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609161347490_Initial1.resx">
-      <DependentUpon>201609161347490_Initial1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609161354361_addeduserid.resx">
-      <DependentUpon>201609161354361_addeduserid.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

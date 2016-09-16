@@ -7,9 +7,6 @@ namespace RedAlert.API.Models
         [Required]
         [Display(Name = "User name")]
         public string UserName { get; set; }
-        [Required]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
     }
 
     public class ManageUserViewModel

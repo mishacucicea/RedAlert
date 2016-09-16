@@ -22,9 +22,9 @@ namespace RedAlert.API
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             
-            //app.UseMicrosoftAccountAuthentication(
-            // clientId: ConfigManager.MicrosoftClientId,
-            // clientSecret: ConfigManager.MicrosoftSecretKey);
+            app.UseMicrosoftAccountAuthentication(
+             clientId: ConfigManager.MicrosoftClientId,
+             clientSecret: ConfigManager.MicrosoftSecretKey);
 
             //app.UseTwitterAuthentication(
             // consumerKey: "",
