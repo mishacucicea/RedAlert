@@ -26,5 +26,11 @@ namespace RedAlert.API.DAL
         public DbSet<DeviceGroup> DeviceGroups { get; set; }
 
         public DbSet<SerialNumber> SerialNumbers { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            Database.SetInitializer<RedAlertContext>(null);
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

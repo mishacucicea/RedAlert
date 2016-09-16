@@ -84,6 +84,8 @@ namespace RedAlert.API.BL
             return new Tuple<string, string>(key1, key2);
         }
 
+       
+
         /// <summary>
         /// Adds the device asynchronous.
         /// </summary>
@@ -184,6 +186,19 @@ namespace RedAlert.API.BL
                 };
             }
         }
+        public async Task<bool> DoesDeviceExist(string serialNumber)
+        {
+            using (RedAlertContext context = new RedAlertContext())
+            {
+                SerialNumber sn = await context.SerialNumbers.SingleOrDefaultAsync(x => x.Code == serialNumber);
+
+                if (sn == null)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
         /// <summary>
         /// Retrieves a cloud device by its hub id.
@@ -259,6 +274,14 @@ namespace RedAlert.API.BL
             using (RedAlertContext context = new RedAlertContext())
             {
                 return await context.Devices.Include(x =>x.Group).ToListAsync();
+            }
+        }
+
+        public async Task<List<Models.Device>> GetDevicesByUserID(string userID)
+        {
+            using (RedAlertContext context = new RedAlertContext())
+            {
+                return await context.Devices.Include(x => x.Group).Where(x=>x.UserID==userID).ToListAsync();
             }
         }
 
