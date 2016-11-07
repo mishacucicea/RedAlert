@@ -549,7 +549,6 @@
     <Content Include="Firmware\dev-08.bin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="debugconfig.json" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
