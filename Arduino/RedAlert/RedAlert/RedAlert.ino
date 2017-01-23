@@ -16,7 +16,7 @@ extern "C" {
 }
 
 //TODO: don't forget to update!
-char VERSION[] = "v2-dev-12";
+char VERSION[] = "v3-dev-13";
 
 unsigned long lastTimeCheck = 0;
 
@@ -129,8 +129,8 @@ void setColor(float r, float g, float b) {
   }
 }
 
-void callback(char* topic, byte* payload, unsigned int length) {
-  Debug("Entered callback");
+void commandCallback(char* topic, byte* payload, unsigned int length) {
+  Debug("Entered commandCallback");
   //this is the new format:
   //check that the length is 9 and message code is 1
   if (length == 9 && payload[0] == 1) {
@@ -319,12 +319,12 @@ void loop() {
     //this will set the address of the hub and port on which it communicates
     client.setServer(apiClient.getHubAddress(), 8883);
   
-    Debug("Setting callback for MQTT");
-    client.setCallback(callback);
+    Debug("Setting commandCallback for MQTT");
+    client.setCallback(commandCallback);
     
     if (apiClient.hasSecondary()) {
       secondaryClient.setServer(apiClient.getHubAddress2(), 8883);
-      secondaryClient.setCallback(callback);
+      secondaryClient.setCallback(commandCallback);
     }
   }
 
@@ -390,26 +390,7 @@ void loop() {
     }
   //}
   
-  if (USE_LIGHT_LEVEL) {
-    //every ~10 seconds or so
-    if (ticksTo10sCounter % 500 == 0) {
-      //shut down the leds to be able to do a light reading
-      analogWrite(RED_PIN, 0);
-      analogWrite(GREEN_PIN, 0);
-      analogWrite(BLUE_PIN, 0);
-      
-      lastLight = analogRead(A0);
-      
-      //set the leds back:
-      if (hasColor) {
-        setColor(lastSetValue[0], lastSetValue[1], lastSetValue[2]);
-      }
-      
-      //reset the ticks coutner
-      ticksTo10sCounter = 0;
-    }
-    ticksTo10sCounter++;
-  }
+
 
   //ideally will be executed every 20ms, but we don't really care about accuracy in here
   if (hasColor = true) {
@@ -425,7 +406,13 @@ void loop() {
       float greenF = 0.0;
       float blueF = 0.0;
   
-      //warning - we're losing precision in here, move to floating point?
+      if (patternStage == 0) {
+        //it means that the output will be blank
+        //we can read ADC here without anyone noticing!
+        
+        checkBrightness();
+      }
+      
       if (patternStage < 200) {
         redF = ((float)red / 200 * patternStage);
         greenF = ((float)green / 200 * patternStage);
@@ -441,5 +428,11 @@ void loop() {
   }
   
   delay(20);
+}
+
+void checkBrightness() {
+  if (USE_LIGHT_LEVEL) {
+    lastLight = analogRead(A0);
+  }
 }
 
