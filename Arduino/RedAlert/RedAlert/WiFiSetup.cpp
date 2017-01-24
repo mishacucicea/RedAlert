@@ -50,7 +50,7 @@ void handleSetup(void) {
   EEPROM.commit();
   wifiSetup.loadStationSettings();
   
-  server.send(200, "text/html", "{}");
+  //server.send(200, "text/html", "{}");
 
   hasSetup = true;
 }
@@ -116,14 +116,17 @@ void handleRoot(void) {
           }\n\
           function checkWiFi() {\n\
             /*TODO: show something*/\n\
-            var checkwifiId = document.getElementById(\"checkwifi\");\n\
-            checkwifiId.style.display=\"block\";\n\
+            var doneId = document.getElementById(\"done\");\n\
+            doneId.style.display = \"block\";\n\
+            //var checkwifiId = document.getElementById(\"checkwifi\");\n\
+            //checkwifiId.style.display=\"block\";\n\
             var contentId = document.getElementById(\"credentials\");\n\
             contentId.style.display = \"none\";\n\
             var xmlhttp = new XMLHttpRequest();\n\
             var ssid = document.getElementById(\"SSID\").value\n\
             var ssidPass = document.getElementById(\"PASSWORD\").value\n\
             var apikey = document.getElementById(\"APIKEY\").value\n\
+            /*\n\
             xmlhttp.onreadystatechange = function() {\n\
               if (xmlhttp.readyState == 4) {\n\
                 if (xmlhttp.status == 200) {\n\
@@ -167,11 +170,13 @@ void handleRoot(void) {
                 } else {\n\
                   var contentId = document.getElementById(\"checkwifiproblem\");\n\
                   contentId.style.display = \"block\";\n\
-                  /*TODO: something went wrong, is it even possible?*/\n\
+                  //TODO: something went wrong, is it even possible?\n\
                 }\n\
               }\n\
             };\n\
-            xmlhttp.open(\"GET\", \"checkwifi?ssid=\"+ssid+\"&pass=\"+ssidPass, true);\n\
+            */\n\
+            //xmlhttp.open(\"GET\", \"checkwifi?ssid=\"+ssid+\"&pass=\"+ssidPass, true);\n\
+            xmlhttp.open(\"GET\", \"setup?ssid=\"+ssid+\"&pass=\"+ssidPass+\"&apikey=\"+apikey, true);\n\
             xmlhttp.send();\n\
           }\n\
         </script>\n\
@@ -259,7 +264,9 @@ void handleCheckWiFi(void) {
     Debug2("Wifi Status: ", WiFi.status());
     retries++;
   }
-
+  
+  // disabling this section as it seems to create problems 
+  
   if (WiFi.status() == WL_CONNECTED) {
     Debug("Sendign connected: true");
     server.send(200, "application/json", "{\"connected\":true}");

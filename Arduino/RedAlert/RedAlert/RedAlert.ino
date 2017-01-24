@@ -26,20 +26,22 @@ unsigned long lastTimeCheck = 0;
 //#define hubPass "SharedAccessSignature sr=arduhub.azure-devices.net%2fdevices%2fpocDevice&sig=ksApO9qnlvs%2bERTKS3qqvO0T7cRG2D1xhI7PiE5C8uk%3d&se=1490896187"
 //#define hubTopic "devices/pocDevice/messages/devicebound/#"
 
-//#define SERIALSPEED 74880
+#define SERIALSPEED 74880
 //for Mini D1:
-#define SERIALSPEED 57600
+//#define SERIALSPEED 57600
 
 //switch to enable support for secondary IoT Hub
 #define USE_SECONDARY_HUB false
 
 //switch to enable light dimming based on environment light
-#define USE_LIGHT_LEVEL false
+#define USE_LIGHT_LEVEL true
 
 //define pins
 #define RED_PIN 14
 #define BLUE_PIN 13
 #define GREEN_PIN 12
+
+#define BUZZ_PIN 16
 
 #define PATTERN_CONTINUOUS 0
 #define PATTERN_WAVES 1
@@ -57,7 +59,6 @@ bool hasColor = false;
 byte pattern;
 int patternStage;
 byte color[3];
-float lastSetValue[3];
 int lastLight;
 
 /*
@@ -70,10 +71,6 @@ int expand10(byte value) {
 }
 
 void setColor(float r, float g, float b) {
-  lastSetValue[0] = r;
-  lastSetValue[0] = g;
-  lastSetValue[0] = b;
-
   if (USE_LIGHT_LEVEL) {
     float red = r;
     float green = g;
@@ -213,7 +210,15 @@ void setup() {
   pinMode(RED_PIN, OUTPUT);
   pinMode(GREEN_PIN, OUTPUT);
   pinMode(BLUE_PIN, OUTPUT);
-
+  
+  pinMode(BUZZ_PIN, OUTPUT);
+  
+  //analogWriteFreq(2000);
+  //analogWrite(BUZZ_PIN, 512);
+  //DOES NOT WORK: tone(BUZZ_PIN, 2000); 
+  //setColor(1023, 1023, 1023);
+  //while(true) {}
+  
   //for pin testing
   //while(true)
   {
@@ -430,9 +435,11 @@ void loop() {
   delay(20);
 }
 
+/* warning: checking brightness delays the clock by a few milliseconds */
 void checkBrightness() {
   if (USE_LIGHT_LEVEL) {
     lastLight = analogRead(A0);
+    Debug2("Brightness level: ", lastLight);
   }
 }
 
